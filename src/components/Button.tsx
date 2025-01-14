@@ -1,0 +1,34 @@
+import { tv, type VariantProps } from 'tailwind-variants';
+
+const button = tv({
+  base: 'rounded-full transition-colors font-semibold',
+  variants: {
+    variant: {
+      primary: 'bg-black text-white hover:bg-gray-800',
+      secondary: 'border border-gray-200 hover:bg-gray-50',
+      white: 'bg-white text-black hover:bg-gray-100',
+      'outline-white':
+        'border-2 border-white text-white hover:bg-white hover:text-purple-900 transition-colors',
+    },
+    size: {
+      sm: 'px-4 py-2 text-sm',
+      md: 'px-8 py-4 text-base',
+    },
+    disabled: {
+      true: 'opacity-50 cursor-not-allowed',
+      false: 'opacity-100',
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+    size: 'md',
+    disabled: false,
+  },
+});
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof button>;
+
+export function Button({ ...props }: ButtonProps) {
+  return <button {...props} className={button({ ...props })} />;
+}
