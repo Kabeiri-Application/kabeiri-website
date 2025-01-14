@@ -11,9 +11,11 @@ export default function Home() {
       <section className='min-h-screen flex items-center justify-center px-6'>
         <div className='mx-auto max-w-7xl pt-20'>
           <div className='max-w-4xl mx-auto text-center'>
-            <span className='text-purple-600 font-semibold mb-4 block'>
-              The Future of Automotive Care
-            </span>
+            <div className='flex items-center justify-center mb-4'>
+              <span className='text-purple-600 font-semibold border px-4 py-1 rounded-full border-purple-600'>
+                The Future of Automotive Care
+              </span>
+            </div>
             <h2 className='text-6xl md:text-7xl font-bold tracking-tight mb-8'>
               The Operating System for
               <br />
