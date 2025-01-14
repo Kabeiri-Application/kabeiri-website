@@ -11,7 +11,7 @@ export function Header() {
           </Link>
           <div className='absolute left-1/2 -translate-x-1/2'>
             <div className='hidden md:flex items-center gap-8 text-lg text-gray-600 transition-colors font-semibold'>
-              <Link href='/features' className='hover:text-gray-900'>
+              <Link href='/#features' className='hover:text-gray-900'>
                 Features
               </Link>
               <Link href='/pricing' className='hover:text-gray-900'>
@@ -24,7 +24,7 @@ export function Header() {
           </div>
           <Link href='/login'>
             <Button variant='primary' size='sm'>
-              Get Started
+              Login
             </Button>
           </Link>
         </div>
