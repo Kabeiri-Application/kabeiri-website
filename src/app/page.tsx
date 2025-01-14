@@ -44,9 +44,9 @@ export default function Home() {
           <div className='grid grid-cols-1 gap-x-8 gap-y-20 md:grid-cols-2 lg:grid-cols-3'>
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-purple-100'>
                   <svg
-                    className='h-6 w-6 text-purple-600'
+                    className='size-6 text-purple-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -65,9 +65,9 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-blue-100'>
                   <svg
-                    className='h-6 w-6 text-blue-600'
+                    className='size-6 text-blue-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -86,9 +86,9 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-pink-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-pink-100'>
                   <svg
-                    className='h-6 w-6 text-pink-600'
+                    className='size-6 text-pink-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -107,9 +107,9 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-green-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-green-100'>
                   <svg
-                    className='h-6 w-6 text-green-600'
+                    className='size-6 text-green-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -128,9 +128,9 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-orange-100'>
                   <svg
-                    className='h-6 w-6 text-orange-600'
+                    className='size-6 text-orange-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>
@@ -149,9 +149,9 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100'>
+                <div className='flex size-12 items-center justify-center rounded-xl bg-indigo-100'>
                   <svg
-                    className='h-6 w-6 text-indigo-600'
+                    className='size-6 text-indigo-600'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'>

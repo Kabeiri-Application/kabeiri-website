@@ -4,7 +4,7 @@ import { Button } from '@/components/Button';
 
 export function Header() {
   return (
-    <header className='fixed left-0 right-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md'>
+    <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md'>
       <nav className='mx-auto max-w-7xl px-6 py-4'>
         <div className='flex items-center justify-between'>
           <Link href='/' className='text-2xl font-bold'>
