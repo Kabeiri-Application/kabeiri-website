@@ -1,4 +1,3 @@
-import { Header } from '@/components/Header';
 import { Button } from '@/components/Button';
 import Link from 'next/link';
 import { FeatureCard } from '@/components/FeatureCard';
@@ -6,8 +5,6 @@ import { FeatureCard } from '@/components/FeatureCard';
 export default function Home() {
   return (
     <main className='bg-white'>
-      <Header />
-
       <section className='min-h-screen flex items-center justify-center px-6'>
         <div className='mx-auto max-w-7xl pt-20'>
           <div className='max-w-4xl mx-auto text-center'>
