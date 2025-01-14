@@ -1,26 +1,27 @@
-import { Button } from '@/components/Button';
 import Link from 'next/link';
+
+import { Button } from '@/components/Button';
 import { FeatureCard } from '@/components/FeatureCard';
 
 export default function Home() {
   return (
     <main className='bg-white'>
-      <section className='min-h-screen flex items-center justify-center px-6'>
+      <section className='flex min-h-screen items-center justify-center px-6'>
         <div className='mx-auto max-w-7xl pt-20'>
-          <div className='max-w-4xl mx-auto text-center'>
-            <div className='flex items-center justify-center mb-4'>
-              <span className='text-purple-600 font-semibold border px-4 py-1 rounded-full border-purple-600'>
+          <div className='mx-auto max-w-4xl text-center'>
+            <div className='mb-4 flex items-center justify-center'>
+              <span className='rounded-full border border-purple-600 px-4 py-1 font-semibold text-purple-600'>
                 The Future of Automotive Care
               </span>
             </div>
-            <h2 className='text-6xl md:text-7xl font-bold tracking-tight mb-8'>
+            <h2 className='mb-8 text-6xl font-bold tracking-tight md:text-7xl'>
               The Operating System for
               <br />
               <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
                 Modern Auto Service
               </span>
             </h2>
-            <p className='text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed'>
+            <p className='mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-gray-600 md:text-2xl'>
               Revolutionizing automotive care with AI diagnostics, digital
               workflows, and an open ecosystem for innovation
             </p>
@@ -38,19 +39,17 @@ export default function Home() {
 
       <section
         id='features'
-        className='py-24 bg-gradient-to-b from-gray-50 to-white'
-      >
+        className='bg-gradient-to-b from-gray-50 to-white py-24'>
         <div className='mx-auto max-w-7xl px-6'>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20'>
+          <div className='grid grid-cols-1 gap-x-8 gap-y-20 md:grid-cols-2 lg:grid-cols-3'>
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100'>
                   <svg
-                    className='w-6 h-6 text-purple-600'
+                    className='h-6 w-6 text-purple-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -66,13 +65,12 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100'>
                   <svg
-                    className='w-6 h-6 text-blue-600'
+                    className='h-6 w-6 text-blue-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -88,13 +86,12 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-pink-100'>
                   <svg
-                    className='w-6 h-6 text-pink-600'
+                    className='h-6 w-6 text-pink-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -110,13 +107,12 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-green-100'>
                   <svg
-                    className='w-6 h-6 text-green-600'
+                    className='h-6 w-6 text-green-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -132,13 +128,12 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100'>
                   <svg
-                    className='w-6 h-6 text-orange-600'
+                    className='h-6 w-6 text-orange-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -154,13 +149,12 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className='w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100'>
                   <svg
-                    className='w-6 h-6 text-indigo-600'
+                    className='h-6 w-6 text-indigo-600'
                     fill='none'
                     stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
+                    viewBox='0 0 24 24'>
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -180,15 +174,15 @@ export default function Home() {
       <section className='py-24'>
         <div className='mx-auto max-w-7xl px-6'>
           <div className='rounded-3xl bg-gradient-to-r from-purple-900 to-pink-900 p-20 text-center'>
-            <h2 className='text-4xl font-bold text-white mb-6'>
+            <h2 className='mb-6 text-4xl font-bold text-white'>
               Join the Automotive Revolution
             </h2>
-            <p className='text-gray-200 mb-8 max-w-2xl mx-auto'>
+            <p className='mx-auto mb-8 max-w-2xl text-gray-200'>
               Whether you&apos;re a car owner, mechanic, or developer, be part
               of the platform that&apos;s reshaping the future of automotive
               care.
             </p>
-            <div className='flex gap-4 justify-center'>
+            <div className='flex justify-center gap-4'>
               <Link href='/login'>
                 <Button variant='white'>Get started now →</Button>
               </Link>
