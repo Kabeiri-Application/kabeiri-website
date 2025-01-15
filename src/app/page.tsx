@@ -39,7 +39,7 @@ export default function Home() {
 
       <section
         id='features'
-        className='bg-gradient-to-b from-gray-50 to-white py-24'>
+        className='scroll-mt-16 bg-gradient-to-b from-gray-50 to-white py-24'>
         <div className='mx-auto max-w-7xl px-6'>
           <div className='grid grid-cols-1 gap-x-8 gap-y-20 md:grid-cols-2 lg:grid-cols-3'>
             <FeatureCard
