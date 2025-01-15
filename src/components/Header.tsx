@@ -30,6 +30,11 @@ export function Header() {
           </Link>
         </div>
       </nav>
+      <div className='flex cursor-progress items-center justify-center bg-gradient-to-b from-purple-600 to-pink-600 py-2'>
+        <span className='font-bold text-white'>
+          🚧 This site is under construction 🚧
+        </span>
+      </div>
     </header>
   );
 }
