@@ -184,10 +184,10 @@ export default function Home() {
             </p>
             <div className='flex justify-center gap-4'>
               <Link href='/login'>
-                <Button variant='white'>Get started now →</Button>
+                <Button variant='primary-white'>Get started now →</Button>
               </Link>
               <Link href='mailto:partners@kabeiri.app'>
-                <Button variant='outline-white'>Become a Partner</Button>
+                <Button variant='secondary-white'>Become a Partner</Button>
               </Link>
             </div>
           </div>
