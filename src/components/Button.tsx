@@ -4,11 +4,11 @@ const button = tv({
   base: 'rounded-full font-semibold transition-colors',
   variants: {
     variant: {
-      primary: 'bg-black text-white hover:bg-gray-800',
-      secondary: 'border border-gray-200 hover:bg-gray-50',
-      white: 'bg-white text-black hover:bg-gray-100',
+      primary: 'bg-black text-white enabled:hover:bg-gray-800',
+      secondary: 'border border-gray-200 enabled:hover:bg-gray-50',
+      white: 'bg-white text-black enabled:hover:bg-gray-100',
       'outline-white':
-        'border-2 border-white text-white transition-colors hover:bg-white hover:text-purple-900',
+        'border-2 border-white text-white transition-colors enabled:hover:bg-white enabled:hover:text-purple-900',
     },
     size: {
       sm: 'px-4 py-2 text-sm',
