@@ -1,6 +1,4 @@
-import '@/app/globals.css';
-
-export default function Index() {
+export default function About() {
   return (
     <main className='bg-white'>
       <section className='flex min-h-screen flex-col items-center justify-center px-6'>
