@@ -27,7 +27,7 @@ export default function Home() {
               workflows, and an open ecosystem for innovation
             </p>
             <div className='flex flex-col items-center justify-center gap-4 md:flex-row'>
-              <Link href='/login'>
+              <Link href='/signup'>
                 <Button variant='primary'>Join the Revolution</Button>
               </Link>
               <Link href='/#features'>

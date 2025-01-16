@@ -26,8 +26,8 @@ export function Header() {
               </Link>
             </div>
           </div>
-          <Link aria-disabled href='/login'>
-            <Button aria-disabled disabled variant='primary' size='sm'>
+          <Link href='/login'>
+            <Button variant='primary' size='sm'>
               Login
             </Button>
           </Link>

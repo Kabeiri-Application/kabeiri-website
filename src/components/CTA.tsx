@@ -15,7 +15,7 @@ export function CTA({ className }: { className?: string }) {
           the platform that&apos;s reshaping the future of automotive care.
         </p>
         <div className='flex flex-col justify-center gap-3 sm:gap-4 md:flex-row'>
-          <Link href='/login' className='w-full md:w-auto'>
+          <Link href='/signup' className='w-full md:w-auto'>
             <Button variant='primary-white' className='w-full md:w-auto'>
               Get started now →
             </Button>
