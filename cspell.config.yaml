@@ -1,0 +1,5 @@
+$schema: node_modules/@cspell/cspell-types/cspell.schema.json
+allowCompoundWords: true
+useGitignore: true
+ignorePaths: []
+words: []
