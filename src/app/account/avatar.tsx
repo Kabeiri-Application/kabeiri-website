@@ -63,8 +63,8 @@ export default function Avatar({
       }
 
       onUpload(filePath);
-    } catch (error: any) {
-      alert(`Error uploading avatar: ${error.message}`);
+    } catch (error: unknown) {
+      alert(`Error uploading avatar: ${error}`);
     } finally {
       setUploading(false);
     }

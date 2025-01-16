@@ -72,8 +72,8 @@ export default function AccountForm({ user }: { user: User | null }) {
       });
       if (error) throw error;
       alert('Profile updated!');
-    } catch (error: any) {
-      alert(`Error updating the data: ${error.message}`);
+    } catch (error: unknown) {
+      alert(`Error updating the data: ${error}`);
     } finally {
       setLoading(false);
     }
