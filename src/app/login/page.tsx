@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/Button';
 
+import { login } from './actions';
+
 export default function LoginPage() {
   return (
     <main className='flex min-h-screen items-center justify-center bg-white'>
@@ -11,7 +13,7 @@ export default function LoginPage() {
           <p className='mt-2 text-gray-600'>Sign in to your account</p>
         </div>
 
-        <form className='mt-8 space-y-6' action='#' method='POST'>
+        <form className='mt-8 space-y-6' action={login}>
           <div className='space-y-4'>
             <div>
               <label
@@ -71,11 +73,7 @@ export default function LoginPage() {
           </div>
 
           <div className='space-y-4'>
-            <Button
-              type='submit'
-              variant='primary-gradient'
-              className='w-full'
-              disabled>
+            <Button type='submit' variant='primary-gradient' className='w-full'>
               Sign in
             </Button>
 

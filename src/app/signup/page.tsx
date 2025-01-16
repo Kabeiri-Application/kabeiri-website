@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/Button';
 
+import { signup } from './actions';
+
 export default function SignupPage() {
   return (
     <main className='flex min-h-screen items-center justify-center bg-white'>
@@ -13,7 +15,7 @@ export default function SignupPage() {
           <p className='mt-2 text-gray-600'>Sign up to get started</p>
         </div>
 
-        <form className='mt-8 space-y-6' action='#' method='POST'>
+        <form className='mt-8 space-y-6' action={signup}>
           <div className='space-y-4'>
             <div>
               <label
@@ -39,7 +41,7 @@ export default function SignupPage() {
               </label>
               <input
                 id='new-password'
-                name='new-password'
+                name='password'
                 type='password'
                 autoComplete='new-password'
                 required
@@ -65,11 +67,7 @@ export default function SignupPage() {
           </div>
 
           <div className='space-y-4'>
-            <Button
-              type='submit'
-              variant='primary-gradient'
-              className='w-full'
-              disabled>
+            <Button type='submit' variant='primary-gradient' className='w-full'>
               Sign up
             </Button>
 
