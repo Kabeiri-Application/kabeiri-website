@@ -6,6 +6,8 @@ import { type User } from '@supabase/supabase-js';
 
 import { createClient } from '@/utils/supabase/client';
 
+import Avatar from './avatar';
+
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-white'>
+    <main className='flex min-h-screen items-center justify-center bg-white pt-28'>
       <div className='m-4 w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg'>
         <div className='text-center'>
           <h1 className='text-3xl font-bold text-gray-900'>Account Settings</h1>
@@ -87,6 +89,16 @@ export default function AccountForm({ user }: { user: User | null }) {
 
         <div className='mt-8 space-y-6'>
           <div className='space-y-4'>
+            <Avatar
+              uid={user?.id ?? null}
+              url={avatar_url}
+              size={150}
+              onUpload={(url) => {
+                setAvatarUrl(url);
+                updateProfile({ fullname, username, website, avatar_url: url });
+              }}
+            />
+
             <div>
               <label
                 htmlFor='email'
@@ -168,6 +180,6 @@ export default function AccountForm({ user }: { user: User | null }) {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
