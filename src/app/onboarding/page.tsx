@@ -4,13 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { submitInitialData } from './actions';
+
 const formSchema = z.object({
   firstName: z.string().min(1, 'First name must be at least 1 characters'),
   lastName: z.string().min(1, 'Last name must be at least 1 characters'),
   email: z.string().email('Invalid email address'),
   streetAddress: z.string().min(5, 'Street address is required'),
   city: z.string().min(2, 'City is required'),
-  state: z.string().min(2).length(2, 'Please enter 2-letter state code'),
+  state: z.string().min(2, 'Please enter a 2-letter state code'),
   zipCode: z.string().regex(/^\d{5}$/, 'Invalid ZIP code'),
   certificates: z.instanceof(FileList).optional(),
 });
@@ -26,7 +28,7 @@ export default function OnboardingPage() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormInputs> = (data) => submitInitialData(data);
 
   return (
     <div className='mx-auto max-w-md px-4 pb-24 pt-40'>
@@ -35,7 +37,8 @@ export default function OnboardingPage() {
           <input
             {...register('firstName')}
             placeholder='First Name'
-            className='w-full rounded border p-2'
+            className='w-full rounded-lg border p-3'
+            autoComplete='given-name'
           />
           {errors.firstName && (
             <span className='text-sm text-red-500'>
@@ -48,7 +51,8 @@ export default function OnboardingPage() {
           <input
             {...register('lastName')}
             placeholder='Last Name'
-            className='w-full rounded border p-2'
+            className='w-full rounded-lg border p-3'
+            autoComplete='family-name'
           />
           {errors.lastName && (
             <span className='text-sm text-red-500'>
@@ -62,7 +66,8 @@ export default function OnboardingPage() {
             {...register('email')}
             placeholder='Email'
             type='email'
-            className='w-full rounded border p-2'
+            className='w-full rounded-lg border p-3'
+            autoComplete='email'
           />
           {errors.email && (
             <span className='text-sm text-red-500'>{errors.email.message}</span>
@@ -73,7 +78,8 @@ export default function OnboardingPage() {
           <input
             {...register('streetAddress')}
             placeholder='Street Address'
-            className='w-full rounded border p-2'
+            className='w-full rounded-lg border p-3'
+            autoComplete='address-line1'
           />
           {errors.streetAddress && (
             <span className='text-sm text-red-500'>
@@ -87,7 +93,8 @@ export default function OnboardingPage() {
             <input
               {...register('city')}
               placeholder='City'
-              className='w-full rounded border p-2'
+              className='w-full rounded-lg border p-3'
+              autoComplete='address-level2'
             />
             {errors.city && (
               <span className='text-sm text-red-500'>
@@ -100,7 +107,8 @@ export default function OnboardingPage() {
             <input
               {...register('state')}
               placeholder='State'
-              className='w-full rounded border p-2'
+              className='w-full rounded-lg border p-3'
+              autoComplete='address-level1'
             />
             {errors.state && (
               <span className='text-sm text-red-500'>
@@ -113,7 +121,8 @@ export default function OnboardingPage() {
             <input
               {...register('zipCode')}
               placeholder='ZIP Code'
-              className='w-full rounded border p-2'
+              className='w-full rounded-lg border p-3'
+              autoComplete='postal-code'
             />
             {errors.zipCode && (
               <span className='text-sm text-red-500'>
@@ -130,7 +139,7 @@ export default function OnboardingPage() {
               type='file'
               multiple
               {...register('certificates')}
-              className='mt-1 w-full rounded border p-2'
+              className='w-full cursor-pointer rounded-lg border p-3'
               accept='.pdf,.jpg,.jpeg,.png'
             />
           </label>
@@ -143,7 +152,7 @@ export default function OnboardingPage() {
 
         <button
           type='submit'
-          className='w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-600'>
+          className='w-full rounded-lg bg-black p-2 text-white transition-colors duration-300 hover:bg-green-700'>
           Submit
         </button>
       </form>
