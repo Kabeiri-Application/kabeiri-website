@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -15,6 +17,7 @@ const formSchema = z.object({
   state: z.string().min(2, 'Please enter a 2-letter state code'),
   zipCode: z.string().regex(/^\d{5}$/, 'Invalid ZIP code'),
   certificates: z.instanceof(FileList).optional(),
+  services: z.array(z.string()).optional(),
 });
 
 type FormInputs = z.infer<typeof formSchema>;
@@ -29,6 +32,25 @@ export default function OnboardingPage() {
   });
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => submitInitialData(data);
+
+  const [inputValue, setInputValue] = useState('');
+  const [items, setItems] = useState([]);
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyPress = (event) => {
+    event.preventDefault();
+    setItems([...items, inputValue]);
+    setInputValue('');
+  };
+
+  const handleRemove = (index) => {
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    setItems(newItems);
+  };
 
   return (
     <div className='mx-auto max-w-md px-4 pb-24 pt-40'>
@@ -149,6 +171,34 @@ export default function OnboardingPage() {
             </span>
           )}
         </div>
+        <h1>Services</h1>
+        <div className='flex flex-row items-center'>
+          <input
+            className='w-full rounded-lg border p-3'
+            type='text'
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder='Add a new service'
+          />
+          <button
+            className='m-2 w-auto rounded-lg bg-black px-2 py-1 text-white transition-colors duration-300 hover:bg-green-700'
+            onClick={handleKeyPress}>
+            Add
+          </button>
+        </div>
+
+        <ul {...register('services')}>
+          {items.map((item, index) => (
+            <div key={index} className='flex flex-row items-center'>
+              <li>{item}</li>
+              <button
+                onClick={handleRemove}
+                className='m-2 w-auto rounded-lg bg-black px-2 py-1 text-white transition-colors duration-300 hover:bg-green-700'>
+                x
+              </button>
+            </div>
+          ))}
+        </ul>
 
         <button
           type='submit'
