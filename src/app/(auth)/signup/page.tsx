@@ -1,17 +1,30 @@
+'use client';
+
+import { useActionState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/Button';
 
-export default function LoginPage() {
+import { signup } from './actions';
+
+const initialState = {
+  error: '',
+};
+
+export default function SignupPage() {
+  const [state, formAction, pending] = useActionState(signup, initialState);
+
   return (
     <main className='flex min-h-screen items-center justify-center bg-white'>
       <div className='m-4 w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg'>
         <div className='text-center'>
-          <h1 className='text-3xl font-bold text-gray-900'>Welcome back</h1>
-          <p className='mt-2 text-gray-600'>Sign in to your account</p>
+          <h1 className='text-3xl font-bold text-gray-900'>
+            Create an account
+          </h1>
+          <p className='mt-2 text-gray-600'>Sign up to get started</p>
         </div>
 
-        <form className='mt-8 space-y-6' action='#' method='POST'>
+        <form className='mt-8 space-y-6' action={formAction}>
           <div className='space-y-4'>
             <div>
               <label
@@ -31,61 +44,57 @@ export default function LoginPage() {
 
             <div>
               <label
-                htmlFor='password'
+                htmlFor='new-password'
                 className='block text-sm font-medium text-gray-700'>
                 Password
               </label>
               <input
-                id='password'
+                id='new-password'
                 name='password'
                 type='password'
-                autoComplete='current-password'
+                autoComplete='new-password'
+                required
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor='confirm-password'
+                className='block text-sm font-medium text-gray-700'>
+                Confirm password
+              </label>
+              <input
+                id='confirm-password'
+                name='confirm-password'
+                type='password'
+                autoComplete='new-password'
                 required
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
               />
             </div>
           </div>
 
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center'>
-              <input
-                id='remember-me'
-                name='remember-me'
-                type='checkbox'
-                className='size-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
-              />
-              <label
-                htmlFor='remember-me'
-                className='ml-2 block text-sm text-gray-700'>
-                Remember me
-              </label>
-            </div>
-
-            <div className='text-sm'>
-              <Link
-                href='#forgot-password'
-                className='font-medium text-purple-600 hover:text-purple-500'>
-                Forgot your password?
-              </Link>
-            </div>
-          </div>
+          {state.error && (
+            <div className='text-center text-red-500'>{state.error}</div>
+          )}
 
           <div className='space-y-4'>
             <Button
               type='submit'
               variant='primary-gradient'
               className='w-full'
-              disabled>
-              Sign in
+              disabled={pending}>
+              Sign up
             </Button>
 
             <div className='text-center'>
               <span className='text-sm text-gray-600'>
-                Don&apos;t have an account?{' '}
+                Already have an account?{' '}
                 <Link
-                  href='/signup'
+                  href='/login'
                   className='font-medium text-purple-600 hover:text-purple-500'>
-                  Sign up
+                  Sign in
                 </Link>
               </span>
             </div>
