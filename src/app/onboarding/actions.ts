@@ -13,7 +13,7 @@ type OrganizationData = {
 };
 
 export async function submitInitialData(
-  formData: OrganizationData & { certificates?: FileList }
+  formData: OrganizationData & { certificates?: File }
 ) {
   const supabase = await createClient();
   const {
@@ -38,8 +38,8 @@ export async function submitInitialData(
     if (orgError) throw orgError;
 
     // Handle certificate upload if provided
-    if (formData.certificates?.[0]) {
-      const file = formData.certificates[0];
+    if (formData.certificates) {
+      const file = formData.certificates;
       const fileExt = file.name.split('.').pop();
       const filePath = `${user.id}-${Math.random()}.${fileExt}`;
 
