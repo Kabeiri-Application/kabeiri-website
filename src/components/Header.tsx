@@ -69,19 +69,29 @@ export function Header() {
             </span>
           </Link>
 
-          <div className='absolute left-1/2 -translate-x-1/2'>
-            <div className='hidden items-center gap-8 text-lg font-semibold text-gray-600 transition-colors md:flex'>
-              <Link href='/#features' className='hover:text-gray-900'>
-                Features
-              </Link>
-              <Link href='/pricing' className='hover:text-gray-900'>
-                Pricing
-              </Link>
-              <Link href='/about' className='hover:text-gray-900'>
-                About
-              </Link>
+          {session ? (
+            <div className='absolute left-1/2 -translate-x-1/2'>
+              <div className='hidden items-center gap-8 text-lg font-semibold text-gray-600 transition-colors md:flex'>
+                <Link href='/dashboard' className='hover:text-gray-900'>
+                  Dashboard
+                </Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className='absolute left-1/2 -translate-x-1/2'>
+              <div className='hidden items-center gap-8 text-lg font-semibold text-gray-600 transition-colors md:flex'>
+                <Link href='/#features' className='hover:text-gray-900'>
+                  Features
+                </Link>
+                <Link href='/pricing' className='hover:text-gray-900'>
+                  Pricing
+                </Link>
+                <Link href='/about' className='hover:text-gray-900'>
+                  About
+                </Link>
+              </div>
+            </div>
+          )}
 
           {session ? (
             <Link
