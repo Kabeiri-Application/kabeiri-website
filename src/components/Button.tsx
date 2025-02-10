@@ -1,7 +1,7 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const button = tv({
-  base: 'rounded-full font-semibold transition-all',
+  base: 'flex flex-row items-center justify-center rounded-full font-semibold transition-all',
   variants: {
     variant: {
       primary: 'bg-black text-white enabled:hover:bg-gray-800',
