@@ -2,7 +2,7 @@ import { BarChart3, Clock, DollarSign, Wrench } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
-    <main className='min-h-screen bg-gray-50 p-8 pt-32'>
+    <main className='p-8'>
       <div className='mx-auto max-w-7xl'>
         <h1 className='mb-8 text-3xl font-bold'>Dashboard</h1>
 
