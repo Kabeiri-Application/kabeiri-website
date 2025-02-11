@@ -14,8 +14,12 @@ export async function POST(req: NextRequest) {
     await supabase.auth.signOut();
   }
 
+  const protocol = req.headers.get('x-forwarded-proto') || 'http';
+  const host = req.headers.get('host') || '';
+  const baseUrl = `${protocol}://${host}`;
+
   revalidatePath('/', 'layout');
-  return NextResponse.redirect(new URL('/', req.url), {
-    status: 303,
+  return NextResponse.redirect(baseUrl, {
+    status: 302,
   });
 }
