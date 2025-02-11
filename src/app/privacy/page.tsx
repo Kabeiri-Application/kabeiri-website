@@ -16,6 +16,7 @@ export default function Privacy() {
           </p>
         </div>
 
+        {/* cspell:disable */}
         <div className='w-full rounded-2xl bg-gray-50 p-8 sm:p-12'>
           <h2 className='text-xl font-semibold text-gray-900'>
             1. Information Collection
@@ -25,7 +26,6 @@ export default function Privacy() {
             blanditiis praesentium voluptatum deleniti atque corrupti quos
             dolores.
           </p>
-
           <h2 className='text-xl font-semibold text-gray-900'>2. Data Usage</h2>
           <p className='mb-8 text-gray-600'>
             Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
@@ -56,6 +56,7 @@ export default function Privacy() {
             reiciendis voluptatibus maiores alias consequatur.
           </p>
         </div>
+        {/* cspell:enable */}
       </section>
     </main>
   );
