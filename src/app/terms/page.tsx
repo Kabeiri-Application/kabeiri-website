@@ -11,6 +11,7 @@ export default function Terms() {
           </p>
         </div>
 
+        {/* cspell:disable */}
         <div className='w-full rounded-2xl bg-gray-50 p-8 sm:p-12'>
           <h2 className='text-xl font-semibold text-gray-900'>
             1. Agreement to Terms
@@ -52,6 +53,7 @@ export default function Terms() {
             consectetur, adipisci velit, sed quia non numquam.
           </p>
         </div>
+        {/* cspell:enable */}
       </section>
     </main>
   );

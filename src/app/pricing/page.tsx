@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { Check } from 'lucide-react';
+
 import { Button } from '@/components/Button';
 import { cn } from '@/utils/cn';
 
@@ -192,18 +194,7 @@ const PricingCard = ({
         <ul className='mt-8 space-y-4 text-sm text-gray-600'>
           {features.map((feature, index) => (
             <li key={index} className='flex items-center'>
-              <svg
-                className='mr-3 size-5 text-purple-500'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M5 13l4 4L19 7'
-                />
-              </svg>
+              <Check className='mr-3 size-5 text-purple-500' />
               {feature}
             </li>
           ))}

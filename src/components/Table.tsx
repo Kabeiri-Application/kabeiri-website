@@ -8,11 +8,12 @@ import {
 } from '@tanstack/react-table';
 
 interface TableProps<TData> {
-  columns: ColumnDef<TData, unknown>[];
   data: TData[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<TData, any>[];
 }
 
-export function Table<TData>({ columns, data }: TableProps<TData>) {
+export function Table<TData>({ data, columns }: TableProps<TData>) {
   const table = useReactTable({
     data,
     columns,

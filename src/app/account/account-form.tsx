@@ -170,7 +170,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               {loading ? 'Loading ...' : 'Update Profile'}
             </button>
 
-            <form action='/auth/signout' method='post'>
+            <form action='/signout' method='post'>
               <button
                 type='submit'
                 className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2'>

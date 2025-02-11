@@ -12,7 +12,8 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "spellcheck": "cspell lint --quiet .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "clean": "git clean -xdf node_modules .next tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
