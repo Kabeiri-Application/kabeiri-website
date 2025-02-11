@@ -54,6 +54,11 @@ export function Header() {
 
   return (
     <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md'>
+      <div className='flex cursor-progress items-center justify-center bg-gradient-to-b from-purple-600 to-pink-600 py-2'>
+        <span className='font-bold text-white'>
+          🚧 This site is under construction 🚧
+        </span>
+      </div>
       <nav className='mx-auto max-w-7xl px-6 py-4'>
         <div className='flex items-center justify-between'>
           <Link href='/' className='relative text-2xl font-bold'>
@@ -109,11 +114,6 @@ export function Header() {
           )}
         </div>
       </nav>
-      <div className='flex cursor-progress items-center justify-center bg-gradient-to-b from-purple-600 to-pink-600 py-2'>
-        <span className='font-bold text-white'>
-          🚧 This site is under construction 🚧
-        </span>
-      </div>
     </header>
   );
 }
