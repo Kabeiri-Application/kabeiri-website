@@ -62,7 +62,7 @@ export function Header() {
       </div>
       <nav className='mx-auto max-w-7xl px-6 py-4'>
         <div className='flex items-center justify-between'>
-          <Link href='/' className='relative text-2xl font-bold'>
+          <Link href='/' className='relative -top-1 text-2xl font-bold'>
             Kabeiri
             <span className='absolute -bottom-4 right-0 rounded-full rounded-tl-none bg-gradient-to-b from-purple-600 to-pink-600 px-2 py-0.5 text-xs font-semibold text-white'>
               BETA
