@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+import { Upload, User } from 'lucide-react';
+
 import { createClient } from '@/utils/supabase/client';
 
 export default function Avatar({
@@ -85,9 +87,7 @@ export default function Avatar({
         <div
           className='flex items-center justify-center rounded-full bg-purple-100 text-purple-600'
           style={{ height: size, width: size }}>
-          <svg className='size-24' fill='currentColor' viewBox='0 0 24 24'>
-            <path d='M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8c0 2.208-1.79 4-3.998 4-2.208 0-3.998-1.792-3.998-4 0-2.208 1.79-4 3.998-4 2.208 0 3.998 1.792 3.998 4z' />
-          </svg>
+          <User className='size-24' />
         </div>
       )}
       <div className='w-full'>
@@ -117,19 +117,7 @@ export default function Avatar({
             </div>
           ) : (
             <div className='flex items-center space-x-2'>
-              <svg
-                className='size-5'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-                xmlns='http://www.w3.org/2000/svg'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
-                />
-              </svg>
+              <Upload className='size-4' />
               <span>Upload new image</span>
             </div>
           )}

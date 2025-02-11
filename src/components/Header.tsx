@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { type Session } from '@supabase/supabase-js';
+import { User } from 'lucide-react';
 
 import { Button } from '@/components/Button';
 import { createClient } from '@/utils/supabase/client';
@@ -96,12 +97,7 @@ export function Header() {
                 />
               ) : (
                 <div className='flex size-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 transition-colors group-hover:bg-purple-200'>
-                  <svg
-                    className='size-6'
-                    fill='currentColor'
-                    viewBox='0 0 24 24'>
-                    <path d='M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8c0 2.208-1.79 4-3.998 4-2.208 0-3.998-1.792-3.998-4 0-2.208 1.79-4 3.998-4 2.208 0 3.998 1.792 3.998 4z' />
-                  </svg>
+                  <User />
                 </div>
               )}
             </Link>
