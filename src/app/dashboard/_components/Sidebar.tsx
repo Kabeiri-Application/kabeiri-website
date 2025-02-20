@@ -21,6 +21,7 @@ import { createClient } from '@/utils/supabase/client';
 
 export function Sidebar() {
   const pathname = usePathname();
+  const supabase = createClient();
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -35,9 +36,7 @@ export function Sidebar() {
     { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
     { name: 'Pricing', href: '/dashboard/pricing', icon: DollarSign },
   ];
-  const supabase = createClient();
 
-  const [session, setSession] = useState<Session | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export function Sidebar() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      setSession(session);
 
       if (session?.user) {
         const { data } = await supabase
@@ -68,14 +66,6 @@ export function Sidebar() {
     };
 
     getSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
   }, [supabase]);
 
   return (
