@@ -2,34 +2,40 @@ import Image from 'next/image';
 
 const TEAM_MEMBERS = [
   {
-    name: 'Jane Doe',
+    name: 'Jesus Martinez',
     role: 'CEO & Co-founder',
-    image: 'https://placehold.co/400x400/purple/white?text=JD',
+    image: 'https://placehold.co/400x400/purple/white?text=JM',
+    link: '',
   },
   {
-    name: 'John Doe',
-    role: 'CTO & Co-founder',
-    image: 'https://placehold.co/400x400/pink/white?text=JD',
+    name: 'Joshua Grossman',
+    role: 'Co-CTO & Head of Product',
+    image: 'https://placehold.co/400x400/pink/white?text=JG',
+    link: '',
   },
   {
-    name: 'Jane Doe',
-    role: 'Head of Product',
-    image: 'https://placehold.co/400x400/blue/white?text=JD',
+    name: 'Zaker Choudhury',
+    role: 'Co-CTO & Head of Engineering',
+    image: 'https://placehold.co/400x400/blue/white?text=ZC',
+    link: '',
   },
   {
-    name: 'John Doe',
-    role: 'Lead Engineer',
-    image: 'https://placehold.co/400x400/red/white?text=JD',
+    name: 'Dinuka Ranasinghe',
+    role: 'COO & Co-Founder',
+    image: 'https://placehold.co/400x400/red/white?text=DR',
+    link: '',
   },
   {
-    name: 'Jane Doe',
-    role: 'Head of Design',
-    image: 'https://placehold.co/400x400/green/white?text=JD',
+    name: 'Khurshid Salma',
+    role: 'Advisor',
+    image: 'https://placehold.co/400x400/green/white?text=KS',
+    link: '',
   },
   {
-    name: 'John Doe',
-    role: 'Head of Business Development',
-    image: 'https://placehold.co/400x400/orange/white?text=JD',
+    name: 'Jerome Homes',
+    role: 'Co-Founder',
+    image: 'https://placehold.co/400x400/orange/white?text=JH',
+    link: '',
   },
 ] as const;
 
