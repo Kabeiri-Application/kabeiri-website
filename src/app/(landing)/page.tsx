@@ -1,12 +1,13 @@
 import Link from 'next/link';
 
 import {
-  Building,
   Download,
   MonitorCog,
   ShieldCheck,
   ShoppingCart,
+  Truck,
   Users,
+  Workflow,
 } from 'lucide-react';
 
 import { Button } from '@/components/Button';
@@ -55,11 +56,21 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className='flex size-10 items-center justify-center rounded-xl bg-blue-100 sm:size-12'>
-                  <Building className='size-5 text-blue-600 sm:size-6' />
+                  <Workflow className='size-5 text-blue-600 sm:size-6' />
                 </div>
               }
               title='Digital Workflows'
               description='Streamlined operations for mechanics and workshops with smart scheduling, digital documentation, and automated reporting.'
+            />
+
+            <FeatureCard
+              icon={
+                <div className='flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12'>
+                  <Truck className='size-5 text-purple-600 sm:size-6' />
+                </div>
+              }
+              title='Inventory Management System'
+              description='Advanced real-time Inventory management and procurement system for automotive parts and supplies.'
             />
 
             <FeatureCard
@@ -100,16 +111,6 @@ export default function Home() {
               }
               title='Enterprise Security'
               description='Military-grade security protocols and compliance measures to protect your sensitive automotive data.'
-            />
-
-            <FeatureCard
-              icon={
-                <div className='flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12'>
-                  <MonitorCog className='size-5 text-purple-600 sm:size-6' />
-                </div>
-              }
-              title='AI-Powered Diagnostics'
-              description='Advanced real-time diagnostics and predictive maintenance powered by our proprietary AI technology and OBD integration.'
             />
           </div>
         </div>
