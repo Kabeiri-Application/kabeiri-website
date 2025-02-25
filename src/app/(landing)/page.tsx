@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import {
   Download,
-  MonitorCog,
   ShieldCheck,
   ShoppingCart,
   Truck,
