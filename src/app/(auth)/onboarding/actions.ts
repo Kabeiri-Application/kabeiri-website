@@ -6,8 +6,6 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 
 type OrganizationData = {
-  firstName: string;
-  lastName: string;
   businessName: string;
   streetAddress: string;
   city: string;
