@@ -47,7 +47,7 @@ export default function About() {
           <h1 className='mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl'>
             Revolutionizing
             <br />
-            <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
+            <span className='bg-gradient-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent'>
               Automotive Care
             </span>
           </h1>
