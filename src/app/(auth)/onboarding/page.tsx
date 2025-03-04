@@ -146,11 +146,11 @@ export default function OnboardingPage() {
               accept='.pdf,.jpg,.jpeg,.png'
             />
           </label>
-          {errors.certificates && (
+          {/* {errors.certificates && (
             <span className='text-sm text-red-500'>
               {errors.certificates.message}
             </span>
-          )}
+          )} */}
         </div>
 
         <button
