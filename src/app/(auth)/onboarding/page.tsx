@@ -16,7 +16,7 @@ const formSchema = z.object({
   city: z.string().min(2, 'City is required'),
   state: z.string().min(2, 'Please enter a 2-letter state code'),
   zipCode: z.string().regex(/^\d{5}$/, 'Invalid ZIP code'),
-  certificates: z.instanceof(File).optional(),
+  certificates: z.any(),
 });
 
 type FormInputs = z.infer<typeof formSchema>;
