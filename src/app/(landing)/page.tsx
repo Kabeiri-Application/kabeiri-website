@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 import {
-  Building,
   Download,
-  MonitorCog,
   ShieldCheck,
   ShoppingCart,
+  Truck,
   Users,
+  Workflow,
 } from 'lucide-react';
 
 import { Button } from '@/components/Button';
@@ -20,27 +20,27 @@ export default function Home() {
         <div className='mx-auto max-w-7xl pt-16 sm:pt-20'>
           <div className='mx-auto max-w-4xl text-center'>
             <div className='mb-4 flex items-center justify-center'>
-              <span className='rounded-full border border-purple-600 px-3 py-1 text-sm font-semibold text-purple-600 sm:px-4 sm:text-base'>
+              {/* <span className='rounded-full border border-purple-600 px-3 py-1 text-sm font-semibold text-purple-600 sm:px-4 sm:text-base'>
                 The Future of Automotive Care
-              </span>
+              </span> */}
             </div>
             <h2 className='mb-6 text-5xl font-bold tracking-tight sm:mb-8 sm:text-6xl lg:text-7xl'>
-              The Operating System for
+              The Future of
               <br />
               <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
-                Modern Auto Service
+                Automotive Repair
               </span>
             </h2>
             <p className='mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-gray-600 sm:mb-12 sm:text-xl md:text-2xl'>
-              Revolutionizing automotive care with AI diagnostics, digital
-              workflows, and an open ecosystem for innovation
+              Revolutionizing the automotive repair experience for mechanics,
+              repair shops, and vehicle owners alike
             </p>
             <div className='flex flex-col items-center justify-center gap-4 md:flex-row'>
               <Link href='/signup'>
                 <Button variant='primary'>Join the Revolution</Button>
               </Link>
               <Link href='/#features'>
-                <Button variant='secondary'>Explore Platform →</Button>
+                <Button variant='secondary'>Explore the Platform →</Button>
               </Link>
             </div>
           </div>
@@ -54,22 +54,22 @@ export default function Home() {
           <div className='grid grid-cols-1 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-20 md:grid-cols-2 lg:grid-cols-3'>
             <FeatureCard
               icon={
-                <div className='flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12'>
-                  <MonitorCog className='size-5 text-purple-600 sm:size-6' />
-                </div>
-              }
-              title='AI-Powered Diagnostics'
-              description='Advanced real-time diagnostics and predictive maintenance powered by our proprietary AI technology and OBD integration.'
-            />
-
-            <FeatureCard
-              icon={
                 <div className='flex size-10 items-center justify-center rounded-xl bg-blue-100 sm:size-12'>
-                  <Building className='size-5 text-blue-600 sm:size-6' />
+                  <Workflow className='size-5 text-blue-600 sm:size-6' />
                 </div>
               }
               title='Digital Workflows'
               description='Streamlined operations for mechanics and workshops with smart scheduling, digital documentation, and automated reporting.'
+            />
+
+            <FeatureCard
+              icon={
+                <div className='flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12'>
+                  <Truck className='size-5 text-purple-600 sm:size-6' />
+                </div>
+              }
+              title='Inventory Management System'
+              description='Advanced real-time Inventory management and procurement system for automotive parts and supplies.'
             />
 
             <FeatureCard
@@ -109,7 +109,7 @@ export default function Home() {
                 </div>
               }
               title='Enterprise Security'
-              description='Bank-grade security protocols and compliance measures to protect your sensitive automotive data.'
+              description='Military-grade security protocols and compliance measures to protect your sensitive automotive data.'
             />
           </div>
         </div>
