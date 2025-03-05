@@ -13,7 +13,6 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [loading, setLoading] = useState(true);
   const [fullname, setFullname] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
-  const [website, setWebsite] = useState<string | null>(null);
   const [avatar_url, setAvatarUrl] = useState<string | null>(null);
 
   const getProfile = useCallback(async () => {
@@ -34,7 +33,6 @@ export default function AccountForm({ user }: { user: User | null }) {
       if (data) {
         setFullname(data.full_name);
         setUsername(data.username);
-        setWebsite(data.website);
         setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
@@ -51,12 +49,11 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   async function updateProfile({
     username,
-    website,
+    fullname,
     avatar_url,
   }: {
     username: string | null;
     fullname: string | null;
-    website: string | null;
     avatar_url: string | null;
   }) {
     try {
@@ -66,7 +63,6 @@ export default function AccountForm({ user }: { user: User | null }) {
         id: user?.id as string,
         full_name: fullname,
         username,
-        website,
         avatar_url,
         updated_at: new Date().toISOString(),
       });
@@ -95,7 +91,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               size={150}
               onUpload={(url) => {
                 setAvatarUrl(url);
-                updateProfile({ fullname, username, website, avatar_url: url });
+                updateProfile({ fullname, username, avatar_url: url });
               }}
             />
 
@@ -143,29 +139,12 @@ export default function AccountForm({ user }: { user: User | null }) {
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
               />
             </div>
-
-            <div>
-              <label
-                htmlFor='website'
-                className='block text-sm font-medium text-gray-700'>
-                Website
-              </label>
-              <input
-                id='website'
-                type='url'
-                value={website || ''}
-                onChange={(e) => setWebsite(e.target.value)}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
-              />
-            </div>
           </div>
 
           <div className='space-y-4'>
             <button
               className='w-full rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-2 text-white hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50'
-              onClick={() =>
-                updateProfile({ fullname, username, website, avatar_url })
-              }
+              onClick={() => updateProfile({ fullname, username, avatar_url })}
               disabled={loading}>
               {loading ? 'Loading ...' : 'Update Profile'}
             </button>
