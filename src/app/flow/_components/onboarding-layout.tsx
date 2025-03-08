@@ -78,51 +78,56 @@ function CarStepper({
 
   return (
     <div className='relative'>
-      {/* Road */}
-      <div className='relative h-2 rounded-full bg-gray-200'>
-        {/* Completed road */}
+      {/* Progress Track */}
+      <div className='relative mb-12'>
+        {/* Base Track */}
+        <div className='absolute left-0 top-1.5 h-1 w-full bg-gray-200' />
+
+        {/* Progress Bar */}
         <div
-          className='absolute left-0 h-full rounded-full bg-black transition-all duration-500 ease-in-out'
+          className='absolute left-0 top-1.5 h-1 bg-black transition-all duration-500 ease-in-out'
           style={{ width: `${progress}%` }}
         />
 
-        {/* Step markers */}
-        {steps.map((step) => (
-          <div
-            key={step}
-            className={cn(
-              'absolute top-1/2 size-4 -translate-y-1/2 rounded-full transition-all duration-300',
-              step <= currentStep ? 'bg-black' : 'bg-gray-300'
-            )}
-            style={{ left: `${((step - 1) / (totalSteps - 1)) * 100}%` }}
-          />
-        ))}
-
         {/* Car */}
         <div
-          className='absolute top-0 -translate-y-full transition-all duration-500 ease-in-out'
+          className='absolute -top-6 left-0 z-20 transition-all duration-500 ease-in-out'
           style={{
             left: `${progress}%`,
-            transform: `translateX(-50%) translateY(-100%)`,
+            transform: `translateX(-50%)`,
           }}>
-          <Car className='size-10' />
+          <Car className='size-5' />
         </div>
-      </div>
 
-      {/* Step labels */}
-      <div className='mt-6 flex justify-between'>
-        {steps.map((step) => (
-          <div
-            key={step}
-            className={cn(
-              'text-sm font-medium transition-colors',
-              step <= currentStep ? 'text-black' : 'text-gray-400'
-            )}>
-            {step === 1 && 'Account'}
-            {step === 2 && 'Personal'}
-            {step === 3 && 'Preferences'}
-          </div>
-        ))}
+        {/* Steps */}
+        <div className='relative flex justify-between'>
+          {steps.map((step) => {
+            const isActive = step <= currentStep;
+
+            return (
+              <div key={step} className='relative flex flex-col items-center'>
+                {/* Step Marker */}
+                <div
+                  className={cn(
+                    'relative z-10 size-4 rounded-full border-4 border-gray-200 bg-white transition-colors duration-700',
+                    isActive && 'border-black bg-black'
+                  )}
+                />
+
+                {/* Label */}
+                <span
+                  className={cn(
+                    'absolute top-8 whitespace-nowrap text-sm font-medium transition-colors duration-700',
+                    isActive ? 'text-black' : 'text-gray-400'
+                  )}>
+                  {step === 1 && 'Account'}
+                  {step === 2 && 'Personal'}
+                  {step === 3 && 'Preferences'}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
