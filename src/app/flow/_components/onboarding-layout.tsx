@@ -91,12 +91,17 @@ function CarStepper({
 
         {/* Car */}
         <div
-          className='absolute -top-6 left-0 z-20 transition-all duration-500 ease-in-out'
+          className='absolute -top-10 left-0 z-20 transition-all duration-500 ease-in-out'
           style={{
             left: `${progress}%`,
-            transform: `translateX(-50%)`,
+            transform:
+              progress === 0
+                ? 'translateX(-30%)'
+                : progress === 100
+                  ? 'translateX(-70%)'
+                  : 'translateX(-50%)',
           }}>
-          <Car className='size-5' />
+          <Car className='size-10' />
         </div>
 
         {/* Steps */}
