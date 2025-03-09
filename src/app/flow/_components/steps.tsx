@@ -10,7 +10,7 @@ export function AccountStep({ form }: { form: UseFormReturn<FormData> }) {
       <h2 className='text-2xl font-semibold tracking-tight'>
         Create your account
       </h2>
-      <p className='text-muted-foreground'>
+      <p className='text-gray-600'>
         Enter your email and create a password to get started
       </p>
 
@@ -61,9 +61,7 @@ export function PersonalStep({ form }: { form: UseFormReturn<FormData> }) {
       <h2 className='text-2xl font-semibold tracking-tight'>
         Tell us about yourself
       </h2>
-      <p className='text-muted-foreground'>
-        Help us personalize your experience
-      </p>
+      <p className='text-gray-600'>Help us personalize your experience</p>
 
       <div className='space-y-4'>
         <div className='grid grid-cols-2 gap-4'>
@@ -131,7 +129,7 @@ export function PreferencesStep({ form }: { form: UseFormReturn<FormData> }) {
       <h2 className='text-2xl font-semibold tracking-tight'>
         Stay in the loop
       </h2>
-      <p className='text-muted-foreground'>
+      <p className='text-gray-600'>
         Choose how you&apos;d like to hear from us
       </p>
 
@@ -140,7 +138,7 @@ export function PreferencesStep({ form }: { form: UseFormReturn<FormData> }) {
           <input
             {...form.register('marketingEmails')}
             type='checkbox'
-            className='h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
+            className='size-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
           />
           <span className='text-sm'>Receive marketing emails</span>
         </label>
@@ -149,7 +147,7 @@ export function PreferencesStep({ form }: { form: UseFormReturn<FormData> }) {
           <input
             {...form.register('productUpdates')}
             type='checkbox'
-            className='h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
+            className='size-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
           />
           <span className='text-sm'>Get product updates</span>
         </label>
@@ -158,7 +156,7 @@ export function PreferencesStep({ form }: { form: UseFormReturn<FormData> }) {
           <input
             {...form.register('newsletterSubscription')}
             type='checkbox'
-            className='h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
+            className='size-5 rounded border-gray-300 focus:ring-2 focus:ring-black'
           />
           <span className='text-sm'>Subscribe to newsletter</span>
         </label>

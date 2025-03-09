@@ -31,18 +31,36 @@ export function OnboardingLayout({
           <div className='flex-1'>
             <h2 className='mb-6 text-3xl font-semibold tracking-tight'>
               {currentStep === 1 && 'Create your account'}
-              {currentStep === 2 && 'Tell us about yourself'}
-              {currentStep === 3 && 'Stay in the loop'}
+              {currentStep === 2 && 'Setup your profile'}
+              {currentStep === 3 && 'Create or join a shop'}
             </h2>
 
-            <p className='mb-8 max-w-md text-lg text-gray-600'>
-              {currentStep === 1 &&
-                'Join our community of drivers and enthusiasts. Set up your account to get started on your journey.'}
-              {currentStep === 2 &&
-                'Help us personalize your experience by sharing a bit about yourself.'}
-              {currentStep === 3 &&
-                'Choose how you&apos;d like to hear from us and stay updated with the latest news and features.'}
-            </p>
+            <div className='mb-8 max-w-md text-lg text-gray-600'>
+              {currentStep === 1 && (
+                <div className='flex flex-col gap-4'>
+                  <p>Get ready to supercharge your workflows with Kabeiri.</p>
+                  <p>
+                    {`If you're a shop owner, you can register your shop and setup your teams.`}
+                  </p>
+                  <p>
+                    {`If you're a team member, and you're shop is already registered, you can join your shop using your shops invite code and start working on your tasks.`}
+                  </p>
+                </div>
+              )}
+              {currentStep === 2 && (
+                <div className='flex flex-col gap-4'>
+                  <p>Setup your profile to help your team get to know you.</p>
+                </div>
+              )}
+              {currentStep === 3 && (
+                <div className='flex flex-col gap-4'>
+                  <p>{`If you're a shop owner, register your shop here.`}</p>
+                  <p>
+                    {`If you're a team member, use your shop's invite code to join your shop.`}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Footer Section */}
@@ -127,7 +145,7 @@ function CarStepper({
                   )}>
                   {step === 1 && 'Account'}
                   {step === 2 && 'Personal'}
-                  {step === 3 && 'Preferences'}
+                  {step === 3 && 'Shop'}
                 </span>
               </div>
             );

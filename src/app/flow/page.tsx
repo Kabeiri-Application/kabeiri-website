@@ -73,7 +73,7 @@ export default function OnboardingPage() {
               'flex items-center space-x-2 rounded-lg px-4 py-2 transition',
               currentStep === 1 ? 'invisible' : 'hover:bg-gray-100'
             )}>
-            <ChevronLeft className='h-4 w-4' />
+            <ChevronLeft className='size-4' />
             <span>Back</span>
           </button>
 
@@ -82,7 +82,7 @@ export default function OnboardingPage() {
             onClick={currentStep === 3 ? undefined : handleNext}
             className='flex items-center space-x-2 rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90'>
             <span>{currentStep === 3 ? 'Complete' : 'Continue'}</span>
-            {currentStep !== 3 && <ChevronRight className='h-4 w-4' />}
+            {currentStep !== 3 && <ChevronRight className='size-4' />}
           </button>
         </div>
       </form>
