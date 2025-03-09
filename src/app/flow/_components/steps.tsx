@@ -2,7 +2,7 @@
 
 import { UseFormReturn } from 'react-hook-form';
 
-import { FormData } from './schema';
+import { FormData } from '@/app/flow/_components/schema';
 
 export function AccountStep({ form }: { form: UseFormReturn<FormData> }) {
   return (

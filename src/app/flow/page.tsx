@@ -6,15 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { cn } from '@/utils/cn';
-
-import { OnboardingLayout } from './_components/onboarding-layout';
-import { FormData, formSchema } from './_components/schema';
+import { OnboardingLayout } from '@/app/flow/_components/onboarding-layout';
+import { FormData, formSchema } from '@/app/flow/_components/schema';
 import {
   AccountStep,
   PersonalStep,
   PreferencesStep,
-} from './_components/steps';
+} from '@/app/flow/_components/steps';
+import { cn } from '@/utils/cn';
 
 type StepFields = keyof FormData;
 
