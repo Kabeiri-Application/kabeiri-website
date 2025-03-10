@@ -1,0 +1,37 @@
+import { z } from 'zod';
+
+export const signupSchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .superRefine((val, ctx) => {
+    if (val.password !== val.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      });
+    }
+  });
+
+export const personalSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  username: z.string().min(1, 'Username is required'),
+  phoneNumber: z.string().min(1, 'Phone number is required'),
+});
+
+export const shopSchema = z.object({
+  shopName: z.string().min(1, 'Shop name is required'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'State is required'),
+  zipCode: z.string().min(1, 'Zip code is required'),
+  website: z.string().optional(),
+});
+
+export type SignupSchema = z.infer<typeof signupSchema>;
+export type PersonalSchema = z.infer<typeof personalSchema>;
+export type ShopSchema = z.infer<typeof shopSchema>;

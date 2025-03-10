@@ -1,30 +1,66 @@
-import { User } from 'lucide-react';
-import type { UseFormReturn } from 'react-hook-form';
+import { startTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { FormData } from '@/app/flow/_components/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 
-export function PersonalForm({ form }: { form: UseFormReturn<FormData> }) {
+import { setPersonalInfo } from '@/app/flow/actions';
+import { personalSchema, type PersonalSchema } from '@/app/flow/schema';
+import { useOnboardingStore } from '@/app/flow/store';
+
+export function PersonalForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { personalInfo, setPersonalInfo: setStorePersonalInfo } =
+    useOnboardingStore();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<PersonalSchema>({
+    resolver: zodResolver(personalSchema),
+    defaultValues: personalInfo,
+  });
+
+  const onSubmit = async (data: PersonalSchema) => {
+    startTransition(async () => {
+      setStorePersonalInfo(data);
+      const response = await setPersonalInfo(data);
+
+      if (response?.error) {
+        setError('root.serverError', {
+          message: response.error,
+        });
+        return;
+      }
+
+      // On success, navigate to next step
+      const params = new URLSearchParams(searchParams);
+      params.set('step', 'shop');
+      router.push(`?${params.toString()}`);
+    });
+  };
+
   return (
     <div className='space-y-6'>
-      <h2 className='text-2xl font-semibold tracking-tight'>
-        Tell us about yourself
-      </h2>
+      <div className='flex items-center gap-4'>
+        <button
+          onClick={() => router.back()}
+          className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100'>
+          <ArrowLeft className='size-5' />
+        </button>
+        <h2 className='text-2xl font-semibold tracking-tight'>
+          Tell us about yourself
+        </h2>
+      </div>
       <p className='text-gray-600'>
         Your profile will be used to identify you.
       </p>
 
-      <div className='space-y-4'>
-        <div>
-          <label htmlFor='avatar' className='mb-2 block text-sm font-medium'>
-            Avatar
-          </label>
-          <div className='flex size-12 items-center justify-center rounded-full bg-gray-600'>
-            <User className='size-10' />
-            {/* <Upload className='size-4' /> */}
-          </div>
-          <input className='hidden' type='file' id='avatar' accept='image/*' />
-        </div>
-
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
         <div className='grid grid-cols-2 gap-4'>
           <div>
             <label
@@ -33,11 +69,16 @@ export function PersonalForm({ form }: { form: UseFormReturn<FormData> }) {
               First Name
             </label>
             <input
-              {...form.register('firstName')}
+              {...register('firstName')}
               type='text'
               id='firstName'
               className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
             />
+            {errors.firstName && (
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -46,28 +87,68 @@ export function PersonalForm({ form }: { form: UseFormReturn<FormData> }) {
               Last Name
             </label>
             <input
-              {...form.register('lastName')}
+              {...register('lastName')}
               type='text'
               id='lastName'
               className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
             />
+            {errors.lastName && (
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
         </div>
 
         <div>
-          <label
-            htmlFor='dateOfBirth'
-            className='mb-2 block text-sm font-medium'>
-            Date of Birth
+          <label htmlFor='username' className='mb-2 block text-sm font-medium'>
+            Username
           </label>
           <input
-            {...form.register('dateOfBirth')}
-            type='date'
-            id='dateOfBirth'
+            {...register('username')}
+            type='text'
+            id='username'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
           />
+          {errors.username && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.username.message}
+            </p>
+          )}
         </div>
-      </div>
+
+        <div>
+          <label
+            htmlFor='phoneNumber'
+            className='mb-2 block text-sm font-medium'>
+            Phone Number
+          </label>
+          <input
+            {...register('phoneNumber')}
+            type='text'
+            id='phoneNumber'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.phoneNumber && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
+
+        {errors.root?.serverError && (
+          <p className='mt-1 text-sm text-red-500'>
+            {errors.root.serverError.message}
+          </p>
+        )}
+
+        <button
+          type='submit'
+          disabled={isSubmitting}
+          className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
+          {isSubmitting ? 'Saving...' : 'Continue'}
+        </button>
+      </form>
     </div>
   );
 }

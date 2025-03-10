@@ -1,43 +1,175 @@
-import type { UseFormReturn } from 'react-hook-form';
+import { startTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { FormData } from '@/app/flow/_components/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 
-export function ShopForm({ form }: { form: UseFormReturn<FormData> }) {
+import { setShopInfo } from '@/app/flow/actions';
+import { shopSchema, type ShopSchema } from '@/app/flow/schema';
+import { useOnboardingStore } from '@/app/flow/store';
+
+export function ShopForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { shopInfo, setShopInfo: setStoreShopInfo } = useOnboardingStore();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<ShopSchema>({
+    resolver: zodResolver(shopSchema),
+    defaultValues: shopInfo,
+  });
+
+  const onSubmit = async (data: ShopSchema) => {
+    startTransition(async () => {
+      setStoreShopInfo(data);
+      const response = await setShopInfo(data);
+
+      if (response?.error) {
+        setError('root.serverError', {
+          message: response.error,
+        });
+        return;
+      }
+
+      // On success, navigate to next step
+      router.push('/dashboard');
+    });
+  };
+
+  const handleBack = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set('step', 'personal');
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <div className='space-y-6'>
-      <h2 className='text-2xl font-semibold tracking-tight'>
-        Create or join a shop
-      </h2>
-      <p className='text-gray-600'>Create or join a shop to get started</p>
+      <div className='flex items-center gap-4'>
+        <button
+          onClick={handleBack}
+          className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100'>
+          <ArrowLeft className='size-5' />
+        </button>
+        <h2 className='text-2xl font-semibold tracking-tight'>
+          Tell us about your shop
+        </h2>
+      </div>
+      <p className='text-gray-600'>
+        This information will be used to setup your shop profile.
+      </p>
 
-      <div className='space-y-4'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
         <div>
-          <label htmlFor='firstName' className='mb-2 block text-sm font-medium'>
-            Shop name
+          <label htmlFor='shopName' className='mb-2 block text-sm font-medium'>
+            Shop Name
           </label>
           <input
-            {...form.register('shopName')}
+            {...register('shopName')}
             type='text'
             id='shopName'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
-            placeholder='Shop name'
           />
+          {errors.shopName && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.shopName.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label
-            htmlFor='shopInviteCode'
-            className='mb-2 block text-sm font-medium'>
-            Shop invite code
+          <label htmlFor='address' className='mb-2 block text-sm font-medium'>
+            Address
           </label>
           <input
-            {...form.register('shopInviteCode')}
-            type='text'
+            {...register('address')}
+            id='address'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
-            placeholder='Shop invite code'
           />
+          {errors.address && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.address.message}
+            </p>
+          )}
         </div>
-      </div>
+
+        <div>
+          <label htmlFor='city' className='mb-2 block text-sm font-medium'>
+            City
+          </label>
+          <input
+            {...register('city')}
+            id='city'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.city && (
+            <p className='mt-1 text-sm text-red-500'>{errors.city.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor='state' className='mb-2 block text-sm font-medium'>
+            State
+          </label>
+          <input
+            {...register('state')}
+            id='state'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.state && (
+            <p className='mt-1 text-sm text-red-500'>{errors.state.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor='zipCode' className='mb-2 block text-sm font-medium'>
+            Zip Code
+          </label>
+          <input
+            {...register('zipCode')}
+            id='zipCode'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.zipCode && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.zipCode.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor='website' className='mb-2 block text-sm font-medium'>
+            Website
+          </label>
+          <input
+            {...register('website')}
+            id='website'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.website && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.website.message}
+            </p>
+          )}
+        </div>
+
+        {errors.root?.serverError && (
+          <p className='mt-1 text-sm text-red-500'>
+            {errors.root.serverError.message}
+          </p>
+        )}
+
+        <button
+          type='submit'
+          disabled={isSubmitting}
+          className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
+          {isSubmitting ? 'Saving...' : 'Complete Setup'}
+        </button>
+      </form>
     </div>
   );
 }
@@ -46,14 +178,14 @@ export function ShopInfo() {
   return (
     <>
       <h2 className='mb-6 text-3xl font-semibold tracking-tight'>
-        Create or join a shop
+        Setup your shop
       </h2>
 
       <div className='mb-8 max-w-md text-lg text-gray-600'>
         <div className='flex flex-col gap-4'>
-          <p>{`If you're a shop owner, register your shop here.`}</p>
           <p>
-            {`If you're a team member, use your shop's invite code to join your shop.`}
+            Tell us about your shop so we can help you get started with your
+            business.
           </p>
         </div>
       </div>

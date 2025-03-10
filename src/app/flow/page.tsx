@@ -1,74 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Car, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Car } from 'lucide-react';
 
 import { PersonalForm, PersonalInfo } from '@/app/flow/_components/personal';
-import { FormData, formSchema } from '@/app/flow/_components/schema';
 import { ShopForm, ShopInfo } from '@/app/flow/_components/shop';
-import { SignupForm, SignupInfo } from '@/app/flow/_components/signup';
 import { cn } from '@/utils/cn';
 
-type StepFields = keyof FormData;
-
-const steps = [
-  {
-    name: 'Account',
-    infoComponent: <SignupInfo />,
-    // formComponent: <SignupForm />,
-  },
-  {
+const STEPS = {
+  personal: {
+    index: 0,
     name: 'Personal',
     infoComponent: <PersonalInfo />,
-    // formComponent: <PersonalForm />,
+    formComponent: <PersonalForm />,
   },
-  {
+  shop: {
+    index: 1,
     name: 'Shop',
     infoComponent: <ShopInfo />,
-    // formComponent: <ShopForm />,
+    formComponent: <ShopForm />,
   },
-];
+} as const;
+
+type StepKey = keyof typeof STEPS;
 
 export default function OnboardingPage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      shopName: '',
-      shopInviteCode: '',
-    },
-  });
+  const searchParams = useSearchParams();
+  const currentStep = (searchParams.get('step') as StepKey) || 'personal';
 
-  const handleNext = async () => {
-    // Only validate fields in the current step
-    const fieldsToValidate: Record<number, StepFields[]> = {
-      0: ['email', 'password'],
-      1: ['firstName', 'lastName', 'dateOfBirth'],
-      2: ['shopName', 'shopInviteCode'],
-    };
-
-    const isValid = await form.trigger(fieldsToValidate[currentStep]);
-    if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
-    }
-  };
-
-  const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  };
-
-  const onSubmit = async (data: FormData) => {
-    console.log(data);
-    // Handle form submission
-  };
+  const stepKeys = Object.keys(STEPS) as StepKey[];
+  const currentStepIndex = STEPS[currentStep].index;
 
   return (
     <>
@@ -84,15 +46,15 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            <div className='flex-1'>{steps[currentStep].infoComponent}</div>
+            <div className='flex-1'>{STEPS[currentStep].infoComponent}</div>
 
             {/* Footer Section */}
             <div className='mt-auto'>
               <div className='mb-8'>
                 <CarStepper
-                  currentStep={currentStep}
-                  totalSteps={steps.length}
-                  stepNames={steps.map((step) => step.name)}
+                  currentStep={currentStepIndex}
+                  totalSteps={stepKeys.length}
+                  stepNames={stepKeys.map((key) => STEPS[key].name)}
                 />
               </div>
 
@@ -106,38 +68,7 @@ export default function OnboardingPage() {
         {/* Right Column - Forms */}
         <div className='flex w-3/5 items-center justify-center bg-white p-10'>
           <div className='w-full max-w-md'>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-              {currentStep === 0 && <SignupForm form={form} />}
-              {currentStep === 1 && <PersonalForm form={form} />}
-              {currentStep === 2 && <ShopForm form={form} />}
-
-              <div className='flex justify-between pt-6'>
-                <button
-                  type='button'
-                  onClick={handleBack}
-                  className={cn(
-                    'flex items-center space-x-2 rounded-lg px-4 py-2 transition',
-                    currentStep === 0 ? 'invisible' : 'hover:bg-gray-100'
-                  )}>
-                  <ChevronLeft className='size-4' />
-                  <span>Back</span>
-                </button>
-
-                <button
-                  type={currentStep === steps.length - 1 ? 'submit' : 'button'}
-                  onClick={
-                    currentStep === steps.length - 1 ? undefined : handleNext
-                  }
-                  className='flex items-center space-x-2 rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90'>
-                  <span>
-                    {currentStep === steps.length - 1 ? 'Complete' : 'Continue'}
-                  </span>
-                  {currentStep !== steps.length - 1 && (
-                    <ChevronRight className='size-4' />
-                  )}
-                </button>
-              </div>
-            </form>
+            {STEPS[currentStep].formComponent}
           </div>
         </div>
       </div>
