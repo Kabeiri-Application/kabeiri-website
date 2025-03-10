@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
+import { AvatarUpload } from '@/app/flow/_components/avatar';
+import { deleteAvatar, uploadAvatar } from '@/app/flow/actions';
 import { personalSchema, type PersonalSchema } from '@/app/flow/schema';
 import { useOnboardingStore } from '@/app/flow/store';
 
@@ -16,6 +18,7 @@ export function PersonalForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<PersonalSchema>({
     resolver: zodResolver(personalSchema),
@@ -31,6 +34,37 @@ export function PersonalForm() {
       params.set('step', 'address');
       router.push(`?${params.toString()}`);
     });
+  };
+
+  const handleAvatarUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await uploadAvatar(formData);
+
+    if (response.error) {
+      alert(response.error);
+      return;
+    }
+
+    if (response.url) {
+      setValue('avatarUrl', response.url);
+      setPersonalInfo({ ...personalInfo, avatarUrl: response.url });
+    }
+  };
+
+  const handleAvatarDelete = async () => {
+    if (personalInfo.avatarUrl) {
+      const response = await deleteAvatar(personalInfo.avatarUrl);
+
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
+    }
+
+    setValue('avatarUrl', undefined);
+    setPersonalInfo({ ...personalInfo, avatarUrl: undefined });
   };
 
   return (
@@ -49,80 +83,92 @@ export function PersonalForm() {
         Your profile will be used to identify you.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-        <div className='grid grid-cols-2 gap-4'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
+        <div className='flex justify-center'>
+          <AvatarUpload
+            onUpload={handleAvatarUpload}
+            onDelete={handleAvatarDelete}
+            url={personalInfo.avatarUrl}
+          />
+        </div>
+
+        <div className='space-y-4'>
+          <div className='grid grid-cols-2 gap-4'>
+            <div>
+              <label
+                htmlFor='firstName'
+                className='mb-2 block text-sm font-medium'>
+                First Name
+              </label>
+              <input
+                {...register('firstName')}
+                type='text'
+                id='firstName'
+                className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+              />
+              {errors.firstName && (
+                <p className='mt-1 text-sm text-red-500'>
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor='lastName'
+                className='mb-2 block text-sm font-medium'>
+                Last Name
+              </label>
+              <input
+                {...register('lastName')}
+                type='text'
+                id='lastName'
+                className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+              />
+              {errors.lastName && (
+                <p className='mt-1 text-sm text-red-500'>
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+          </div>
+
           <div>
             <label
-              htmlFor='firstName'
+              htmlFor='username'
               className='mb-2 block text-sm font-medium'>
-              First Name
+              Username
             </label>
             <input
-              {...register('firstName')}
+              {...register('username')}
               type='text'
-              id='firstName'
+              id='username'
               className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
             />
-            {errors.firstName && (
+            {errors.username && (
               <p className='mt-1 text-sm text-red-500'>
-                {errors.firstName.message}
+                {errors.username.message}
               </p>
             )}
           </div>
+
           <div>
             <label
-              htmlFor='lastName'
+              htmlFor='phoneNumber'
               className='mb-2 block text-sm font-medium'>
-              Last Name
+              Phone Number
             </label>
             <input
-              {...register('lastName')}
+              {...register('phoneNumber')}
               type='text'
-              id='lastName'
+              id='phoneNumber'
               className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
             />
-            {errors.lastName && (
+            {errors.phoneNumber && (
               <p className='mt-1 text-sm text-red-500'>
-                {errors.lastName.message}
+                {errors.phoneNumber.message}
               </p>
             )}
           </div>
-        </div>
-
-        <div>
-          <label htmlFor='username' className='mb-2 block text-sm font-medium'>
-            Username
-          </label>
-          <input
-            {...register('username')}
-            type='text'
-            id='username'
-            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
-          />
-          {errors.username && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.username.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor='phoneNumber'
-            className='mb-2 block text-sm font-medium'>
-            Phone Number
-          </label>
-          <input
-            {...register('phoneNumber')}
-            type='text'
-            id='phoneNumber'
-            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
-          />
-          {errors.phoneNumber && (
-            <p className='mt-1 text-sm text-red-500'>
-              {errors.phoneNumber.message}
-            </p>
-          )}
         </div>
 
         <button

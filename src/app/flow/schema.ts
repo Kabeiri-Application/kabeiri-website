@@ -21,6 +21,7 @@ export const personalSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   username: z.string().min(1, 'Username is required'),
   phoneNumber: z.string().min(1, 'Phone number is required'),
+  avatarUrl: z.string().optional(),
 });
 
 export const addressSchema = z.object({

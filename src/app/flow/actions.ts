@@ -6,6 +6,7 @@ import {
   PersonalSchema,
   type AddressSchema,
   type ShopSchema,
+  type SignupSchema,
 } from '@/app/flow/schema';
 import { db } from '@/db';
 import { organizationsTable, profilesTable } from '@/db/schema';
@@ -26,11 +27,61 @@ export async function createAccount(formData: SignupSchema) {
   revalidatePath('/flow', 'layout');
 }
 
+export async function uploadAvatar(formData: FormData) {
+  try {
+    const file = formData.get('file') as File;
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const supabase = await createClient();
+
+    // Generate a unique filename using timestamp and original extension
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, file);
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    return { url: fileName };
+  } catch (error) {
+    console.error('Error uploading avatar:', error);
+    return { error: 'Failed to upload avatar' };
+  }
+}
+
+export async function deleteAvatar(path: string) {
+  try {
+    const supabase = await createClient();
+
+    const { data, error: deleteError } = await supabase.storage
+      .from('avatars')
+      .remove([path]);
+
+    console.log(path);
+    console.log(data);
+    console.log(deleteError);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting avatar:', error);
+    return { error: 'Failed to delete avatar' };
+  }
+}
+
 export async function setPersonalInfo(
   formData: PersonalSchema & AddressSchema
 ) {
   // TODO: Implement this
-
   console.log(formData);
 
   // try {
