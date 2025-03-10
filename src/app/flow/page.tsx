@@ -14,6 +14,24 @@ import { cn } from '@/utils/cn';
 
 type StepFields = keyof FormData;
 
+const steps = [
+  {
+    name: 'Account',
+    infoComponent: <SignupInfo />,
+    // formComponent: <SignupForm />,
+  },
+  {
+    name: 'Personal',
+    infoComponent: <PersonalInfo />,
+    // formComponent: <PersonalForm />,
+  },
+  {
+    name: 'Shop',
+    infoComponent: <ShopInfo />,
+    // formComponent: <ShopForm />,
+  },
+];
+
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const form = useForm<FormData>({
@@ -32,19 +50,19 @@ export default function OnboardingPage() {
   const handleNext = async () => {
     // Only validate fields in the current step
     const fieldsToValidate: Record<number, StepFields[]> = {
-      1: ['email', 'password'],
-      2: ['firstName', 'lastName', 'dateOfBirth'],
-      3: ['shopName', 'shopInviteCode'],
+      0: ['email', 'password'],
+      1: ['firstName', 'lastName', 'dateOfBirth'],
+      2: ['shopName', 'shopInviteCode'],
     };
 
     const isValid = await form.trigger(fieldsToValidate[currentStep]);
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, 3));
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
     }
   };
 
   const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
   const onSubmit = async (data: FormData) => {
@@ -66,19 +84,15 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            <div className='flex-1'>
-              {currentStep === 1 && <SignupInfo />}
-              {currentStep === 2 && <PersonalInfo />}
-              {currentStep === 3 && <ShopInfo />}
-            </div>
+            <div className='flex-1'>{steps[currentStep].infoComponent}</div>
 
             {/* Footer Section */}
             <div className='mt-auto'>
               <div className='mb-8'>
                 <CarStepper
                   currentStep={currentStep}
-                  totalSteps={3}
-                  stepNames={['Account', 'Personal', 'Shop']}
+                  totalSteps={steps.length}
+                  stepNames={steps.map((step) => step.name)}
                 />
               </div>
 
@@ -93,9 +107,9 @@ export default function OnboardingPage() {
         <div className='flex w-3/5 items-center justify-center bg-white p-10'>
           <div className='w-full max-w-md'>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-              {currentStep === 1 && <SignupForm form={form} />}
-              {currentStep === 2 && <PersonalForm form={form} />}
-              {currentStep === 3 && <ShopForm form={form} />}
+              {currentStep === 0 && <SignupForm form={form} />}
+              {currentStep === 1 && <PersonalForm form={form} />}
+              {currentStep === 2 && <ShopForm form={form} />}
 
               <div className='flex justify-between pt-6'>
                 <button
@@ -103,18 +117,24 @@ export default function OnboardingPage() {
                   onClick={handleBack}
                   className={cn(
                     'flex items-center space-x-2 rounded-lg px-4 py-2 transition',
-                    currentStep === 1 ? 'invisible' : 'hover:bg-gray-100'
+                    currentStep === 0 ? 'invisible' : 'hover:bg-gray-100'
                   )}>
                   <ChevronLeft className='size-4' />
                   <span>Back</span>
                 </button>
 
                 <button
-                  type={currentStep === 3 ? 'submit' : 'button'}
-                  onClick={currentStep === 3 ? undefined : handleNext}
+                  type={currentStep === steps.length - 1 ? 'submit' : 'button'}
+                  onClick={
+                    currentStep === steps.length - 1 ? undefined : handleNext
+                  }
                   className='flex items-center space-x-2 rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90'>
-                  <span>{currentStep === 3 ? 'Complete' : 'Continue'}</span>
-                  {currentStep !== 3 && <ChevronRight className='size-4' />}
+                  <span>
+                    {currentStep === steps.length - 1 ? 'Complete' : 'Continue'}
+                  </span>
+                  {currentStep !== steps.length - 1 && (
+                    <ChevronRight className='size-4' />
+                  )}
                 </button>
               </div>
             </form>
@@ -134,8 +154,8 @@ function CarStepper({
   totalSteps: number;
   stepNames: string[];
 }) {
-  const steps = Array.from({ length: totalSteps }, (_, i) => i + 1);
-  const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+  const steps = Array.from({ length: totalSteps }, (_, i) => i);
+  const progress = (currentStep / (totalSteps - 1)) * 100;
 
   return (
     <div className='relative'>
@@ -186,7 +206,7 @@ function CarStepper({
                     'absolute top-8 whitespace-nowrap text-sm font-medium transition-colors duration-700',
                     isActive ? 'text-black' : 'text-gray-400'
                   )}>
-                  {stepNames[step - 1]}
+                  {stepNames[step]}
                 </span>
               </div>
             );
