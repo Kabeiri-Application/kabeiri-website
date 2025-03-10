@@ -6,6 +6,8 @@ export const formSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  shopName: z.string().min(1, 'Shop name is required'),
+  shopInviteCode: z.string().min(1, 'Shop invite code is required'),
 });
 
 export type FormData = z.infer<typeof formSchema>;
