@@ -23,6 +23,13 @@ export const personalSchema = z.object({
   phoneNumber: z.string().min(1, 'Phone number is required'),
 });
 
+export const addressSchema = z.object({
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'State is required'),
+  zipCode: z.string().min(1, 'Zip code is required'),
+});
+
 export const shopSchema = z.object({
   shopName: z.string().min(1, 'Shop name is required'),
   address: z.string().min(1, 'Address is required'),
@@ -34,4 +41,5 @@ export const shopSchema = z.object({
 
 export type SignupSchema = z.infer<typeof signupSchema>;
 export type PersonalSchema = z.infer<typeof personalSchema>;
+export type AddressSchema = z.infer<typeof addressSchema>;
 export type ShopSchema = z.infer<typeof shopSchema>;

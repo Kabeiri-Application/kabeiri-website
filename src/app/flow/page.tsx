@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { Car } from 'lucide-react';
 
+import { AddressForm, AddressInfo } from '@/app/flow/_components/address';
 import { PersonalForm, PersonalInfo } from '@/app/flow/_components/personal';
 import { ShopForm, ShopInfo } from '@/app/flow/_components/shop';
 import { cn } from '@/utils/cn';
@@ -15,8 +16,14 @@ const STEPS = {
     infoComponent: <PersonalInfo />,
     formComponent: <PersonalForm />,
   },
-  shop: {
+  address: {
     index: 1,
+    name: 'Address',
+    infoComponent: <AddressInfo />,
+    formComponent: <AddressForm />,
+  },
+  shop: {
+    index: 2,
     name: 'Shop',
     infoComponent: <ShopInfo />,
     formComponent: <ShopForm />,

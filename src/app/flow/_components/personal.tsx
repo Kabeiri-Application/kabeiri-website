@@ -5,20 +5,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { setPersonalInfo } from '@/app/flow/actions';
 import { personalSchema, type PersonalSchema } from '@/app/flow/schema';
 import { useOnboardingStore } from '@/app/flow/store';
 
 export function PersonalForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { personalInfo, setPersonalInfo: setStorePersonalInfo } =
-    useOnboardingStore();
+  const { personalInfo, setPersonalInfo } = useOnboardingStore();
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<PersonalSchema>({
     resolver: zodResolver(personalSchema),
@@ -26,20 +23,12 @@ export function PersonalForm() {
   });
 
   const onSubmit = async (data: PersonalSchema) => {
-    startTransition(async () => {
-      setStorePersonalInfo(data);
-      const response = await setPersonalInfo(data);
-
-      if (response?.error) {
-        setError('root.serverError', {
-          message: response.error,
-        });
-        return;
-      }
+    startTransition(() => {
+      setPersonalInfo(data);
 
       // On success, navigate to next step
       const params = new URLSearchParams(searchParams);
-      params.set('step', 'shop');
+      params.set('step', 'address');
       router.push(`?${params.toString()}`);
     });
   };
@@ -135,12 +124,6 @@ export function PersonalForm() {
             </p>
           )}
         </div>
-
-        {errors.root?.serverError && (
-          <p className='mt-1 text-sm text-red-500'>
-            {errors.root.serverError.message}
-          </p>
-        )}
 
         <button
           type='submit'

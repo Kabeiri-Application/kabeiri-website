@@ -2,7 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { PersonalSchema, type ShopSchema } from '@/app/flow/schema';
+import {
+  PersonalSchema,
+  type AddressSchema,
+  type ShopSchema,
+} from '@/app/flow/schema';
 import { db } from '@/db';
 import { organizationsTable, profilesTable } from '@/db/schema';
 import { createClient } from '@/utils/supabase/server';
@@ -22,12 +26,22 @@ export async function createAccount(formData: SignupSchema) {
   revalidatePath('/flow', 'layout');
 }
 
-export async function setPersonalInfo(formData: PersonalSchema) {
+export async function setPersonalInfo(
+  formData: PersonalSchema & AddressSchema
+) {
   // TODO: Implement this
+
+  console.log(formData);
 
   // try {
   //   await db.insert(profilesTable).values({
   //     fullName: formData.firstName,
+  //     username: formData.username,
+  //     phone: formData.phoneNumber,
+  //     streetAddress: formData.address,
+  //     city: formData.city,
+  //     state: formData.state,
+  //     zipCode: formData.zipCode,
   //   });
   // } catch (error) {
   //   console.error(error);
