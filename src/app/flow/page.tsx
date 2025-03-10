@@ -27,10 +27,6 @@ export default function OnboardingPage() {
       firstName: '',
       lastName: '',
       dateOfBirth: '',
-      address: '',
-      marketingEmails: false,
-      productUpdates: false,
-      newsletterSubscription: false,
     },
   });
 
@@ -38,8 +34,7 @@ export default function OnboardingPage() {
     // Only validate fields in the current step
     const fieldsToValidate: Record<number, StepFields[]> = {
       1: ['email', 'password'],
-      2: ['firstName', 'lastName', 'dateOfBirth', 'address'],
-      3: ['marketingEmails', 'productUpdates', 'newsletterSubscription'],
+      2: ['firstName', 'lastName', 'dateOfBirth'],
     };
 
     const isValid = await form.trigger(fieldsToValidate[currentStep]);
