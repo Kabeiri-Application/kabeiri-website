@@ -43,7 +43,7 @@ export function ShopForm() {
 
   const handleBack = () => {
     const params = new URLSearchParams(searchParams);
-    params.set('step', 'personal');
+    params.set('step', 'address');
     router.push(`?${params.toString()}`);
   };
 
