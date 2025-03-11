@@ -37,9 +37,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## NOTE
 
- ```sql
- grant usage on schema "public" to authenticated;
- GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA "public" TO authenticated;
- ```
+```sql
+grant usage on schema "public" to authenticated;
+GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA "public" TO authenticated;
+```
 
- Added these commands in the Supasbase SQL Editor to resolve issue with INSERT requests being denied to a signed in user.
+Added these commands in the Supasbase SQL Editor to resolve issue with INSERT requests being denied to a signed in user.
