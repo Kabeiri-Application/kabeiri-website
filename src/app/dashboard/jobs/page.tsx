@@ -137,7 +137,12 @@ export default function JobsPage() {
   }, [selectedCustomer]);
 
   const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
-  const vehicles = ['', 'Toyota Camry', 'Ford F-150', 'Honda Civic'];
+  const [vehicles, setVehicles] = useState([
+    '',
+    'Toyota Camry',
+    'Ford F-150',
+    'Honda Civic',
+  ]);
   const mechanics = ['', 'Bob Hammer', 'Ben Nail', 'John Wrench'];
 
   return (
@@ -155,7 +160,8 @@ export default function JobsPage() {
           </div>
           <Table columns={columns} data={data} />
         </div>
-        <DialogContent className='sm:max-w-md'>
+
+        <DialogContent className='max-h-full overflow-y-scroll'>
           <DialogHeader>
             <DialogTitle className='text-3xl font-bold text-gray-900'>
               Create a Job
@@ -182,6 +188,7 @@ export default function JobsPage() {
                 Description
               </label>
               <textarea
+                rows={4}
                 {...register('description')}
                 placeholder='Description'
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
@@ -218,7 +225,7 @@ export default function JobsPage() {
                 Vehicle
               </label>
               <select
-                disabled={vehicles.length > 0}
+                disabled={vehicles.length === 0}
                 {...register('vehicle')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
                 {vehicles.map((vehicle) => (
