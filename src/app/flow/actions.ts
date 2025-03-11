@@ -59,13 +59,9 @@ export async function deleteAvatar(path: string) {
   try {
     const supabase = await createClient();
 
-    const { data, error: deleteError } = await supabase.storage
+    const { error: deleteError } = await supabase.storage
       .from('avatars')
       .remove([path]);
-
-    console.log(path);
-    console.log(data);
-    console.log(deleteError);
 
     if (deleteError) {
       throw deleteError;
