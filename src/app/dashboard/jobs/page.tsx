@@ -3,6 +3,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 
+import { getJobs } from '@/app/dashboard/jobs/actions';
 import { Button } from '@/components/Button';
 import { Table } from '@/components/Table';
 
@@ -37,6 +38,10 @@ const data: Job[] = [
     status: 'Completed',
   },
 ];
+
+// const data = getJobs('1').then((data) => {
+//   console.log(data);
+// });
 
 const columnHelper = createColumnHelper<Job>();
 
