@@ -25,6 +25,8 @@ type Job = {
   vehicle: string;
   service: string;
   status: 'In Progress' | 'Pending' | 'Completed';
+  assignedTo: string;
+  dueDate?: Date;
 };
 
 const data: Job[] = [
@@ -35,6 +37,7 @@ const data: Job[] = [
     service: 'Oil Change',
     status: 'In Progress',
     assignedTo: 'Bob Hammer',
+    dueDate: new Date(),
   },
   {
     id: 2,
@@ -43,6 +46,7 @@ const data: Job[] = [
     service: 'Brake Replacement',
     status: 'Pending',
     assignedTo: 'Ben Nail',
+    dueDate: new Date('05/04/25'),
   },
   {
     id: 3,
@@ -51,6 +55,7 @@ const data: Job[] = [
     service: 'Tire Rotation',
     status: 'Completed',
     assignedTo: 'John Wrench',
+    dueDate: new Date('04/30/25'),
   },
 ];
 
@@ -80,6 +85,10 @@ const columns = [
   columnHelper.accessor('assignedTo', {
     header: 'Assigned To',
     cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('dueDate', {
+    header: 'Due Date',
+    cell: (info) => info.getValue().toLocaleDateString(),
   }),
   columnHelper.accessor('status', {
     header: 'Status',
