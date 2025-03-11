@@ -10,6 +10,11 @@ import {
 import { authUsers } from 'drizzle-orm/supabase/rls';
 
 export const rolesEnum = pgEnum('role', ['admin', 'owner', 'customer', 'user']);
+export const jobStatusEnum = pgEnum('status', [
+  'complete',
+  'in progress',
+  'incomplete',
+]);
 
 export const profilesTable = pgTable('profiles', {
   id: uuid()
@@ -64,7 +69,7 @@ export const jobsTable = pgTable('jobs', {
   title: text().notNull(),
   service: uuid().references(() => servicesTable.id),
   description: text().notNull(),
-  status: text().notNull(),
+  status: jobStatusEnum().notNull(),
   dueDate: timestamp({ withTimezone: true }),
   assignedTo: uuid().references(() => profilesTable.id),
   createdBy: uuid().references(() => profilesTable.id),
