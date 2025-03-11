@@ -34,6 +34,7 @@ const data: Job[] = [
     vehicle: 'Toyota Camry',
     service: 'Oil Change',
     status: 'In Progress',
+    assignedTo: 'Bob Hammer',
   },
   {
     id: 2,
@@ -41,6 +42,7 @@ const data: Job[] = [
     vehicle: 'Ford F-150',
     service: 'Brake Replacement',
     status: 'Pending',
+    assignedTo: 'Ben Nail',
   },
   {
     id: 3,
@@ -48,6 +50,7 @@ const data: Job[] = [
     vehicle: 'Honda Civic',
     service: 'Tire Rotation',
     status: 'Completed',
+    assignedTo: 'John Wrench',
   },
 ];
 
@@ -72,6 +75,10 @@ const columns = [
   }),
   columnHelper.accessor('service', {
     header: 'Service',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('assignedTo', {
+    header: 'Assigned To',
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('status', {
@@ -106,6 +113,8 @@ const formSchema = z.object({
   customer: z.string().min(1, 'Customer is required'),
   vehicle: z.string().min(1, 'Vehicle is required'),
   service: z.string().min(1, 'Service is required'),
+  dueDate: z.date(),
+  assignedTo: z.string().min(1, 'Assigned to is required'),
 });
 
 type FormInputs = z.infer<typeof formSchema>;
@@ -129,6 +138,7 @@ export default function JobsPage() {
 
   const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
   const vehicles = ['', 'Toyota Camry', 'Ford F-150', 'Honda Civic'];
+  const mechanics = ['', 'Bob Hammer', 'Ben Nail', 'John Wrench'];
 
   return (
     <main className='p-8'>
@@ -230,14 +240,49 @@ export default function JobsPage() {
               <select
                 {...register('service')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
-                <option></option>
-                <option value='1'>Oil Change</option>
-                <option value='2'>Brake Replacement</option>
-                <option value='3'>Tire Rotation</option>
+                <option value=''>Select a service</option>
+                <option value='Oil Change'>Oil Change</option>
+                <option value='Brake Replacement'>Brake Replacement</option>
+                <option value='Tire Rotation'>Tire Rotation</option>
               </select>
               {errors.service && (
                 <span className='text-sm text-red-500'>
                   {errors.service.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Due Date
+              </label>
+              <input
+                min={new Date().toISOString().split('T')[0]}
+                {...register('dueDate')}
+                type='date'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.dueDate && (
+                <span className='text-sm text-red-500'>
+                  {errors.dueDate.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Assigned To
+              </label>
+              <select
+                {...register('assignedTo')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                {mechanics.map((mechanic) => (
+                  <option key={mechanic} value={mechanic}>
+                    {mechanic}
+                  </option>
+                ))}
+              </select>
+              {errors.assignedTo && (
+                <span className='text-sm text-red-500'>
+                  {errors.assignedTo.message}
                 </span>
               )}
             </div>

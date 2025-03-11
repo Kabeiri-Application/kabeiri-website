@@ -7,8 +7,8 @@ interface FormData {
   organization: string;
   service: string;
   description: string;
-  // dueDate: Date;
-  // assignedTo: string;
+  dueDate: Date;
+  assignedTo: string;
   // createdBy: string;
   title: string;
 }
@@ -77,6 +77,21 @@ export async function getVehicles(customerId: string) {
     .from('cars')
     .select()
     .eq('owner', customerId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return data;
+}
+
+export async function getEmployees(organizationId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .eq('organization', organizationId)
+    .eq('role', 'employee');
 
   if (error) {
     return { error: error.message };
