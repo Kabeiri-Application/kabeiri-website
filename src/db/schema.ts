@@ -13,7 +13,7 @@ export const rolesEnum = pgEnum('role', ['admin', 'owner', 'customer', 'user']);
 export const jobStatusEnum = pgEnum('status', [
   'complete',
   'in progress',
-  'incomplete',
+  'pending',
 ]);
 
 export const profilesTable = pgTable('profiles', {
