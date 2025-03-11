@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import Script from 'next/script';
 
 import '@/app/globals.css';
 
@@ -25,6 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <Script
+        defer
+        src='https://umami.kabeiri.app/script.js'
+        data-website-id='7fdac713-b6cb-4ff8-b5f8-9ca1cabf3594'
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
