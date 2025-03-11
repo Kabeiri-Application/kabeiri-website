@@ -36,9 +36,17 @@ export async function uploadAvatar(formData: FormData) {
 
     const supabase = await createClient();
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     // Generate a unique filename using timestamp and original extension
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
+    const fileName = `${user.id}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from('avatars')
