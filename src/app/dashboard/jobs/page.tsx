@@ -1,12 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { createJob } from '@/app/dashboard/jobs/actions';
+import { createJob, getVehicles } from '@/app/dashboard/jobs/actions';
 import { Button } from '@/components/Button';
 import { Table } from '@/components/Table';
 import {
@@ -109,6 +111,7 @@ const formSchema = z.object({
 type FormInputs = z.infer<typeof formSchema>;
 
 export default function JobsPage() {
+  const [selectedCustomer, setSelectedCustomer] = useState('');
   const {
     register,
     handleSubmit,
@@ -120,9 +123,13 @@ export default function JobsPage() {
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     createJob(data);
   };
+  useEffect(() => {
+    getVehicles(selectedCustomer);
+  }, [selectedCustomer]);
 
   const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
   const vehicles = ['', 'Toyota Camry', 'Ford F-150', 'Honda Civic'];
+
   return (
     <main className='p-8'>
       <Dialog>
@@ -180,7 +187,9 @@ export default function JobsPage() {
                 Customer
               </label>
               <select
-                {...register('customer')}
+                {...register('customer', {
+                  onChange: (e) => setSelectedCustomer(e.target.value),
+                })}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
                 {customers.map((customer) => (
                   <option key={customer} value={customer}>
@@ -199,8 +208,9 @@ export default function JobsPage() {
                 Vehicle
               </label>
               <select
+                disabled={vehicles.length > 0}
                 {...register('vehicle')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
                 {vehicles.map((vehicle) => (
                   <option key={vehicle} value={vehicle}>
                     {vehicle}
@@ -231,9 +241,9 @@ export default function JobsPage() {
                 </span>
               )}
             </div>
-            <button type='submit' className='my-3 w-full'>
+            <Button type='submit' className='my-3 w-full'>
               Create
-            </button>
+            </Button>
           </form>
         </DialogContent>
       </Dialog>

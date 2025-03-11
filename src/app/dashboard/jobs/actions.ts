@@ -41,3 +41,46 @@ export async function createJob(formData: FormData) {
 
   // return { success: true };
 }
+
+export async function getServices(organizationId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('services')
+    .select()
+    .eq('organization', organizationId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return data;
+}
+
+export async function getCustomers() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .eq('role', 'customer');
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return data;
+}
+
+export async function getVehicles(customerId: string) {
+  console.log(customerId);
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('cars')
+    .select()
+    .eq('owner', customerId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return data;
+}
