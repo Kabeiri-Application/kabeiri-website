@@ -88,7 +88,7 @@ const columns = [
   }),
   columnHelper.accessor('dueDate', {
     header: 'Due Date',
-    cell: (info) => info.getValue().toLocaleDateString(),
+    cell: (info) => info.getValue()?.toLocaleDateString(),
   }),
   columnHelper.accessor('status', {
     header: 'Status',
@@ -161,15 +161,12 @@ export default function JobsPage() {
           <div className='mb-8 flex items-center justify-between'>
             <h1 className='text-3xl font-bold'>Job List</h1>
             <DialogTrigger>
-              <Button>
-                <Plus className='mr-2 size-5' />
-                New Job
-              </Button>
+              <Plus className='mr-2 size-5' />
+              New Job
             </DialogTrigger>
           </div>
           <Table columns={columns} data={data} />
         </div>
-
         <DialogContent className='max-h-full overflow-y-scroll'>
           <DialogHeader>
             <DialogTitle className='text-3xl font-bold text-gray-900'>
