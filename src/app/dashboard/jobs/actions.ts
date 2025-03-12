@@ -4,12 +4,10 @@ import { createClient } from '@/utils/supabase/server';
 
 interface FormData {
   customer: string;
-  organization: string;
   service: string;
   description: string;
   dueDate: Date;
   assignedTo: string;
-  // createdBy: string;
   title: string;
 }
 

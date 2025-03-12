@@ -146,6 +146,7 @@ export default function JobsPage() {
   }, [selectedCustomer]);
 
   const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [vehicles, setVehicles] = useState([
     '',
     'Toyota Camry',
