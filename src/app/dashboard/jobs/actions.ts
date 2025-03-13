@@ -54,7 +54,7 @@ export async function getServices(organizationId: string) {
   return data;
 }
 
-export async function getCustomers(organizationId) {
+export async function getCustomers(organizationId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('profiles')
