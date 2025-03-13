@@ -143,7 +143,7 @@ export default function JobsPage() {
     resolver: zodResolver(formSchema),
   });
   //TODO REPLACE!!!
-  const organizationId = '1';
+  const organizationId: string = '1';
   useEffect(() => {
     getEmployees(organizationId);
     getServices(organizationId);
