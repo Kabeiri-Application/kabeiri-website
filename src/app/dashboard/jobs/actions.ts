@@ -6,7 +6,7 @@ interface FormData {
   customer: string;
   service: string;
   description: string;
-  dueDate: Date;
+  dueDate: string | Date;
   assignedTo: string;
   title: string;
 }
@@ -28,16 +28,16 @@ export async function getJobs(org: string) {
 
 export async function createJob(formData: FormData) {
   console.log(formData);
-  // const supabase = await createClient();
+  const supabase = await createClient();
 
-  // const { error } = await supabase.from('jobs').insert(formData);
+  const { error } = await supabase.from('jobs').insert(formData);
 
-  // if (error) {
-  //   console.error('Error in createJob:', error);
-  //   return { success: false, error };
-  // }
+  if (error) {
+    console.error('Error in createJob:', error);
+    return { success: false, error };
+  }
 
-  // return { success: true };
+  return { success: true };
 }
 
 export async function getServices(organizationId: string) {
@@ -54,11 +54,12 @@ export async function getServices(organizationId: string) {
   return data;
 }
 
-export async function getCustomers() {
+export async function getCustomers(organizationId) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('profiles')
     .select()
+    .eq('organization', organizationId)
     .eq('role', 'customer');
 
   if (error) {

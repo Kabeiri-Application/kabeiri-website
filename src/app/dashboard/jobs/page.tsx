@@ -8,11 +8,18 @@ import { Plus } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { createJob, getVehicles } from '@/app/dashboard/jobs/actions';
+import {
+  createJob,
+  getCustomers,
+  getEmployees,
+  getServices,
+  getVehicles,
+} from '@/app/dashboard/jobs/actions';
 import { Button } from '@/components/Button';
 import { Table } from '@/components/Table';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -26,7 +33,7 @@ type Job = {
   service: string;
   status: 'In Progress' | 'Pending' | 'Completed';
   assignedTo: string;
-  dueDate?: Date;
+  dueDate?: string | Date;
 };
 
 const data: Job[] = [
@@ -59,10 +66,6 @@ const data: Job[] = [
   },
 ];
 
-// const data = getJobs('1').then((data) => {
-//   console.log(data);
-// });
-
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
@@ -88,7 +91,10 @@ const columns = [
   }),
   columnHelper.accessor('dueDate', {
     header: 'Due Date',
-    cell: (info) => info.getValue()?.toLocaleDateString(),
+    cell: (info) =>
+      info.getValue()
+        ? new Date(info.getValue() as string).toLocaleDateString()
+        : '',
   }),
   columnHelper.accessor('status', {
     header: 'Status',
@@ -122,7 +128,7 @@ const formSchema = z.object({
   customer: z.string().min(1, 'Customer is required'),
   vehicle: z.string().min(1, 'Vehicle is required'),
   service: z.string().min(1, 'Service is required'),
-  dueDate: z.date(),
+  dueDate: z.string(),
   assignedTo: z.string().min(1, 'Assigned to is required'),
 });
 
@@ -137,9 +143,17 @@ export default function JobsPage() {
   } = useForm<FormInputs>({
     resolver: zodResolver(formSchema),
   });
+  //TODO REPLACE!!!
+  const organizationId = '1';
+  useEffect(() => {
+    getEmployees(organizationId);
+    getServices(organizationId);
+    getCustomers(organizationId);
+  }, []);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     createJob(data);
+    setModalStatus(false);
   };
   useEffect(() => {
     getVehicles(selectedCustomer);
@@ -154,10 +168,10 @@ export default function JobsPage() {
     'Honda Civic',
   ]);
   const mechanics = ['', 'Bob Hammer', 'Ben Nail', 'John Wrench'];
-
+  const [modalStatus, setModalStatus] = useState(false);
   return (
     <main className='p-8'>
-      <Dialog>
+      <Dialog open={modalStatus} onOpenChange={setModalStatus}>
         <div className='mx-auto max-w-7xl'>
           <div className='mb-8 flex items-center justify-between'>
             <h1 className='text-3xl font-bold'>Job List</h1>
@@ -168,6 +182,7 @@ export default function JobsPage() {
           </div>
           <Table columns={columns} data={data} />
         </div>
+
         <DialogContent className='max-h-full overflow-y-scroll'>
           <DialogHeader>
             <DialogTitle className='text-3xl font-bold text-gray-900'>
@@ -300,7 +315,9 @@ export default function JobsPage() {
                 </span>
               )}
             </div>
-            <Button type='submit' className='my-3 w-full'>
+            <Button
+              type='submit'
+              className='my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800'>
               Create
             </Button>
           </form>
