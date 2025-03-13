@@ -161,7 +161,7 @@ export default function JobsPage() {
         <div className='mx-auto max-w-7xl'>
           <div className='mb-8 flex items-center justify-between'>
             <h1 className='text-3xl font-bold'>Job List</h1>
-            <DialogTrigger>
+            <DialogTrigger className='flex flex-row items-center rounded-full bg-black px-4 py-2 text-white transition hover:bg-gray-800'>
               <Plus className='mr-2 size-5' />
               New Job
             </DialogTrigger>
