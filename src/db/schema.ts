@@ -25,7 +25,7 @@ export const profilesTable = pgTable('profiles', {
   deletedAt: timestamp({ withTimezone: true }),
   username: text().notNull(),
   fullName: text().notNull(),
-  avatarUrl: text().notNull(),
+  avatarUrl: text(),
   role: rolesEnum().notNull(),
   organization: uuid().references(() => organizationsTable.id),
   phone: text().notNull(),

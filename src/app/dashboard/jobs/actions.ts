@@ -11,6 +11,22 @@ interface FormData {
   title: string;
 }
 
+export async function getOrganizationId() {
+  //  TODO GET USER and their Organization ID
+  const supabase = await createClient();
+
+  const { data: userData, error } = await supabase.auth.getUser();
+  const { data, error: error2 } = await supabase
+    .from('profiles')
+    .select()
+    .eq('id', userData?.user?.id);
+  if (error2) {
+    return { error: error2.message };
+  }
+  console.log('USER: ', data[0]?.organization);
+  return data[0]?.organization;
+}
+
 export async function getJobs(org: string) {
   const supabase = await createClient();
 
@@ -22,7 +38,7 @@ export async function getJobs(org: string) {
   if (error) {
     return { error: error.message };
   }
-
+  console.log('JOBS: ', data);
   return data;
 }
 
@@ -30,13 +46,13 @@ export async function createJob(formData: FormData) {
   console.log(formData);
   const supabase = await createClient();
 
-  const { error } = await supabase.from('jobs').insert(formData);
+  const { data, error } = await supabase.from('jobs').insert(formData);
 
   if (error) {
     console.error('Error in createJob:', error);
     return { success: false, error };
   }
-
+  console.log(data);
   return { success: true };
 }
 
@@ -50,7 +66,7 @@ export async function getServices(organizationId: string) {
   if (error) {
     return { error: error.message };
   }
-
+  console.log('SERVICES: ', data);
   return data;
 }
 
@@ -65,7 +81,7 @@ export async function getCustomers(organizationId: string) {
   if (error) {
     return { error: error.message };
   }
-
+  console.log('CUSTOMERS: ', data);
   return data;
 }
 
@@ -80,7 +96,7 @@ export async function getVehicles(customerId: string) {
   if (error) {
     return { error: error.message };
   }
-
+  console.log('VEHICLES: ', data);
   return data;
 }
 
@@ -90,11 +106,11 @@ export async function getEmployees(organizationId: string) {
     .from('profiles')
     .select()
     .eq('organization', organizationId)
-    .eq('role', 'employee');
+    .eq('role', 'user');
 
   if (error) {
     return { error: error.message };
   }
-
+  console.log('EMPLOYEES: ', data);
   return data;
 }

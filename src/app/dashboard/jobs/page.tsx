@@ -12,6 +12,8 @@ import {
   createJob,
   getCustomers,
   getEmployees,
+  getJobs,
+  getOrganizationId,
   getServices,
   getVehicles,
 } from '@/app/dashboard/jobs/actions';
@@ -144,17 +146,24 @@ export default function JobsPage() {
   });
 
   //TODO REPLACE!!!
-  const organizationId: string = '1';
   useEffect(() => {
-    getEmployees(organizationId);
-    getServices(organizationId);
-    getCustomers(organizationId);
+    const fetchData = async () => {
+      const organizationId = await getOrganizationId();
+
+      getJobs(organizationId);
+      getEmployees(organizationId);
+      getServices(organizationId);
+      getCustomers(organizationId);
+    };
+
+    fetchData();
   }, []);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     createJob(data);
     setModalStatus(false);
   };
+
   useEffect(() => {
     getVehicles(selectedCustomer);
   }, [selectedCustomer]);
