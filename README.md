@@ -38,8 +38,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## NOTE
 
 ```sql
+grant usage on schema "public" to anon;
 grant usage on schema "public" to authenticated;
+```
+
+AND
+
+```sql
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA "public" TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA "public" TO anon;
 ```
 
 Added these commands in the Supasbase SQL Editor to resolve issue with INSERT requests being denied to a signed in user.
