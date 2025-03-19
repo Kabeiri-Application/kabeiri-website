@@ -37,6 +37,31 @@ type Job = {
   dueDate?: string | Date;
 };
 
+type Customer = {
+  id: string;
+  full_name: string;
+};
+
+type Employee = {
+  id: string;
+  full_name: string;
+};
+
+type Service = {
+  id: string;
+  title: string;
+};
+
+type Vehicle = {
+  id: string;
+  make: string;
+  model: string;
+  year: string;
+  vin: string;
+  licensePlate: string;
+  color: string;
+};
+
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
@@ -109,6 +134,11 @@ export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
 
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -123,7 +153,6 @@ export default function JobsPage() {
   //     const organizationId = await getOrganizationId();
   //     console.log(organizationId);
   //     getJobs(organizationId);
-  //     getEmployees(organizationId);
   //     getServices(organizationId);
   //     getCustomers(organizationId);
   //   };
@@ -136,6 +165,9 @@ export default function JobsPage() {
     const fetchData = async () => {
       const organizationId = await getOrganizationId();
       await getJobs(organizationId).then((data) => setJobs(data as Job[]));
+      await getEmployees(organizationId).then((data) => setEmployees(data));
+      await getServices(organizationId).then((data) => setServices(data));
+      await getCustomers(organizationId).then((data) => setCustomers(data));
     };
     fetchData();
   }, []);
@@ -147,21 +179,11 @@ export default function JobsPage() {
 
   useEffect(() => {
     const fetchCars = async () => {
-      getVehicles(selectedCustomer);
+      await getVehicles(selectedCustomer).then((data) => setVehicles(data));
     };
     fetchCars();
   }, [selectedCustomer]);
 
-  const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [vehicles, setVehicles] = useState([
-    '',
-    'Toyota Camry',
-    'Ford F-150',
-    'Honda Civic',
-  ]);
-
-  const mechanics = ['', 'Bob Hammer', 'Ben Nail', 'John Wrench'];
   const [modalStatus, setModalStatus] = useState(false);
   return (
     <main className='p-8'>
@@ -224,11 +246,17 @@ export default function JobsPage() {
                   onChange: (e) => setSelectedCustomer(e.target.value),
                 })}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
-                {customers.map((customer) => (
-                  <option key={customer} value={customer}>
-                    {customer}
-                  </option>
-                ))}
+                <option value=''>Select a Customer</option>
+                {customers.map(
+                  (customer) => (
+                    console.log('Customer: ', customer),
+                    (
+                      <option key={customer.id} value={customer.id}>
+                        {customer?.full_name}
+                      </option>
+                    )
+                  )
+                )}
               </select>
               {errors.customer && (
                 <span className='text-sm text-red-500'>
@@ -237,24 +265,28 @@ export default function JobsPage() {
               )}
             </div>
             <div>
-              <label className='block text-sm font-medium text-gray-700'>
-                Vehicle
-              </label>
-              <select
-                disabled={vehicles.length === 0}
-                {...register('vehicle')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
-                {vehicles.map((vehicle) => (
-                  <option key={vehicle} value={vehicle}>
-                    {vehicle}
-                  </option>
-                ))}
-              </select>
-              {errors.vehicle && (
-                <span className='text-sm text-red-500'>
-                  {errors.vehicle.message}
-                </span>
-              )}
+              {vehicles.length > 0 ? (
+                <>
+                  <label className='block text-sm font-medium text-gray-700'>
+                    Vehicle
+                  </label>
+                  <select
+                    {...register('vehicle')}
+                    className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
+                    <option value=''>Select a vehicle</option>
+                    {vehicles.map((vehicle) => (
+                      <option key={vehicle.id} value={vehicle.id}>
+                        {vehicle.year} {vehicle.make} {vehicle.model}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.vehicle && (
+                    <span className='text-sm text-red-500'>
+                      {errors.vehicle.message}
+                    </span>
+                  )}
+                </>
+              ) : null}
             </div>
             <div>
               <label className='block text-sm font-medium text-gray-700'>
@@ -264,9 +296,11 @@ export default function JobsPage() {
                 {...register('service')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a service</option>
-                <option value='Oil Change'>Oil Change</option>
-                <option value='Brake Replacement'>Brake Replacement</option>
-                <option value='Tire Rotation'>Tire Rotation</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.title}
+                  </option>
+                ))}
               </select>
               {errors.service && (
                 <span className='text-sm text-red-500'>
@@ -297,9 +331,10 @@ export default function JobsPage() {
               <select
                 {...register('assignedTo')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
-                {mechanics.map((mechanic) => (
-                  <option key={mechanic} value={mechanic}>
-                    {mechanic}
+                <option value=''>Select a mechanic</option>
+                {employees.map((mechanic) => (
+                  <option key={mechanic.id} value={mechanic.id}>
+                    {mechanic.full_name}
                   </option>
                 ))}
               </select>
