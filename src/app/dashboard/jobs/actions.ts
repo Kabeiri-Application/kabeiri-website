@@ -11,8 +11,21 @@ interface FormData {
   title: string;
 }
 
+export async function createJob(formData: FormData) {
+  console.log(formData);
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.from('jobs').insert(formData);
+
+  if (error) {
+    console.error('Error in createJob:', error);
+    return { success: false, error };
+  }
+  console.log(data);
+  return { success: true };
+}
+
 export async function getOrganizationId() {
-  //  TODO GET USER and their Organization ID
   const supabase = await createClient();
 
   const { data: userData, error } = await supabase.auth.getUser();
@@ -27,33 +40,19 @@ export async function getOrganizationId() {
   return data[0]?.organization;
 }
 
-export async function getJobs(org: string) {
+export async function getJobs(organizationId: string) {
   const supabase = await createClient();
-
   const { data, error } = await supabase
     .from('jobs')
     .select()
-    .eq('organization', org);
+    .eq('organization', organizationId);
 
   if (error) {
+    console.log('ERROR JOBS', error);
     return { error: error.message };
   }
   console.log('JOBS: ', data);
   return data;
-}
-
-export async function createJob(formData: FormData) {
-  console.log(formData);
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.from('jobs').insert(formData);
-
-  if (error) {
-    console.error('Error in createJob:', error);
-    return { success: false, error };
-  }
-  console.log(data);
-  return { success: true };
 }
 
 export async function getServices(organizationId: string) {

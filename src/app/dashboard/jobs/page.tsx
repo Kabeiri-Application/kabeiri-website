@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { set, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
@@ -36,36 +36,6 @@ type Job = {
   assignedTo: string;
   dueDate?: string | Date;
 };
-
-const data: Job[] = [
-  {
-    id: 1,
-    customer: 'John Doe',
-    vehicle: 'Toyota Camry',
-    service: 'Oil Change',
-    status: 'In Progress',
-    assignedTo: 'Bob Hammer',
-    dueDate: new Date(),
-  },
-  {
-    id: 2,
-    customer: 'Jane Smith',
-    vehicle: 'Ford F-150',
-    service: 'Brake Replacement',
-    status: 'Pending',
-    assignedTo: 'Ben Nail',
-    dueDate: new Date('05/04/25'),
-  },
-  {
-    id: 3,
-    customer: 'Bob Johnson',
-    vehicle: 'Honda Civic',
-    service: 'Tire Rotation',
-    status: 'Completed',
-    assignedTo: 'John Wrench',
-    dueDate: new Date('04/30/25'),
-  },
-];
 
 const columnHelper = createColumnHelper<Job>();
 
@@ -137,6 +107,8 @@ type FormInputs = z.infer<typeof formSchema>;
 
 export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [jobs, setJobs] = useState<Job[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -146,16 +118,25 @@ export default function JobsPage() {
   });
 
   //TODO REPLACE!!!
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const organizationId = await getOrganizationId();
+  //     console.log(organizationId);
+  //     getJobs(organizationId);
+  //     getEmployees(organizationId);
+  //     getServices(organizationId);
+  //     getCustomers(organizationId);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // GETTING JOBS
   useEffect(() => {
     const fetchData = async () => {
       const organizationId = await getOrganizationId();
-
-      getJobs(organizationId);
-      getEmployees(organizationId);
-      getServices(organizationId);
-      getCustomers(organizationId);
+      await getJobs(organizationId).then((data) => setJobs(data as Job[]));
     };
-
     fetchData();
   }, []);
 
@@ -165,7 +146,10 @@ export default function JobsPage() {
   };
 
   useEffect(() => {
-    getVehicles(selectedCustomer);
+    const fetchCars = async () => {
+      getVehicles(selectedCustomer);
+    };
+    fetchCars();
   }, [selectedCustomer]);
 
   const customers = ['', 'John Doe', 'Jane Smith', 'Bob Johnson'];
@@ -176,6 +160,7 @@ export default function JobsPage() {
     'Ford F-150',
     'Honda Civic',
   ]);
+
   const mechanics = ['', 'Bob Hammer', 'Ben Nail', 'John Wrench'];
   const [modalStatus, setModalStatus] = useState(false);
   return (
@@ -189,7 +174,7 @@ export default function JobsPage() {
               New Job
             </DialogTrigger>
           </div>
-          <Table columns={columns} data={data} />
+          <Table columns={columns} data={jobs} />
         </div>
 
         <DialogContent className='max-h-full overflow-y-scroll'>
