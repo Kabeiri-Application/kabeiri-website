@@ -5,12 +5,11 @@ import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
-import { set, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
   createJob,
-  getCustomer,
   getCustomers,
   getEmployees,
   getJobs,
@@ -162,22 +161,30 @@ export default function JobsPage() {
       const organizationId = await getOrganizationId();
       setOrganization(organizationId);
       await getJobs(organizationId).then((data) => setJobs(data as Job[]));
-      await getEmployees(organizationId).then((data) => setEmployees(data));
-      await getServices(organizationId).then((data) => setServices(data));
-      await getCustomers(organizationId).then((data) => setCustomers(data));
+      await getEmployees(organizationId).then((data) =>
+        setEmployees(data as Employee[])
+      );
+      await getServices(organizationId).then((data) =>
+        setServices(data as Service[])
+      );
+      await getCustomers(organizationId).then((data) =>
+        setCustomers(data as Customer[])
+      );
     };
     fetchData();
   }, [modalStatus]);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    createJob(data, organization);
+    createJob({ ...data, organization });
     setModalStatus(false);
   };
 
   // GETTING CUSTOMER VEHICLES
   useEffect(() => {
     const fetchCars = async () => {
-      await getVehicles(selectedCustomer).then((data) => setVehicles(data));
+      await getVehicles(selectedCustomer).then((data) =>
+        setVehicles(data as Vehicle[])
+      );
     };
     fetchCars();
   }, [selectedCustomer]);
@@ -257,28 +264,29 @@ export default function JobsPage() {
               )}
             </div>
             <div>
-              {vehicles.length > 0 ? (
-                <>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Vehicle
-                  </label>
-                  <select
-                    {...register('vehicle')}
-                    className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
-                    <option value=''>Select a vehicle</option>
-                    {vehicles.map((vehicle) => (
-                      <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.year} {vehicle.make} {vehicle.model}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.vehicle && (
-                    <span className='text-sm text-red-500'>
-                      {errors.vehicle.message}
-                    </span>
-                  )}
-                </>
-              ) : null}
+              <label className='block text-sm font-medium text-gray-700'>
+                Vehicle
+              </label>
+              <select
+                disabled={!selectedCustomer}
+                {...register('vehicle')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
+                <option value=''>Select a vehicle</option>
+                {vehicles.length > 0 ? (
+                  vehicles.map((vehicle) => (
+                    <option key={vehicle.id} value={vehicle.id}>
+                      {vehicle.year} {vehicle.make} {vehicle.model}
+                    </option>
+                  ))
+                ) : (
+                  <option value=''>No vehicles found</option>
+                )}
+              </select>
+              {errors.vehicle && (
+                <span className='text-sm text-red-500'>
+                  {errors.vehicle.message}
+                </span>
+              )}
             </div>
             <div>
               <label className='block text-sm font-medium text-gray-700'>

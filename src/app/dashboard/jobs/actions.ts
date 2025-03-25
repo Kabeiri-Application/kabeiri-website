@@ -13,10 +13,7 @@ interface FormData {
   organization: string | null;
 }
 
-export async function createJob(formData: FormData, organizationId: string) {
-  console.log(formData, organizationId);
-  formData.organization = organizationId;
-  console.log('Edited: ', formData);
+export async function createJob(formData: FormData) {
   const supabase = await createClient();
   const { data, error } = await supabase.from('jobs').insert(formData);
 
