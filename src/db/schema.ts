@@ -65,6 +65,7 @@ export const jobsTable = pgTable('jobs', {
   updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp({ withTimezone: true }),
   customer: uuid().references(() => profilesTable.id),
+  vehicle: uuid().references(() => carsTable.id),
   organization: uuid().references(() => organizationsTable.id),
   title: text().notNull(),
   service: uuid().references(() => servicesTable.id),

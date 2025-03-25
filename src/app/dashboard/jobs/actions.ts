@@ -6,15 +6,18 @@ interface FormData {
   customer: string;
   service: string;
   description: string;
-  dueDate: string | Date;
-  assignedTo: string;
+  due_date: string | Date;
+  assigned_to: string;
   title: string;
+  vehicle: string;
+  organization: string | null;
 }
 
-export async function createJob(formData: FormData) {
-  console.log(formData);
+export async function createJob(formData: FormData, organizationId: string) {
+  console.log(formData, organizationId);
+  formData.organization = organizationId;
+  console.log('Edited: ', formData);
   const supabase = await createClient();
-
   const { data, error } = await supabase.from('jobs').insert(formData);
 
   if (error) {
@@ -81,6 +84,20 @@ export async function getCustomers(organizationId: string) {
     return { error: error.message };
   }
   console.log('CUSTOMERS: ', data);
+  return data;
+}
+
+export async function getCustomer(customerId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .eq('id', customerId);
+
+  if (error) {
+    return { error: error.message };
+  }
+  console.log('CUSTOMER: ', data);
   return data;
 }
 

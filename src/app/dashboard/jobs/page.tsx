@@ -10,6 +10,7 @@ import { z } from 'zod';
 
 import {
   createJob,
+  getCustomer,
   getCustomers,
   getEmployees,
   getJobs,
@@ -29,12 +30,14 @@ import {
 
 type Job = {
   id: number;
+  title: string;
+  description: string;
   customer: string;
   vehicle: string;
   service: string;
   status: 'In Progress' | 'Pending' | 'Completed';
-  assignedTo: string;
-  dueDate?: string | Date;
+  assigned_to: string;
+  due_date?: string | Date;
 };
 
 type Customer = {
@@ -65,9 +68,20 @@ type Vehicle = {
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-  columnHelper.accessor('id', {
-    header: 'ID',
+  // columnHelper.accessor('id', {
+  //   header: 'ID',
+  //   cell: (info) => info.getValue(),
+  // }),
+  columnHelper.accessor('title', {
+    header: 'Job',
     cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('due_date', {
+    header: 'Due Date',
+    cell: (info) =>
+      info.getValue()
+        ? new Date(info.getValue() as string).toLocaleDateString()
+        : '',
   }),
   columnHelper.accessor('customer', {
     header: 'Customer',
@@ -81,17 +95,11 @@ const columns = [
     header: 'Service',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('assignedTo', {
+  columnHelper.accessor('assigned_to', {
     header: 'Assigned To',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('dueDate', {
-    header: 'Due Date',
-    cell: (info) =>
-      info.getValue()
-        ? new Date(info.getValue() as string).toLocaleDateString()
-        : '',
-  }),
+
   columnHelper.accessor('status', {
     header: 'Status',
     cell: (info) => (
@@ -124,8 +132,8 @@ const formSchema = z.object({
   customer: z.string().min(1, 'Customer is required'),
   vehicle: z.string().min(1, 'Vehicle is required'),
   service: z.string().min(1, 'Service is required'),
-  dueDate: z.string(),
-  assignedTo: z.string().min(1, 'Assigned to is required'),
+  due_date: z.string(),
+  assigned_to: z.string().min(1, 'Assigned to is required'),
 });
 
 type FormInputs = z.infer<typeof formSchema>;
@@ -133,11 +141,12 @@ type FormInputs = z.infer<typeof formSchema>;
 export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
-
+  const [organization, setOrganization] = useState('');
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [modalStatus, setModalStatus] = useState(false);
 
   const {
     register,
@@ -147,36 +156,25 @@ export default function JobsPage() {
     resolver: zodResolver(formSchema),
   });
 
-  //TODO REPLACE!!!
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const organizationId = await getOrganizationId();
-  //     console.log(organizationId);
-  //     getJobs(organizationId);
-  //     getServices(organizationId);
-  //     getCustomers(organizationId);
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   // GETTING JOBS
   useEffect(() => {
     const fetchData = async () => {
       const organizationId = await getOrganizationId();
+      setOrganization(organizationId);
       await getJobs(organizationId).then((data) => setJobs(data as Job[]));
       await getEmployees(organizationId).then((data) => setEmployees(data));
       await getServices(organizationId).then((data) => setServices(data));
       await getCustomers(organizationId).then((data) => setCustomers(data));
     };
     fetchData();
-  }, []);
+  }, [modalStatus]);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    createJob(data);
+    createJob(data, organization);
     setModalStatus(false);
   };
 
+  // GETTING CUSTOMER VEHICLES
   useEffect(() => {
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) => setVehicles(data));
@@ -184,7 +182,6 @@ export default function JobsPage() {
     fetchCars();
   }, [selectedCustomer]);
 
-  const [modalStatus, setModalStatus] = useState(false);
   return (
     <main className='p-8'>
       <Dialog open={modalStatus} onOpenChange={setModalStatus}>
@@ -247,16 +244,11 @@ export default function JobsPage() {
                 })}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a Customer</option>
-                {customers.map(
-                  (customer) => (
-                    console.log('Customer: ', customer),
-                    (
-                      <option key={customer.id} value={customer.id}>
-                        {customer?.full_name}
-                      </option>
-                    )
-                  )
-                )}
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer?.full_name}
+                  </option>
+                ))}
               </select>
               {errors.customer && (
                 <span className='text-sm text-red-500'>
@@ -314,13 +306,13 @@ export default function JobsPage() {
               </label>
               <input
                 min={new Date().toISOString().split('T')[0]}
-                {...register('dueDate')}
+                {...register('due_date')}
                 type='date'
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
               />
-              {errors.dueDate && (
+              {errors.due_date && (
                 <span className='text-sm text-red-500'>
-                  {errors.dueDate.message}
+                  {errors.due_date.message}
                 </span>
               )}
             </div>
@@ -329,7 +321,7 @@ export default function JobsPage() {
                 Assigned To
               </label>
               <select
-                {...register('assignedTo')}
+                {...register('assigned_to')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a mechanic</option>
                 {employees.map((mechanic) => (
@@ -338,16 +330,16 @@ export default function JobsPage() {
                   </option>
                 ))}
               </select>
-              {errors.assignedTo && (
+              {errors.assigned_to && (
                 <span className='text-sm text-red-500'>
-                  {errors.assignedTo.message}
+                  {errors.assigned_to.message}
                 </span>
               )}
             </div>
             <Button
               type='submit'
               className='my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800'>
-              Create
+              Submit
             </Button>
           </form>
         </DialogContent>
