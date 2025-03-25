@@ -15,7 +15,14 @@ interface FormData {
 
 export async function createJob(formData: FormData) {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('jobs').insert(formData);
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) {
+    console.error('Error in createJob:', userError);
+    return { success: false, userError };
+  }
+  const { data, error } = await supabase
+    .from('jobs')
+    .insert({ ...formData, created_by: userData?.user?.id });
 
   if (error) {
     console.error('Error in createJob:', error);
@@ -28,13 +35,17 @@ export async function createJob(formData: FormData) {
 export async function getOrganizationId() {
   const supabase = await createClient();
 
-  const { data: userData, error } = await supabase.auth.getUser();
-  const { data, error: error2 } = await supabase
+  const { data: userData, userError } = await supabase.auth.getUser();
+  if (userError) {
+    console.error('Error in createJob:', userError);
+    return { success: false, userError };
+  }
+  const { data, error: error } = await supabase
     .from('profiles')
     .select()
     .eq('id', userData?.user?.id);
-  if (error2) {
-    return { error: error2.message };
+  if (error) {
+    return { error: error.message };
   }
   console.log('USER: ', data[0]?.organization);
   return data[0]?.organization;
