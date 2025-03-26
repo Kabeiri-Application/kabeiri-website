@@ -2,14 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 
-import {
+import type {
+  AddressSchema,
   PersonalSchema,
-  type AddressSchema,
-  type ShopSchema,
-  type SignupSchema,
+  // ShopSchema,
+  SignupSchema,
 } from '@/app/flow/schema';
-import { db } from '@/db';
-import { organizationsTable, profilesTable } from '@/db/schema';
+// import { db } from '@/db';
+// import { organizationsTable, profilesTable } from '@/db/schema';
 import { createClient } from '@/utils/supabase/server';
 
 export async function createAccount(formData: SignupSchema) {
@@ -110,7 +110,8 @@ export async function setPersonalInfo(
   // revalidatePath('/flow', 'layout');
 }
 
-export async function setShopInfo(formData: ShopSchema) {
+export async function setShopInfo() {
+  // export async function setShopInfo(formData: ShopSchema) {
   // TODO: Implement this
 
   // try {

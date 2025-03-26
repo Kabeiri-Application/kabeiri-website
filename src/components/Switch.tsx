@@ -31,7 +31,7 @@ export function Switch({ defaultChecked = false, onChange }: SwitchProps) {
       <span className='sr-only'>Toggle notification</span>
       <span
         className={cn(
-          'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+          'inline-block size-4 rounded-full bg-white transition-transform',
           enabled ? 'translate-x-6' : 'translate-x-1'
         )}
       />
