@@ -75,7 +75,7 @@ export default function LoginPage() {
             <div className='text-sm'>
               <Link
                 href='#forgot-password'
-                className='font-medium text-purple-600 hover:text-purple-500'>
+                className='font-medium text-green-700 hover:text-red-500'>
                 Forgot your password?
               </Link>
             </div>
@@ -88,8 +88,8 @@ export default function LoginPage() {
           <div className='space-y-4'>
             <Button
               type='submit'
-              variant='primary-gradient'
-              className='w-full'
+              // variant='primary-gradient'
+              className='w-full bg-gradient-to-r from-yellow-500 to-green-700 text-white'
               disabled={pending}>
               Sign in
             </Button>
@@ -99,7 +99,7 @@ export default function LoginPage() {
                 Don&apos;t have an account?{' '}
                 <Link
                   href='/signup'
-                  className='font-medium text-purple-600 hover:text-purple-500'>
+                  className='font-medium text-green-700 hover:text-red-500'>
                   Sign up
                 </Link>
               </span>
