@@ -27,7 +27,8 @@ export function ShopForm() {
   const onSubmit = async (data: ShopSchema) => {
     startTransition(async () => {
       setStoreShopInfo(data);
-      const response = await setShopInfo(data);
+      // const response = await setShopInfo(data);
+      const response = await setShopInfo();
 
       if (response?.error) {
         setError('root.serverError', {
