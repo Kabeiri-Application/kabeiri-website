@@ -35,7 +35,7 @@ export async function createJob(formData: FormData) {
 export async function getOrganizationId() {
   const supabase = await createClient();
 
-  const { data: userData, userError } = await supabase.auth.getUser();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
     console.error('Error in createJob:', userError);
     return { success: false, userError };

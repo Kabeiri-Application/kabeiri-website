@@ -105,10 +105,10 @@ const columns = [
       <span
         className={
           info.getValue() === 'Completed'
-            ? 'text-green-600'
+            ? 'text-green-700'
             : info.getValue() === 'In Progress'
-              ? 'text-blue-600'
-              : 'text-yellow-600'
+              ? 'text-yellow-600'
+              : 'text-red-600'
         }>
         {info.getValue()}
       </span>
@@ -154,29 +154,30 @@ export default function JobsPage() {
   } = useForm<FormInputs>({
     resolver: zodResolver(formSchema),
   });
+  const fetchData = async () => {
+    const organizationId = await getOrganizationId();
+    setOrganization(organizationId);
+    await getJobs(organizationId).then((data) => setJobs(data as Job[]));
+    await getEmployees(organizationId).then((data) =>
+      setEmployees(data as Employee[])
+    );
+    await getServices(organizationId).then((data) =>
+      setServices(data as Service[])
+    );
+    await getCustomers(organizationId).then((data) =>
+      setCustomers(data as Customer[])
+    );
+  };
 
-  // GETTING JOBS
+  // GETTING DATA
   useEffect(() => {
-    const fetchData = async () => {
-      const organizationId = await getOrganizationId();
-      setOrganization(organizationId);
-      await getJobs(organizationId).then((data) => setJobs(data as Job[]));
-      await getEmployees(organizationId).then((data) =>
-        setEmployees(data as Employee[])
-      );
-      await getServices(organizationId).then((data) =>
-        setServices(data as Service[])
-      );
-      await getCustomers(organizationId).then((data) =>
-        setCustomers(data as Customer[])
-      );
-    };
     fetchData();
-  }, [modalStatus]);
+  }, []);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     createJob({ ...data, organization });
     setModalStatus(false);
+    fetchData();
   };
 
   // GETTING CUSTOMER VEHICLES
