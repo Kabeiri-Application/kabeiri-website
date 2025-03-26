@@ -14,6 +14,13 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   ...tailwind.configs['flat/recommended'],
+  {
+    settings: {
+      tailwindcss: {
+        callees: ['cn'],
+      },
+    },
+  },
 ];
 
 export default eslintConfig;
