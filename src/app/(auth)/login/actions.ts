@@ -18,8 +18,7 @@ export async function login(prevState: LoginState, formData: FormData) {
   };
 
   try {
-    const signIn = await auth.api.signInEmail({ body: data });
-    console.log(signIn);
+    await auth.api.signInEmail({ body: data });
   } catch (error: unknown) {
     console.log(error);
     return { error: error instanceof Error ? error.message : error };

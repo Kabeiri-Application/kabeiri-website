@@ -19,8 +19,7 @@ export async function signup(prevState: SignupState, formData: FormData) {
   };
 
   try {
-    const signUp = await auth.api.signUpEmail({ body: data });
-    console.log(signUp);
+    await auth.api.signUpEmail({ body: data });
   } catch (error: unknown) {
     console.log(error);
     return { error: error instanceof Error ? error.message : error };
