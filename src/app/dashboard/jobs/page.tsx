@@ -39,20 +39,11 @@ type Job = {
   due_date?: string | Date;
 };
 
-type Customer = {
-  id: string;
-  full_name: string;
-};
+type Customer = { id: string; full_name: string };
 
-type Employee = {
-  id: string;
-  full_name: string;
-};
+type Employee = { id: string; full_name: string };
 
-type Service = {
-  id: string;
-  title: string;
-};
+type Service = { id: string; title: string };
 
 type Vehicle = {
   id: string;
@@ -151,9 +142,7 @@ export default function JobsPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({
-    resolver: zodResolver(formSchema),
-  });
+  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
   const fetchData = async () => {
     const organizationId = await getOrganizationId();
     setOrganization(organizationId);
