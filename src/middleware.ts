@@ -8,8 +8,6 @@ export async function middleware(request: NextRequest) {
     // cookiePrefix: 'better-auth',
   });
 
-  console.log('Session cookie:', sessionCookie);
-
   if (!sessionCookie) {
     return NextResponse.redirect(new URL('/', request.url));
   }
