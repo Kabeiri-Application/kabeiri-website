@@ -5,9 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '@/lib/auth';
 
-type SignupState = {
-  error: string;
-};
+type SignupState = { error: string };
 
 export async function signup(prevState: SignupState, formData: FormData) {
   // type-casting here for convenience
@@ -26,5 +24,5 @@ export async function signup(prevState: SignupState, formData: FormData) {
   }
 
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/dashboard');
 }
