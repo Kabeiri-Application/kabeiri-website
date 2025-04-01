@@ -4,10 +4,11 @@ import { getSessionCookie } from 'better-auth/cookies';
 
 export async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request, {
-    cookieName: 'session_token',
-    cookiePrefix: 'better-auth',
-    useSecureCookies: true,
+    // cookieName: 'session_token',
+    // cookiePrefix: 'better-auth',
   });
+
+  console.log('Session cookie:', sessionCookie);
 
   if (!sessionCookie) {
     return NextResponse.redirect(new URL('/', request.url));
