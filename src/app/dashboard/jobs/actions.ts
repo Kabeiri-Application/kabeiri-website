@@ -31,7 +31,6 @@ export async function createJob(formData: FormData) {
   }
 
   try {
-    console.log('Creating job with data:', formData);
     await db.insert(jobsTable).values({
       ...formData,
       due_date:
@@ -70,6 +69,14 @@ export async function getJobs(organizationId: string) {
   try {
     return await db.query.jobsTable.findMany({
       where: eq(jobsTable.organization, organizationId),
+      //  TODO: add related tables data
+      with: {
+        customer: true,
+        vehicle: true,
+        service: true,
+        assigned_to: true,
+        createdBy: true,
+      },
     });
   } catch (error) {
     return {

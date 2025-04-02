@@ -31,11 +31,15 @@ type Job = {
   id: number;
   title: string;
   description: string;
-  customer: string;
-  vehicle: string;
-  service: string;
+  customer: { id: string; firstName: string; lastName: string };
+  vehicle: {
+    year: string;
+    make: string;
+    model: string;
+  };
+  service: { id: string; title: string };
   status: 'In Progress' | 'Pending' | 'Completed';
-  assigned_to: string;
+  assigned_to: { id: string; firstName: string; lastName: string };
   due_date?: string | Date;
 };
 
@@ -75,19 +79,25 @@ const columns = [
   }),
   columnHelper.accessor('customer', {
     header: 'Customer',
-    cell: (info) => info.getValue(),
+    cell: (info) => `${info.getValue().firstName} ${info.getValue().lastName}`,
   }),
   columnHelper.accessor('vehicle', {
     header: 'Vehicle',
-    cell: (info) => info.getValue(),
+    cell: (info) =>
+      info.getValue().year +
+      ' ' +
+      info.getValue().make +
+      ' ' +
+      info.getValue().model,
   }),
   columnHelper.accessor('service', {
     header: 'Service',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue().title,
   }),
   columnHelper.accessor('assigned_to', {
     header: 'Assigned To',
-    cell: (info) => info.getValue(),
+    cell: (info) =>
+      `${info?.getValue()?.firstName} ${info?.getValue()?.lastName}`,
   }),
 
   columnHelper.accessor('status', {
@@ -137,7 +147,7 @@ export default function JobsPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
-
+  console.log(jobs);
   const {
     register,
     handleSubmit,

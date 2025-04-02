@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   numeric,
   pgEnum,
@@ -79,6 +80,33 @@ export const jobsTable = pgTable('jobs', {
   assigned_to: text().references(() => profilesTable.id),
   createdBy: text().references(() => profilesTable.id),
 });
+
+export const jobRelations = relations(jobsTable, ({ one }) => ({
+  customer: one(profilesTable, {
+    fields: [jobsTable.customer],
+    references: [profilesTable.id],
+  }),
+  vehicle: one(carsTable, {
+    fields: [jobsTable.vehicle],
+    references: [carsTable.id],
+  }),
+  organization: one(organizationsTable, {
+    fields: [jobsTable.organization],
+    references: [organizationsTable.id],
+  }),
+  service: one(servicesTable, {
+    fields: [jobsTable.service],
+    references: [servicesTable.id],
+  }),
+  assigned_to: one(profilesTable, {
+    fields: [jobsTable.assigned_to],
+    references: [profilesTable.id],
+  }),
+  createdBy: one(profilesTable, {
+    fields: [jobsTable.createdBy],
+    references: [profilesTable.id],
+  }),
+}));
 
 export const servicesTable = pgTable('services', {
   id: uuid().primaryKey().defaultRandom(),
