@@ -75,8 +75,8 @@ export const jobsTable = pgTable('jobs', {
   service: uuid().references(() => servicesTable.id),
   description: text().notNull(),
   status: jobStatusEnum().notNull().default('pending'),
-  dueDate: timestamp({ withTimezone: true }),
-  assignedTo: text().references(() => profilesTable.id),
+  due_date: timestamp({ withTimezone: true }),
+  assigned_to: text().references(() => profilesTable.id),
   createdBy: text().references(() => profilesTable.id),
 });
 

@@ -32,9 +32,14 @@ export async function createJob(formData: FormData) {
 
   try {
     console.log('Creating job with data:', formData);
-    await db
-      .insert(jobsTable)
-      .values({ ...formData, createdBy: session.user.id });
+    await db.insert(jobsTable).values({
+      ...formData,
+      due_date:
+        formData.due_date instanceof Date
+          ? formData.due_date
+          : new Date(formData.due_date),
+      createdBy: session.user.id,
+    });
     return { success: true };
   } catch (error) {
     console.error('Error in createJob:', error);
