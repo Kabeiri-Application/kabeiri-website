@@ -31,6 +31,7 @@ export async function createJob(formData: FormData) {
   }
 
   try {
+    console.log('Creating job with data:', formData);
     await db
       .insert(jobsTable)
       .values({ ...formData, createdBy: session.user.id });

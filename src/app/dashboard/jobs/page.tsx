@@ -39,9 +39,9 @@ type Job = {
   due_date?: string | Date;
 };
 
-type Customer = { id: string; full_name: string };
+type Customer = { id: string; firstName: string; lastName: string };
 
-type Employee = { id: string; full_name: string };
+type Employee = { id: string; firstName: string; lastName: string };
 
 type Service = { id: string; title: string };
 
@@ -143,6 +143,7 @@ export default function JobsPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
+
   const fetchData = async () => {
     const organizationId = await getOrganizationId();
     setOrganization(organizationId);
@@ -243,7 +244,7 @@ export default function JobsPage() {
                 <option value=''>Select a Customer</option>
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
-                    {customer?.full_name}
+                    {customer?.firstName} {customer?.lastName}
                   </option>
                 ))}
               </select>
@@ -324,7 +325,7 @@ export default function JobsPage() {
                 <option value=''>Select a mechanic</option>
                 {employees.map((mechanic) => (
                   <option key={mechanic.id} value={mechanic.id}>
-                    {mechanic.full_name}
+                    {mechanic.firstName} {mechanic.lastName}
                   </option>
                 ))}
               </select>
