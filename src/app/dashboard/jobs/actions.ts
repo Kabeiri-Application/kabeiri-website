@@ -69,7 +69,6 @@ export async function getJobs(organizationId: string) {
   try {
     return await db.query.jobsTable.findMany({
       where: eq(jobsTable.organization, organizationId),
-      //  TODO: add related tables data
       with: {
         customer: true,
         vehicle: true,
