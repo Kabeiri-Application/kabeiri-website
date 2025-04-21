@@ -10,17 +10,23 @@ import type {
 } from '@/app/flow/schema';
 // import { db } from '@/db';
 // import { organizationsTable, profilesTable } from '@/db/schema';
-import { authClient } from '@/lib/auth-client';
+import { auth } from '@/lib/auth';
 
 export async function createAccount(formData: SignupSchema) {
-  const { error } = await authClient.signUp({
-    name: '', // TODO: Add name here
-    email: formData.email,
-    password: formData.password,
-  });
-
-  if (error) {
-    return { error: error.message };
+  try {
+    await auth.api.signUpEmail({
+      body: {
+        name: '', // TODO: Add name here
+        email: formData.email,
+        password: formData.password,
+      },
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    // TODO: Handle types
+    return {
+      error: error instanceof Error ? error.message : (error as string),
+    };
   }
 
   revalidatePath('/flow', 'layout');
