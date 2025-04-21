@@ -20,7 +20,10 @@ export async function signup(prevState: SignupState, formData: FormData) {
     await auth.api.signUpEmail({ body: data });
   } catch (error: unknown) {
     console.log(error);
-    return { error: error instanceof Error ? error.message : error };
+    // TODO: Handle types
+    return {
+      error: error instanceof Error ? error.message : (error as string),
+    };
   }
 
   revalidatePath('/', 'layout');

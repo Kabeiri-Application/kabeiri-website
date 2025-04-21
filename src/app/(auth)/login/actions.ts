@@ -19,7 +19,10 @@ export async function login(prevState: LoginState, formData: FormData) {
     await auth.api.signInEmail({ body: data });
   } catch (error: unknown) {
     console.log(error);
-    return { error: error instanceof Error ? error.message : error };
+    return {
+      // TODO: Handle types
+      error: error instanceof Error ? error.message : (error as string),
+    };
   }
 
   revalidatePath('/', 'layout');
