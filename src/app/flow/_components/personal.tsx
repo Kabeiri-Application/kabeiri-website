@@ -2,11 +2,9 @@ import { startTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, UserIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { AvatarUpload } from '@/app/flow/_components/avatar';
-import { deleteAvatar, uploadAvatar } from '@/app/flow/actions';
 import { personalSchema, type PersonalSchema } from '@/app/flow/schema';
 import { useOnboardingStore } from '@/app/flow/store';
 
@@ -36,37 +34,6 @@ export function PersonalForm() {
     });
   };
 
-  const handleAvatarUpload = async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await uploadAvatar(formData);
-
-    if (response.error) {
-      alert(response.error);
-      return;
-    }
-
-    if (response.url) {
-      setValue('avatarUrl', response.url);
-      setPersonalInfo({ ...personalInfo, avatarUrl: response.url });
-    }
-  };
-
-  const handleAvatarDelete = async () => {
-    if (personalInfo.avatarUrl) {
-      const response = await deleteAvatar(personalInfo.avatarUrl);
-
-      if (response.error) {
-        alert(response.error);
-        return;
-      }
-    }
-
-    setValue('avatarUrl', undefined);
-    setPersonalInfo({ ...personalInfo, avatarUrl: undefined });
-  };
-
   return (
     <div className='space-y-6'>
       <div className='flex items-center gap-4'>
@@ -85,11 +52,7 @@ export function PersonalForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
         <div className='flex justify-center'>
-          <AvatarUpload
-            onUpload={handleAvatarUpload}
-            onDelete={handleAvatarDelete}
-            url={personalInfo.avatarUrl}
-          />
+          <UserIcon className='size-24' />
         </div>
 
         <div className='space-y-4'>
