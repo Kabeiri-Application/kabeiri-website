@@ -62,10 +62,10 @@ type Vehicle = {
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-  // columnHelper.accessor('id', {
-  //   header: 'ID',
-  //   cell: (info) => info.getValue(),
-  // }),
+  columnHelper.accessor('id', {
+    header: undefined,
+    cell: undefined,
+  }),
   columnHelper.accessor('title', {
     header: 'Job',
     cell: (info) => info.getValue(),
@@ -115,15 +115,15 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.display({
-    id: 'actions',
-    header: 'Actions',
-    cell: () => (
-      <Button variant='secondary' size='sm'>
-        Update
-      </Button>
-    ),
-  }),
+  // columnHelper.display({
+  //   id: 'actions',
+  //   header: 'Actions',
+  //   cell: () => (
+  //     <Button variant='secondary' size='sm'>
+  //       Update
+  //     </Button>
+  //   ),
+  // }),
 ];
 
 const formSchema = z.object({
@@ -156,17 +156,39 @@ export default function JobsPage() {
 
   const fetchData = async () => {
     const organizationId = await getOrganizationId();
-    setOrganization(organizationId);
-    await getJobs(organizationId).then((data) => setJobs(data as Job[]));
-    await getEmployees(organizationId).then((data) =>
-      setEmployees(data as Employee[])
-    );
-    await getServices(organizationId).then((data) =>
-      setServices(data as Service[])
-    );
-    await getCustomers(organizationId).then((data) =>
-      setCustomers(data as Customer[])
-    );
+    if (typeof organizationId === 'string') {
+      setOrganization(organizationId);
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getJobs(organizationId).then((data) =>
+        setJobs(data as unknown as Job[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getEmployees(organizationId).then((data) =>
+        setEmployees(data as Employee[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getServices(organizationId).then((data) =>
+        setServices(data as Service[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getCustomers(organizationId).then((data) =>
+        setCustomers(data as Customer[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
   };
 
   // GETTING DATA
@@ -201,7 +223,7 @@ export default function JobsPage() {
               New Job
             </DialogTrigger>
           </div>
-          <Table columns={columns} data={jobs} />
+          <Table columns={columns} data={jobs} clickable={true} />
         </div>
 
         <DialogContent className='max-h-full overflow-y-scroll'>

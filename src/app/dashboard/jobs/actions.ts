@@ -49,7 +49,7 @@ export async function createJob(formData: FormData) {
 export async function getOrganizationId() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false, error: 'Not authenticated' };
+    throw new Error('Not authenticated');
   }
 
   try {
