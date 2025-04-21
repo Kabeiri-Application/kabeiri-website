@@ -30,7 +30,7 @@ export default function Page() {
   const fetchData = async () => {
     try {
       const data = await getJob(jobID as string);
-      setJob(data as Job);
+      setJob(data as unknown as Job);
     } catch (error) {
       console.error('Error fetching job data:', error);
     }
