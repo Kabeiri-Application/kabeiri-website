@@ -23,6 +23,7 @@ interface FormData {
   vehicle: string;
   organization: string | null;
 }
+// TODO: IMPROVE ERROR HANDLING
 
 export async function createJob(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -69,6 +70,26 @@ export async function getJobs(organizationId: string) {
   try {
     return await db.query.jobsTable.findMany({
       where: eq(jobsTable.organization, organizationId),
+      with: {
+        customer: true,
+        vehicle: true,
+        service: true,
+        assigned_to: true,
+        createdBy: true,
+      },
+    });
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : 'An unknown error occurred',
+    };
+  }
+}
+
+export async function getJob(jobId: string) {
+  try {
+    return await db.query.jobsTable.findFirst({
+      where: eq(jobsTable.id, jobId),
       with: {
         customer: true,
         vehicle: true,

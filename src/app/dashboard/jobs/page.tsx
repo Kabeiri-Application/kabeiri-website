@@ -153,7 +153,7 @@ export default function JobsPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
-
+  // TODO: IMPROVE ERROR HANDLING
   const fetchData = async () => {
     const organizationId = await getOrganizationId();
     if (typeof organizationId === 'string') {
