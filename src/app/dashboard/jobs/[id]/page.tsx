@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+
+import { ArrowLeft } from 'lucide-react';
 
 import { getJob } from '../actions';
 
@@ -24,6 +26,7 @@ type Job = {
 export default function Page() {
   const [job, setJob] = useState<Job | null>(null);
   const params = useParams();
+  const router = useRouter();
 
   const jobID = params.id;
 
@@ -43,6 +46,13 @@ export default function Page() {
 
   return (
     <main className='p-8'>
+      <button
+        onClick={() => router.back()}
+        className='mb-6 flex items-center text-gray-600 hover:text-gray-900'>
+        <ArrowLeft className='mr-2 h-4 w-4' />
+        Back to Jobs
+      </button>
+
       {!job ? (
         <div>Loading...</div>
       ) : (
