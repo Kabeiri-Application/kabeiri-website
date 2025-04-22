@@ -121,7 +121,7 @@ export default function Page() {
               <div className='space-y-2'>
                 <p>
                   <span className='font-medium'>Assigned To: </span>
-                  {job.assigned_to.firstName} {job.assigned_to.lastName}
+                  {job?.assigned_to?.firstName} {job?.assigned_to?.lastName}
                 </p>
               </div>
             </div>
