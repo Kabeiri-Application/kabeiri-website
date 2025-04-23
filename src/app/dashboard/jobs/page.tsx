@@ -147,7 +147,7 @@ export default function JobsPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
-  console.log(jobs);
+
   const {
     register,
     handleSubmit,

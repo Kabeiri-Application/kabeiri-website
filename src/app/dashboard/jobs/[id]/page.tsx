@@ -3,9 +3,21 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { ArrowLeft } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, Pencil } from 'lucide-react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { z } from 'zod';
 
-import { getJob } from '../actions';
+import { Button } from '@/components/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+import { editJob, getJob } from '../actions';
 
 type Job = {
   id: number;
@@ -27,6 +39,7 @@ export default function Page() {
   const [job, setJob] = useState<Job | null>(null);
   const params = useParams();
   const router = useRouter();
+  const [modalStatus, setModalStatus] = useState(false);
 
   const jobID = params.id;
 
@@ -42,16 +55,53 @@ export default function Page() {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log('Job:', job);
+
+  const formSchema = z.object({
+    title: z.string().min(1, 'Title must be at least 1 characters'),
+    description: z.string().min(1, 'Last name must be at least 1 characters'),
+    customer: z.string().min(1, 'Customer is required'),
+    vehicle: z.string().min(1, 'Vehicle is required'),
+    service: z.string().min(1, 'Service is required'),
+    due_date: z.string(),
+    assigned_to: z.string().min(1, 'Assigned to is required'),
+  });
+
+  type FormInputs = z.infer<typeof formSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
+
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    editJob(
+      {
+        ...data,
+        organization: '',
+      },
+      jobID as string
+    );
+    setModalStatus(false);
+    fetchData();
+  };
 
   return (
     <main className='p-8'>
-      <button
-        onClick={() => router.back()}
-        className='mb-6 flex items-center text-gray-600 hover:text-gray-900'>
-        <ArrowLeft className='mr-2 h-4 w-4' />
-        Back to Jobs
-      </button>
+      <div className='mx-auto mb-8 flex max-w-5xl items-center justify-between'>
+        <button
+          onClick={() => router.back()}
+          className='flex items-center text-gray-600 hover:text-gray-900'>
+          <ArrowLeft className='size-4' />
+          Back to Jobs
+        </button>
+        <button
+          onClick={() => setModalStatus(true)}
+          className='flex items-center text-gray-600 hover:text-gray-900'>
+          <Pencil className='size-4' />
+          Edit
+        </button>
+      </div>
 
       {!job ? (
         <div>Loading...</div>
@@ -128,6 +178,78 @@ export default function Page() {
           </div>
         </div>
       )}
+      <Dialog open={modalStatus} onOpenChange={setModalStatus}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Job</DialogTitle>
+            <DialogDescription>
+              Here you can edit the job details.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Title
+              </label>
+              <input
+                {...register('title')}
+                defaultValue={job?.title}
+                type='text'
+                placeholder='Title'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.title && (
+                <span className='text-sm text-red-500'>
+                  {errors.title.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Description
+              </label>
+              <textarea
+                rows={4}
+                {...register('description')}
+                defaultValue={job?.description}
+                placeholder='Description'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.description && (
+                <span className='text-sm text-red-500'>
+                  {errors.description.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Due Date
+              </label>
+              <input
+                min={new Date().toISOString().split('T')[0]}
+                {...register('due_date')}
+                defaultValue={
+                  job?.due_date
+                    ? new Date(job.due_date).toISOString().split('T')[0]
+                    : ''
+                }
+                type='date'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.due_date && (
+                <span className='text-sm text-red-500'>
+                  {errors.due_date.message}
+                </span>
+              )}
+            </div>
+            <Button
+              type='submit'
+              className='my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800'>
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

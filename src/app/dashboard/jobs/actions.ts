@@ -47,6 +47,31 @@ export async function createJob(formData: FormData) {
   }
 }
 
+export async function editJob(formData: FormData, jobId: string) {
+  console.log('formData', formData);
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { success: false, error: 'Not authenticated' };
+  }
+  try {
+    await db
+      .update(jobsTable)
+      .set({
+        ...formData,
+        due_date:
+          formData.due_date instanceof Date
+            ? formData.due_date
+            : new Date(formData.due_date),
+      })
+      .where(eq(jobsTable.id, jobId));
+    return { success: true };
+  } catch (error) {
+    console.error('Error in createJob:', error);
+    return { success: false, error };
+  }
+}
+
 export async function getOrganizationId() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
