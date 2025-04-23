@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { editJob, getJob } from '../actions';
+import { editJob, getJob, getOrganizationId } from '../actions';
 
 type Job = {
   id: number;
@@ -40,10 +40,17 @@ export default function Page() {
   const params = useParams();
   const router = useRouter();
   const [modalStatus, setModalStatus] = useState(false);
+  const [organization, setOrganization] = useState('');
 
   const jobID = params.id;
 
   const fetchData = async () => {
+    const organizationId = await getOrganizationId();
+    if (typeof organizationId === 'string') {
+      setOrganization(organizationId);
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
     try {
       const data = await getJob(jobID as string);
       setJob(data as unknown as Job);
@@ -54,6 +61,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formSchema = z.object({
@@ -75,13 +83,8 @@ export default function Page() {
   } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    editJob(
-      {
-        ...data,
-        organization: '',
-      },
-      jobID as string
-    );
+    console.log('Form data:', data);
+    editJob({ ...data, organization }, jobID as string);
     setModalStatus(false);
     fetchData();
   };

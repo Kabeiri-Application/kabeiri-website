@@ -48,13 +48,12 @@ export async function createJob(formData: FormData) {
 }
 
 export async function editJob(formData: FormData, jobId: string) {
-  console.log('formData', formData);
-
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false, error: 'Not authenticated' };
   }
   try {
+    console.log('Editing job with ID:', jobId);
     await db
       .update(jobsTable)
       .set({
