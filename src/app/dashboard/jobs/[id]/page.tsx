@@ -25,6 +25,7 @@ type Job = {
   description: string;
   customer: { id: string; firstName: string; lastName: string };
   vehicle: {
+    id: string;
     year: string;
     make: string;
     model: string;
@@ -67,11 +68,7 @@ export default function Page() {
   const formSchema = z.object({
     title: z.string().min(1, 'Title must be at least 1 characters'),
     description: z.string().min(1, 'Last name must be at least 1 characters'),
-    customer: z.string().min(1, 'Customer is required'),
-    vehicle: z.string().min(1, 'Vehicle is required'),
-    service: z.string().min(1, 'Service is required'),
     due_date: z.string(),
-    assigned_to: z.string().min(1, 'Assigned to is required'),
   });
 
   type FormInputs = z.infer<typeof formSchema>;
@@ -83,8 +80,17 @@ export default function Page() {
   } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log('Form data:', data);
-    editJob({ ...data, organization }, jobID as string);
+    editJob(
+      {
+        ...data,
+        organization,
+        customer: job?.customer.id || '',
+        service: job?.service.id || '',
+        assigned_to: job?.assigned_to.id || '',
+        vehicle: job?.vehicle.id || '',
+      },
+      jobID as string
+    );
     setModalStatus(false);
     fetchData();
   };
