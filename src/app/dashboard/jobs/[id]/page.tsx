@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { set, z } from 'zod';
+import { z } from 'zod';
 
 import { Button } from '@/components/Button';
 import {
