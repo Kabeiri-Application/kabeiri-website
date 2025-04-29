@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
+import { set, z } from 'zod';
 
 import { Button } from '@/components/Button';
 import {
@@ -17,7 +17,15 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { editJob, getJob, getOrganizationId } from '../actions';
+import {
+  editJob,
+  getCustomers,
+  getEmployees,
+  getJob,
+  getOrganizationId,
+  getServices,
+  getVehicles,
+} from '../actions';
 
 type Job = {
   id: number;
@@ -36,12 +44,33 @@ type Job = {
   due_date?: string | Date;
 };
 
+type Customer = { id: string; firstName: string; lastName: string };
+
+type Employee = { id: string; firstName: string; lastName: string };
+
+type Service = { id: string; title: string };
+
+type Vehicle = {
+  id: string;
+  make: string;
+  model: string;
+  year: string;
+  vin: string;
+  licensePlate: string;
+  color: string;
+};
+
 export default function Page() {
   const [job, setJob] = useState<Job | null>(null);
   const params = useParams();
   const router = useRouter();
   const [modalStatus, setModalStatus] = useState(false);
   const [organization, setOrganization] = useState('');
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState('');
 
   const jobID = params.id;
 
@@ -52,9 +81,31 @@ export default function Page() {
     } else {
       console.error('Invalid organizationId:', organizationId);
     }
+    if (typeof organizationId === 'string') {
+      await getEmployees(organizationId).then((data) =>
+        setEmployees(data as Employee[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getServices(organizationId).then((data) =>
+        setServices(data as Service[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getCustomers(organizationId).then((data) =>
+        setCustomers(data as Customer[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
     try {
       const data = await getJob(jobID as string);
       setJob(data as unknown as Job);
+      setSelectedCustomer(data.customer.id);
     } catch (error) {
       console.error('Error fetching job data:', error);
     }
@@ -68,7 +119,11 @@ export default function Page() {
   const formSchema = z.object({
     title: z.string().min(1, 'Title must be at least 1 characters'),
     description: z.string().min(1, 'Last name must be at least 1 characters'),
+    customer: z.string().min(1, 'Customer is required'),
+    vehicle: z.string().min(1, 'Vehicle is required'),
+    service: z.string().min(1, 'Service is required'),
     due_date: z.string(),
+    assigned_to: z.string().min(1, 'Assigned to is required'),
   });
 
   type FormInputs = z.infer<typeof formSchema>;
@@ -84,16 +139,21 @@ export default function Page() {
       {
         ...data,
         organization,
-        customer: job?.customer.id || '',
-        service: job?.service.id || '',
-        assigned_to: job?.assigned_to.id || '',
-        vehicle: job?.vehicle.id || '',
       },
       jobID as string
     );
     setModalStatus(false);
     fetchData();
   };
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      await getVehicles(selectedCustomer).then((data) =>
+        setVehicles(data as Vehicle[])
+      );
+    };
+    fetchCars();
+  }, [selectedCustomer]);
 
   return (
     <main className='p-8'>
@@ -201,9 +261,8 @@ export default function Page() {
                 Title
               </label>
               <input
-                {...register('title')}
                 defaultValue={job?.title}
-                type='text'
+                {...register('title')}
                 placeholder='Title'
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
               />
@@ -218,9 +277,9 @@ export default function Page() {
                 Description
               </label>
               <textarea
+                defaultValue={job?.description}
                 rows={4}
                 {...register('description')}
-                defaultValue={job?.description}
                 placeholder='Description'
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
               />
@@ -232,22 +291,109 @@ export default function Page() {
             </div>
             <div>
               <label className='block text-sm font-medium text-gray-700'>
+                Customer
+              </label>
+              <select
+                defaultValue={job?.customer.id}
+                {...register('customer', {
+                  onChange: (e) => setSelectedCustomer(e.target.value),
+                })}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                <option value=''>Select a Customer</option>
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer?.firstName} {customer?.lastName}
+                  </option>
+                ))}
+              </select>
+              {errors.customer && (
+                <span className='text-sm text-red-500'>
+                  {errors.customer.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Vehicle
+              </label>
+              <select
+                // disabled={!job?.customer.id}
+                defaultValue={job?.vehicle.id}
+                {...register('vehicle')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
+                <option value=''>Select a vehicle</option>
+                {vehicles.length > 0 ? (
+                  vehicles.map((vehicle) => (
+                    <option key={vehicle.id} value={vehicle.id}>
+                      {vehicle.year} {vehicle.make} {vehicle.model}
+                    </option>
+                  ))
+                ) : (
+                  <option value=''>No vehicles found</option>
+                )}
+              </select>
+              {errors.vehicle && (
+                <span className='text-sm text-red-500'>
+                  {errors.vehicle.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Service
+              </label>
+              <select
+                defaultValue={job?.service.id}
+                {...register('service')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                <option value=''>Select a service</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.title}
+                  </option>
+                ))}
+              </select>
+              {errors.service && (
+                <span className='text-sm text-red-500'>
+                  {errors.service.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
                 Due Date
               </label>
               <input
+                defaultValue={job?.due_date?.toISOString().split('T')[0]}
                 min={new Date().toISOString().split('T')[0]}
                 {...register('due_date')}
-                defaultValue={
-                  job?.due_date
-                    ? new Date(job.due_date).toISOString().split('T')[0]
-                    : ''
-                }
                 type='date'
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
               />
               {errors.due_date && (
                 <span className='text-sm text-red-500'>
                   {errors.due_date.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Assigned To
+              </label>
+              <select
+                defaultValue={job?.assigned_to.id}
+                {...register('assigned_to')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                <option value=''>Select a mechanic</option>
+                {employees.map((mechanic) => (
+                  <option key={mechanic.id} value={mechanic.id}>
+                    {mechanic.firstName} {mechanic.lastName}
+                  </option>
+                ))}
+              </select>
+              {errors.assigned_to && (
+                <span className='text-sm text-red-500'>
+                  {errors.assigned_to.message}
                 </span>
               )}
             </div>
