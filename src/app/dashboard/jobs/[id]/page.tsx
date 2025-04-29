@@ -39,9 +39,9 @@ type Job = {
     model: string;
   };
   service: { id: string; title: string };
-  status: 'In Progress' | 'Pending' | 'Completed';
+  status: 'in progress' | 'pending' | 'completed';
   assigned_to: { id: string; firstName: string; lastName: string };
-  due_date?: string | Date;
+  due_date?: Date;
 };
 
 type Customer = { id: string; firstName: string; lastName: string };
@@ -105,7 +105,7 @@ export default function Page() {
     try {
       const data = await getJob(jobID as string);
       setJob(data as unknown as Job);
-      setSelectedCustomer(data.customer.id);
+      setSelectedCustomer(data?.customer?.id);
     } catch (error) {
       console.error('Error fetching job data:', error);
     }
@@ -122,8 +122,9 @@ export default function Page() {
     customer: z.string().min(1, 'Customer is required'),
     vehicle: z.string().min(1, 'Vehicle is required'),
     service: z.string().min(1, 'Service is required'),
-    due_date: z.string(),
+    due_date: z.date(),
     assigned_to: z.string().min(1, 'Assigned to is required'),
+    status: z.enum(['in progress', 'pending', 'completed']),
   });
 
   type FormInputs = z.infer<typeof formSchema>;
@@ -154,7 +155,7 @@ export default function Page() {
     };
     fetchCars();
   }, [selectedCustomer]);
-
+  console.log(job);
   return (
     <main className='p-8'>
       <div className='mx-auto mb-8 flex max-w-5xl items-center justify-between'>
@@ -180,9 +181,9 @@ export default function Page() {
             <h1 className='text-3xl font-bold'>{job.title}</h1>
             <span
               className={`rounded-full px-4 py-2 font-medium ${
-                job.status === 'Completed'
+                job.status === 'completed'
                   ? 'bg-green-100 text-green-700'
-                  : job.status === 'In Progress'
+                  : job.status === 'in progress'
                     ? 'bg-yellow-100 text-yellow-700'
                     : 'bg-red-100 text-red-700'
               }`}>
@@ -394,6 +395,25 @@ export default function Page() {
               {errors.assigned_to && (
                 <span className='text-sm text-red-500'>
                   {errors.assigned_to.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Status
+              </label>
+              <select
+                defaultValue={job?.status}
+                {...register('status')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                <option value=''>Select Status</option>
+                <option value='in progress'>In Progress</option>
+                <option value='pending'>Pending</option>
+                <option value='completed'>Completed</option>
+              </select>
+              {errors.status && (
+                <span className='text-sm text-red-500'>
+                  {errors.status.message}
                 </span>
               )}
             </div>
