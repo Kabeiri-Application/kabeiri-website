@@ -38,7 +38,7 @@ type Job = {
     model: string;
   };
   service: { id: string; title: string };
-  status: 'In Progress' | 'Pending' | 'Completed';
+  status: 'in progress' | 'pending' | 'completed';
   assigned_to: { id: string; firstName: string; lastName: string };
   due_date?: string | Date;
 };
@@ -105,9 +105,9 @@ const columns = [
     cell: (info) => (
       <span
         className={
-          info.getValue() === 'Completed'
+          info.getValue() === 'completed'
             ? 'text-green-700'
-            : info.getValue() === 'In Progress'
+            : info.getValue() === 'in progress'
               ? 'text-yellow-600'
               : 'text-red-600'
         }>
