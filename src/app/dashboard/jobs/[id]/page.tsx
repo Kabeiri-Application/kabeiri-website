@@ -27,7 +27,6 @@ import {
   getVehicles,
 } from '../actions';
 
-
 type Job = {
   id: number;
   title: string;
@@ -59,7 +58,6 @@ type Vehicle = {
   vin: string;
   licensePlate: string;
   color: string;
-
 };
 
 export default function Page() {
@@ -73,7 +71,6 @@ export default function Page() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState('');
-
 
   const jobID = params.id;
 
@@ -175,7 +172,6 @@ export default function Page() {
           Edit
         </button>
       </div>
-
 
       {!job ? (
         <div>Loading...</div>
@@ -429,7 +425,6 @@ export default function Page() {
           </form>
         </DialogContent>
       </Dialog>
-
     </main>
   );
 }
