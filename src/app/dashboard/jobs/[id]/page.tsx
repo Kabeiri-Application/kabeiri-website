@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 import {
   editJob,
@@ -39,9 +40,9 @@ type Job = {
     model: string;
   };
   service: { id: string; title: string };
-  status: 'in progress' | 'pending' | 'completed';
+  status: 'in progress' | 'pending' | 'complete';
   assigned_to: { id: string; firstName: string; lastName: string };
-  due_date?: Date;
+  due_date?: string | Date;
 };
 
 type Customer = { id: string; firstName: string; lastName: string };
@@ -122,9 +123,9 @@ export default function Page() {
     customer: z.string().min(1, 'Customer is required'),
     vehicle: z.string().min(1, 'Vehicle is required'),
     service: z.string().min(1, 'Service is required'),
-    due_date: z.date(),
+    due_date: z.string(),
     assigned_to: z.string().min(1, 'Assigned to is required'),
-    status: z.enum(['in progress', 'pending', 'completed']),
+    status: z.enum(['in progress', 'pending', 'complete']),
   });
 
   type FormInputs = z.infer<typeof formSchema>;
@@ -180,13 +181,14 @@ export default function Page() {
           <div className='flex items-center justify-between'>
             <h1 className='text-3xl font-bold'>{job.title}</h1>
             <span
-              className={`rounded-full px-4 py-2 font-medium ${
-                job.status === 'completed'
+              className={cn(
+                `rounded-full px-4 py-2 font-medium capitalize`,
+                job.status === 'complete'
                   ? 'bg-green-100 text-green-700'
                   : job.status === 'in progress'
                     ? 'bg-yellow-100 text-yellow-700'
                     : 'bg-red-100 text-red-700'
-              }`}>
+              )}>
               {job.status}
             </span>
           </div>
@@ -382,7 +384,7 @@ export default function Page() {
                 Assigned To
               </label>
               <select
-                defaultValue={job?.assigned_to.id}
+                defaultValue={job?.assigned_to?.id}
                 {...register('assigned_to')}
                 className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a mechanic</option>
@@ -409,7 +411,7 @@ export default function Page() {
                 <option value=''>Select Status</option>
                 <option value='in progress'>In Progress</option>
                 <option value='pending'>Pending</option>
-                <option value='completed'>Completed</option>
+                <option value='complete'>Complete</option>
               </select>
               {errors.status && (
                 <span className='text-sm text-red-500'>

@@ -26,6 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 type Job = {
   id: number;
@@ -38,7 +39,7 @@ type Job = {
     model: string;
   };
   service: { id: string; title: string };
-  status: 'in progress' | 'pending' | 'completed';
+  status: 'in progress' | 'pending' | 'complete';
   assigned_to: { id: string; firstName: string; lastName: string };
   due_date?: string | Date;
 };
@@ -104,26 +105,17 @@ const columns = [
     header: 'Status',
     cell: (info) => (
       <span
-        className={
-          info.getValue() === 'completed'
+        className={cn(
+          info.getValue() === 'complete'
             ? 'text-green-700'
             : info.getValue() === 'in progress'
               ? 'text-yellow-600'
               : 'text-red-600'
-        }>
+        )}>
         {info.getValue()}
       </span>
     ),
   }),
-  // columnHelper.display({
-  //   id: 'actions',
-  //   header: 'Actions',
-  //   cell: () => (
-  //     <Button variant='secondary' size='sm'>
-  //       Update
-  //     </Button>
-  //   ),
-  // }),
 ];
 
 const formSchema = z.object({
