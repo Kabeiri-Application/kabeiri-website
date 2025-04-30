@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
@@ -31,28 +31,23 @@ type Job = {
   id: number;
   title: string;
   description: string;
-  customer: string;
-  vehicle: string;
-  service: string;
+  customer: { id: string; firstName: string; lastName: string };
+  vehicle: {
+    year: string;
+    make: string;
+    model: string;
+  };
+  service: { id: string; title: string };
   status: 'In Progress' | 'Pending' | 'Completed';
-  assigned_to: string;
+  assigned_to: { id: string; firstName: string; lastName: string };
   due_date?: string | Date;
 };
 
-type Customer = {
-  id: string;
-  full_name: string;
-};
+type Customer = { id: string; firstName: string; lastName: string };
 
-type Employee = {
-  id: string;
-  full_name: string;
-};
+type Employee = { id: string; firstName: string; lastName: string };
 
-type Service = {
-  id: string;
-  title: string;
-};
+type Service = { id: string; title: string };
 
 type Vehicle = {
   id: string;
@@ -67,10 +62,10 @@ type Vehicle = {
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-  // columnHelper.accessor('id', {
-  //   header: 'ID',
-  //   cell: (info) => info.getValue(),
-  // }),
+  columnHelper.accessor('id', {
+    header: undefined,
+    cell: undefined,
+  }),
   columnHelper.accessor('title', {
     header: 'Job',
     cell: (info) => info.getValue(),
@@ -84,19 +79,25 @@ const columns = [
   }),
   columnHelper.accessor('customer', {
     header: 'Customer',
-    cell: (info) => info.getValue(),
+    cell: (info) => `${info.getValue().firstName} ${info.getValue().lastName}`,
   }),
   columnHelper.accessor('vehicle', {
     header: 'Vehicle',
-    cell: (info) => info.getValue(),
+    cell: (info) =>
+      info.getValue().year +
+      ' ' +
+      info.getValue().make +
+      ' ' +
+      info.getValue().model,
   }),
   columnHelper.accessor('service', {
     header: 'Service',
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue().title,
   }),
   columnHelper.accessor('assigned_to', {
     header: 'Assigned To',
-    cell: (info) => info.getValue(),
+    cell: (info) =>
+      `${info?.getValue()?.firstName} ${info?.getValue()?.lastName}`,
   }),
 
   columnHelper.accessor('status', {
@@ -114,15 +115,15 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.display({
-    id: 'actions',
-    header: 'Actions',
-    cell: () => (
-      <Button variant='secondary' size='sm'>
-        Update
-      </Button>
-    ),
-  }),
+  // columnHelper.display({
+  //   id: 'actions',
+  //   header: 'Actions',
+  //   cell: () => (
+  //     <Button variant='secondary' size='sm'>
+  //       Update
+  //     </Button>
+  //   ),
+  // }),
 ];
 
 const formSchema = z.object({
@@ -146,27 +147,48 @@ export default function JobsPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
-
+  console.log(jobs);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({
-    resolver: zodResolver(formSchema),
-  });
+  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
+  // TODO: IMPROVE ERROR HANDLING
   const fetchData = async () => {
     const organizationId = await getOrganizationId();
-    setOrganization(organizationId);
-    await getJobs(organizationId).then((data) => setJobs(data as Job[]));
-    await getEmployees(organizationId).then((data) =>
-      setEmployees(data as Employee[])
-    );
-    await getServices(organizationId).then((data) =>
-      setServices(data as Service[])
-    );
-    await getCustomers(organizationId).then((data) =>
-      setCustomers(data as Customer[])
-    );
+    if (typeof organizationId === 'string') {
+      setOrganization(organizationId);
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getJobs(organizationId).then((data) =>
+        setJobs(data as unknown as Job[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getEmployees(organizationId).then((data) =>
+        setEmployees(data as Employee[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getServices(organizationId).then((data) =>
+        setServices(data as Service[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
+    if (typeof organizationId === 'string') {
+      await getCustomers(organizationId).then((data) =>
+        setCustomers(data as Customer[])
+      );
+    } else {
+      console.error('Invalid organizationId:', organizationId);
+    }
   };
 
   // GETTING DATA
@@ -201,7 +223,7 @@ export default function JobsPage() {
               New Job
             </DialogTrigger>
           </div>
-          <Table columns={columns} data={jobs} />
+          <Table columns={columns} data={jobs} clickable={true} />
         </div>
 
         <DialogContent className='max-h-full overflow-y-scroll'>
@@ -254,7 +276,7 @@ export default function JobsPage() {
                 <option value=''>Select a Customer</option>
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
-                    {customer?.full_name}
+                    {customer?.firstName} {customer?.lastName}
                   </option>
                 ))}
               </select>
@@ -335,7 +357,7 @@ export default function JobsPage() {
                 <option value=''>Select a mechanic</option>
                 {employees.map((mechanic) => (
                   <option key={mechanic.id} value={mechanic.id}>
-                    {mechanic.full_name}
+                    {mechanic.firstName} {mechanic.lastName}
                   </option>
                 ))}
               </select>

@@ -10,76 +10,26 @@ import type {
 } from '@/app/flow/schema';
 // import { db } from '@/db';
 // import { organizationsTable, profilesTable } from '@/db/schema';
-import { createClient } from '@/utils/supabase/server';
+import { auth } from '@/lib/auth';
 
 export async function createAccount(formData: SignupSchema) {
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-  });
-
-  if (error) {
-    return { error: error.message };
+  try {
+    await auth.api.signUpEmail({
+      body: {
+        name: '', // TODO: Add name here
+        email: formData.email,
+        password: formData.password,
+      },
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    // TODO: Handle types
+    return {
+      error: error instanceof Error ? error.message : (error as string),
+    };
   }
 
   revalidatePath('/flow', 'layout');
-}
-
-export async function uploadAvatar(formData: FormData) {
-  try {
-    const file = formData.get('file') as File;
-    if (!file) {
-      throw new Error('No file provided');
-    }
-
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    // Generate a unique filename using timestamp and original extension
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(fileName, file);
-
-    if (uploadError) {
-      throw uploadError;
-    }
-
-    return { url: fileName };
-  } catch (error) {
-    console.error('Error uploading avatar:', error);
-    return { error: 'Failed to upload avatar' };
-  }
-}
-
-export async function deleteAvatar(path: string) {
-  try {
-    const supabase = await createClient();
-
-    const { error: deleteError } = await supabase.storage
-      .from('avatars')
-      .remove([path]);
-
-    if (deleteError) {
-      throw deleteError;
-    }
-
-    return { success: true };
-  } catch (error) {
-    console.error('Error deleting avatar:', error);
-    return { error: 'Failed to delete avatar' };
-  }
 }
 
 export async function setPersonalInfo(

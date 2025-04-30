@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { Car } from 'lucide-react';
@@ -33,6 +34,14 @@ const STEPS = {
 type StepKey = keyof typeof STEPS;
 
 export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingContent />
+    </Suspense>
+  );
+}
+
+function OnboardingContent() {
   const searchParams = useSearchParams();
   const currentStep = (searchParams.get('step') as StepKey) || 'personal';
 
@@ -40,46 +49,44 @@ export default function OnboardingPage() {
   const currentStepIndex = STEPS[currentStep].index;
 
   return (
-    <>
-      <div className='flex min-h-screen'>
-        {/* Left Column - Brand and Info */}
-        <div className='relative flex w-2/5 flex-col bg-gray-50 p-10'>
-          {/* Brand and Content */}
-          <div className='flex flex-1 flex-col'>
-            <div className='mb-10'>
-              <h1 className='text-4xl font-bold'>Kabeiri</h1>
-              <p className='mt-2 text-xl text-gray-600'>
-                Your journey starts here
-              </p>
-            </div>
-
-            <div className='flex-1'>{STEPS[currentStep].infoComponent}</div>
-
-            {/* Footer Section */}
-            <div className='mt-auto'>
-              <div className='mb-8'>
-                <CarStepper
-                  currentStep={currentStepIndex}
-                  totalSteps={stepKeys.length}
-                  stepNames={stepKeys.map((key) => STEPS[key].name)}
-                />
-              </div>
-
-              <p className='text-sm text-gray-600'>
-                &copy; {new Date().getFullYear()} Kabeiri. All rights reserved.
-              </p>
-            </div>
+    <div className='flex min-h-screen'>
+      {/* Left Column - Brand and Info */}
+      <div className='relative flex w-2/5 flex-col bg-gray-50 p-10'>
+        {/* Brand and Content */}
+        <div className='flex flex-1 flex-col'>
+          <div className='mb-10'>
+            <h1 className='text-4xl font-bold'>Kabeiri</h1>
+            <p className='mt-2 text-xl text-gray-600'>
+              Your journey starts here
+            </p>
           </div>
-        </div>
 
-        {/* Right Column - Forms */}
-        <div className='flex w-3/5 items-center justify-center bg-white p-10'>
-          <div className='w-full max-w-md'>
-            {STEPS[currentStep].formComponent}
+          <div className='flex-1'>{STEPS[currentStep].infoComponent}</div>
+
+          {/* Footer Section */}
+          <div className='mt-auto'>
+            <div className='mb-8'>
+              <CarStepper
+                currentStep={currentStepIndex}
+                totalSteps={stepKeys.length}
+                stepNames={stepKeys.map((key) => STEPS[key].name)}
+              />
+            </div>
+
+            <p className='text-sm text-gray-600'>
+              &copy; {new Date().getFullYear()} Kabeiri. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
-    </>
+
+      {/* Right Column - Forms */}
+      <div className='flex w-3/5 items-center justify-center bg-white p-10'>
+        <div className='w-full max-w-md'>
+          {STEPS[currentStep].formComponent}
+        </div>
+      </div>
+    </div>
   );
 }
 

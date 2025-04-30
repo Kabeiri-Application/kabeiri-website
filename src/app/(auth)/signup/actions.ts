@@ -3,28 +3,29 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { createClient } from '@/utils/supabase/server';
+import { auth } from '@/lib/auth';
 
-type SignupState = {
-  error: string;
-};
+type SignupState = { error: string };
 
 export async function signup(prevState: SignupState, formData: FormData) {
-  const supabase = await createClient();
-
   // type-casting here for convenience
   // in practice, you should validate your inputs
   const data = {
+    name: formData.get('name') as string,
     email: formData.get('email') as string,
     password: formData.get('password') as string,
   };
 
-  const { error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    return { error: error.message };
+  try {
+    await auth.api.signUpEmail({ body: data });
+  } catch (error: unknown) {
+    console.log(error);
+    // TODO: Handle types
+    return {
+      error: error instanceof Error ? error.message : (error as string),
+    };
   }
 
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/dashboard');
 }

@@ -1,57 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { type Session } from '@supabase/supabase-js';
 import { User } from 'lucide-react';
 
 import { Button } from '@/components/Button';
-import { createClient } from '@/utils/supabase/client';
+import { authClient } from '@/lib/auth-client';
 
 export function Header() {
-  const supabase = createClient();
-  const [session, setSession] = useState<Session | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-
-      if (session?.user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('avatar_url')
-          .eq('id', session.user.id)
-          .single();
-
-        if (data?.avatar_url) {
-          const { data: avatarData } = await supabase.storage
-            .from('avatars')
-            .download(data.avatar_url);
-
-          if (avatarData) {
-            const url = URL.createObjectURL(avatarData);
-            setAvatarUrl(url);
-          }
-        }
-      }
-    };
-
-    getSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+  const { data: session } = authClient.useSession();
 
   return (
     <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md'>
@@ -97,9 +55,9 @@ export function Header() {
             <Link
               href='/account'
               className='group relative rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2'>
-              {avatarUrl ? (
+              {session.user.image ? (
                 <Image
-                  src={avatarUrl}
+                  src={session.user.image}
                   alt='Profile'
                   width={40}
                   height={40}

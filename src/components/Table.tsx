@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import {
   ColumnDef,
   flexRender,
@@ -11,14 +13,17 @@ interface TableProps<TData> {
   data: TData[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
+  clickable?: boolean;
 }
 
-export function Table<TData>({ data, columns }: TableProps<TData>) {
+export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const router = useRouter();
 
   return (
     <div className='rounded-2xl bg-white p-6 shadow-sm'>
@@ -44,7 +49,14 @@ export function Table<TData>({ data, columns }: TableProps<TData>) {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                onClick={() =>
+                  clickable
+                    ? router.push(`/dashboard/jobs/${row.renderValue('id')}`)
+                    : null
+                }
+                className={clickable ? 'cursor-pointer hover:bg-gray-50' : ''}>
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
