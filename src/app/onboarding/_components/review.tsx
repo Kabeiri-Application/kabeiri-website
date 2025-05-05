@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
@@ -178,10 +179,10 @@ export function ReviewForm() {
               <div>
                 <dt className='text-sm text-gray-600'>Business Photo</dt>
                 <dd>
-                  <img
+                  <Image
                     src={shopInfo.businessPhotoUrl}
                     alt='Business'
-                    className='mt-1 h-24 w-24 rounded-lg object-cover'
+                    className='mt-1 size-24 rounded-lg object-cover'
                   />
                 </dd>
               </div>
