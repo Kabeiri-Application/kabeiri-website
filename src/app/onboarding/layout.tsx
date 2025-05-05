@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -16,5 +17,5 @@ export default async function OnboardingLayout({
     redirect('/dashboard');
   }
 
-  return children;
+  return <Suspense>{children}</Suspense>;
 }

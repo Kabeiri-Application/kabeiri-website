@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { Car } from 'lucide-react';
@@ -44,14 +43,6 @@ const STEPS = {
 type StepKey = keyof typeof STEPS;
 
 export default function OnboardingPage() {
-  return (
-    <Suspense>
-      <OnboardingContent />
-    </Suspense>
-  );
-}
-
-function OnboardingContent() {
   const searchParams = useSearchParams();
   const currentStep = (searchParams.get('step') as StepKey) || 'personal';
 
