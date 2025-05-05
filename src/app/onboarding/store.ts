@@ -40,7 +40,9 @@ const initialState = {
     city: '',
     state: '',
     zipCode: '',
+    phone: '',
     website: '',
+    businessPhotoUrl: '',
   },
 };
 

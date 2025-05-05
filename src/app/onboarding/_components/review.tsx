@@ -170,6 +170,22 @@ export function ReviewForm() {
                 <dd>{shopInfo.website}</dd>
               </div>
             )}
+            <div>
+              <dt className='text-sm text-gray-600'>Business Phone</dt>
+              <dd>{shopInfo.phone}</dd>
+            </div>
+            {shopInfo.businessPhotoUrl && (
+              <div>
+                <dt className='text-sm text-gray-600'>Business Photo</dt>
+                <dd>
+                  <img
+                    src={shopInfo.businessPhotoUrl}
+                    alt='Business'
+                    className='mt-1 h-24 w-24 rounded-lg object-cover'
+                  />
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
       )}

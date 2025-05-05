@@ -158,6 +158,40 @@ export function ShopForm() {
           )}
         </div>
 
+        <div>
+          <label htmlFor='phone' className='mb-2 block text-sm font-medium'>
+            Business Phone
+          </label>
+          <input
+            {...register('phone')}
+            type='tel'
+            id='phone'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.phone && (
+            <p className='mt-1 text-sm text-red-500'>{errors.phone.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor='businessPhotoUrl'
+            className='mb-2 block text-sm font-medium'>
+            Business Photo URL
+          </label>
+          <input
+            {...register('businessPhotoUrl')}
+            type='url'
+            id='businessPhotoUrl'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.businessPhotoUrl && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.businessPhotoUrl.message}
+            </p>
+          )}
+        </div>
+
         <div className='flex gap-4'>
           <button
             type='button'
