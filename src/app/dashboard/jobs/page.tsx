@@ -28,6 +28,8 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
+import { JobStatus } from './types';
+
 type Job = {
   id: number;
   title: string;
@@ -190,7 +192,11 @@ export default function JobsPage() {
   }, []);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    createJob({ ...data, organization });
+    createJob({
+      ...data,
+      organization,
+      status: JobStatus.PENDING,
+    });
     setModalStatus(false);
     fetchData();
   };

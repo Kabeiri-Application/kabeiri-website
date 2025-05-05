@@ -119,7 +119,7 @@ export default function Page() {
 
   const formSchema = z.object({
     title: z.string().min(1, 'Title must be at least 1 characters'),
-    description: z.string().min(1, 'Last name must be at least 1 characters'),
+    description: z.string().min(1, 'Description must be at least 1 characters'),
     customer: z.string().min(1, 'Customer is required'),
     vehicle: z.string().min(1, 'Vehicle is required'),
     service: z.string().min(1, 'Service is required'),

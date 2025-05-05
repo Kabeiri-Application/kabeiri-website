@@ -13,19 +13,11 @@ import {
 } from '@/db/app.schema';
 import { auth } from '@/lib/auth';
 
-interface FormData {
-  customer: string;
-  service: string;
-  description: string;
-  due_date: string | Date;
-  assigned_to: string;
-  title: string;
-  vehicle: string;
-  organization: string | null;
-}
+import { JobFormInputs } from './types';
+
 // TODO: IMPROVE ERROR HANDLING
 
-export async function createJob(formData: FormData) {
+export async function createJob(formData: JobFormInputs) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false, error: 'Not authenticated' };
@@ -34,10 +26,7 @@ export async function createJob(formData: FormData) {
   try {
     await db.insert(jobsTable).values({
       ...formData,
-      due_date:
-        formData.due_date instanceof Date
-          ? formData.due_date
-          : new Date(formData.due_date),
+      due_date: new Date(formData.due_date),
       createdBy: session.user.id,
     });
     return { success: true };
@@ -47,7 +36,7 @@ export async function createJob(formData: FormData) {
   }
 }
 
-export async function editJob(formData: FormData, jobId: string) {
+export async function editJob(formData: JobFormInputs, jobId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false, error: 'Not authenticated' };
@@ -58,10 +47,7 @@ export async function editJob(formData: FormData, jobId: string) {
       .update(jobsTable)
       .set({
         ...formData,
-        due_date:
-          formData.due_date instanceof Date
-            ? formData.due_date
-            : new Date(formData.due_date),
+        due_date: new Date(formData.due_date),
       })
       .where(eq(jobsTable.id, jobId));
     return { success: true };
