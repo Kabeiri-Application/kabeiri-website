@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/signup',
+        destination: '/onboarding',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

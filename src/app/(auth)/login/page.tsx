@@ -96,7 +96,7 @@ export default function LoginPage() {
 
             <div className='text-center'>
               <span className='text-sm text-gray-600'>
-                Don&apos;t have an account?{' '}
+                {`Don't have an account? `}
                 <Link
                   href='/signup'
                   className='font-medium text-green-700 hover:text-red-500'>
@@ -109,7 +109,7 @@ export default function LoginPage() {
 
         <div className='relative'>
           <div className='absolute inset-0 flex items-center'>
-            <div className='w-full border-t border-gray-300'></div>
+            <div className='w-full border-t border-gray-300' />
           </div>
           <div className='relative flex justify-center text-sm'>
             <span className='bg-white px-2 text-gray-500'>
