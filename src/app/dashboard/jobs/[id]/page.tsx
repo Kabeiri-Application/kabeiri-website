@@ -27,6 +27,7 @@ import {
   getServices,
   getVehicles,
 } from '../actions';
+import { JobStatus } from '../types';
 
 type Job = {
   id: number;
@@ -125,7 +126,7 @@ export default function Page() {
     service: z.string().min(1, 'Service is required'),
     due_date: z.string(),
     assigned_to: z.string().min(1, 'Assigned to is required'),
-    status: z.enum(['in progress', 'pending', 'complete']),
+    status: z.nativeEnum(JobStatus),
   });
 
   type FormInputs = z.infer<typeof formSchema>;
@@ -367,7 +368,11 @@ export default function Page() {
                 Due Date
               </label>
               <input
-                defaultValue={job?.due_date?.toISOString().split('T')[0]}
+                defaultValue={
+                  job?.due_date instanceof Date
+                    ? job.due_date.toISOString().split('T')[0]
+                    : job?.due_date || ''
+                }
                 min={new Date().toISOString().split('T')[0]}
                 {...register('due_date')}
                 type='date'
