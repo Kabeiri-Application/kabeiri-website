@@ -5,37 +5,30 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { setPersonalInfo } from '@/app/flow/actions';
-import {
-  addressSchema,
-  type AddressSchema,
-  type PersonalSchema,
-} from '@/app/flow/schema';
-import { useOnboardingStore } from '@/app/flow/store';
+import { setShopInfo } from '@/app/onboarding/actions';
+import { shopSchema, type ShopSchema } from '@/app/onboarding/schema';
+import { useOnboardingStore } from '@/app/onboarding/store';
 
-export function AddressForm() {
+export function ShopForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { addressInfo, personalInfo, setAddressInfo } = useOnboardingStore();
+  const { shopInfo, setShopInfo: setStoreShopInfo } = useOnboardingStore();
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<AddressSchema>({
-    resolver: zodResolver(addressSchema),
-    defaultValues: addressInfo,
+  } = useForm<ShopSchema>({
+    resolver: zodResolver(shopSchema),
+    defaultValues: shopInfo,
   });
 
-  const onSubmit = async (data: AddressSchema) => {
+  const onSubmit = async (data: ShopSchema) => {
     startTransition(async () => {
-      setAddressInfo(data);
-
-      const response = await setPersonalInfo({
-        ...(personalInfo as Required<PersonalSchema>),
-        ...data,
-      });
+      setStoreShopInfo(data);
+      // const response = await setShopInfo(data);
+      const response = await setShopInfo();
 
       if (response?.error) {
         setError('root.serverError', {
@@ -45,15 +38,13 @@ export function AddressForm() {
       }
 
       // On success, navigate to next step
-      const params = new URLSearchParams(searchParams);
-      params.set('step', 'shop');
-      router.push(`?${params.toString()}`);
+      router.push('/dashboard');
     });
   };
 
   const handleBack = () => {
     const params = new URLSearchParams(searchParams);
-    params.set('step', 'personal');
+    params.set('step', 'address');
     router.push(`?${params.toString()}`);
   };
 
@@ -66,21 +57,37 @@ export function AddressForm() {
           <ArrowLeft className='size-5' />
         </button>
         <h2 className='text-2xl font-semibold tracking-tight'>
-          {`What's your address?`}
+          Tell us about your shop
         </h2>
       </div>
       <p className='text-gray-600'>
-        This information will be used to verify your identity.
+        This information will be used to setup your shop profile.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <div>
+          <label htmlFor='shopName' className='mb-2 block text-sm font-medium'>
+            Shop Name
+          </label>
+          <input
+            {...register('shopName')}
+            type='text'
+            id='shopName'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.shopName && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.shopName.message}
+            </p>
+          )}
+        </div>
+
         <div>
           <label htmlFor='address' className='mb-2 block text-sm font-medium'>
             Address
           </label>
           <input
             {...register('address')}
-            type='text'
             id='address'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
           />
@@ -97,7 +104,6 @@ export function AddressForm() {
           </label>
           <input
             {...register('city')}
-            type='text'
             id='city'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
           />
@@ -112,7 +118,6 @@ export function AddressForm() {
           </label>
           <input
             {...register('state')}
-            type='text'
             id='state'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
           />
@@ -127,13 +132,28 @@ export function AddressForm() {
           </label>
           <input
             {...register('zipCode')}
-            type='text'
             id='zipCode'
             className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
           />
           {errors.zipCode && (
             <p className='mt-1 text-sm text-red-500'>
               {errors.zipCode.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor='website' className='mb-2 block text-sm font-medium'>
+            Website
+          </label>
+          <input
+            {...register('website')}
+            id='website'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.website && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.website.message}
             </p>
           )}
         </div>
@@ -148,25 +168,25 @@ export function AddressForm() {
           type='submit'
           disabled={isSubmitting}
           className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
-          {isSubmitting ? 'Saving...' : 'Continue'}
+          {isSubmitting ? 'Saving...' : 'Complete Setup'}
         </button>
       </form>
     </div>
   );
 }
 
-export function AddressInfo() {
+export function ShopInfo() {
   return (
     <>
       <h2 className='mb-6 text-3xl font-semibold tracking-tight'>
-        Where are you located?
+        Setup your shop
       </h2>
 
       <div className='mb-8 max-w-md text-lg text-gray-600'>
         <div className='flex flex-col gap-4'>
           <p>
-            We need your address to verify your identity and ensure a secure
-            experience.
+            Tell us about your shop so we can help you get started with your
+            business.
           </p>
         </div>
       </div>

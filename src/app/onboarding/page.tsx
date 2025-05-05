@@ -5,9 +5,12 @@ import { useSearchParams } from 'next/navigation';
 
 import { Car } from 'lucide-react';
 
-import { AddressForm, AddressInfo } from '@/app/flow/_components/address';
-import { PersonalForm, PersonalInfo } from '@/app/flow/_components/personal';
-import { ShopForm, ShopInfo } from '@/app/flow/_components/shop';
+import { AddressForm, AddressInfo } from '@/app/onboarding/_components/address';
+import {
+  PersonalForm,
+  PersonalInfo,
+} from '@/app/onboarding/_components/personal';
+import { ShopForm, ShopInfo } from '@/app/onboarding/_components/shop';
 import { cn } from '@/utils/cn';
 
 const STEPS = {

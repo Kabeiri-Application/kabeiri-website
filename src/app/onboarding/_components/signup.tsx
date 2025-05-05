@@ -4,8 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { createAccount } from '@/app/flow/actions';
-import { signupSchema, type SignupSchema } from '@/app/flow/schema';
+import { createAccount } from '@/app/onboarding/actions';
+import { signupSchema, type SignupSchema } from '@/app/onboarding/schema';
 
 export function SignupForm() {
   const router = useRouter();

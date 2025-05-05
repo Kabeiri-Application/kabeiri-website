@@ -27,5 +27,5 @@ export async function signup(prevState: SignupState, formData: FormData) {
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect('/onboarding');
 }

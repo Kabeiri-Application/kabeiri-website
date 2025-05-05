@@ -16,13 +16,28 @@ export const signupSchema = z
     }
   });
 
-export const personalSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  username: z.string().min(1, 'Username is required'),
-  phoneNumber: z.string().min(1, 'Phone number is required'),
-  avatarUrl: z.string().optional(),
-});
+export const personalSchema = z
+  .object({
+    email: z.string().email('Please enter a valid email'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters'),
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    username: z.string().min(1, 'Username is required'),
+    phoneNumber: z.string().min(1, 'Phone number is required'),
+    avatarUrl: z.string().optional(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.password !== val.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      });
+    }
+  });
 
 export const addressSchema = z.object({
   address: z.string().min(1, 'Address is required'),

@@ -7,7 +7,7 @@ import type {
   PersonalSchema,
   // ShopSchema,
   SignupSchema,
-} from '@/app/flow/schema';
+} from '@/app/onboarding/schema';
 // import { db } from '@/db';
 // import { organizationsTable, profilesTable } from '@/db/schema';
 import { auth } from '@/lib/auth';

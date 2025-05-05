@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, UserIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { personalSchema, type PersonalSchema } from '@/app/flow/schema';
-import { useOnboardingStore } from '@/app/flow/store';
+import { personalSchema, type PersonalSchema } from '@/app/onboarding/schema';
+import { useOnboardingStore } from '@/app/onboarding/store';
 
 export function PersonalForm() {
   const router = useRouter();
@@ -37,6 +37,7 @@ export function PersonalForm() {
     <div className='space-y-6'>
       <div className='flex items-center gap-4'>
         <button
+          type='button'
           onClick={() => router.back()}
           className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100'>
           <ArrowLeft className='size-5' />
@@ -95,20 +96,18 @@ export function PersonalForm() {
           </div>
 
           <div>
-            <label
-              htmlFor='username'
-              className='mb-2 block text-sm font-medium'>
-              Username
+            <label htmlFor='email' className='mb-2 block text-sm font-medium'>
+              Email
             </label>
             <input
-              {...register('username')}
-              type='text'
-              id='username'
+              {...register('email')}
+              type='email'
+              id='email'
               className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
             />
-            {errors.username && (
+            {errors.email && (
               <p className='mt-1 text-sm text-red-500'>
-                {errors.username.message}
+                {errors.email.message}
               </p>
             )}
           </div>
@@ -131,6 +130,63 @@ export function PersonalForm() {
               </p>
             )}
           </div>
+
+          <div>
+            <label
+              htmlFor='username'
+              className='mb-2 block text-sm font-medium'>
+              Username
+            </label>
+            <input
+              {...register('username')}
+              type='text'
+              id='username'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+            />
+            {errors.username && (
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.username.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor='password'
+              className='mb-2 block text-sm font-medium'>
+              Password
+            </label>
+            <input
+              {...register('password')}
+              type='password'
+              id='password'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+            />
+            {errors.password && (
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor='confirmPassword'
+              className='mb-2 block text-sm font-medium'>
+              Confirm Password
+            </label>
+            <input
+              {...register('confirmPassword')}
+              type='password'
+              id='confirmPassword'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+            />
+            {errors.confirmPassword && (
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <button
@@ -148,12 +204,13 @@ export function PersonalInfo() {
   return (
     <>
       <h2 className='mb-6 text-3xl font-semibold tracking-tight'>
-        Setup your profile
+        Create your account
       </h2>
 
       <div className='mb-8 max-w-md text-lg text-gray-600'>
         <div className='flex flex-col gap-4'>
-          <p>Setup your profile to help your team get to know you.</p>
+          <p>Sign up and create your profile to get started with Kabeiri.</p>
+          <p>We&apos;ll help you set up your account step by step.</p>
         </div>
       </div>
     </>
