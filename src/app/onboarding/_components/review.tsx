@@ -23,7 +23,7 @@ export function ReviewForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<SubmissionStatus>({});
-  const { personalInfo, addressInfo, shopInfo } = useOnboardingStore();
+  const { personalInfo, addressInfo, shopInfo, reset } = useOnboardingStore();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -64,6 +64,9 @@ export function ReviewForm() {
         }
         setStatus((prev) => ({ ...prev, organization: true }));
       }
+
+      // Clear the store
+      reset();
 
       // Success! Redirect to dashboard
       router.push('/dashboard');
