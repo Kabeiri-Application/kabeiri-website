@@ -212,7 +212,7 @@ export function PersonalInfo() {
       <div className='mb-8 max-w-md text-lg text-gray-600'>
         <div className='flex flex-col gap-4'>
           <p>Sign up and create your profile to get started with Kabeiri.</p>
-          <p>We'll help you set up your account step by step.</p>
+          <p>{`We'll help you set up your account step by step.`}</p>
         </div>
       </div>
     </>
