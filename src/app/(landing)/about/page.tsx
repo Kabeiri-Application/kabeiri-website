@@ -52,9 +52,9 @@ export default function About() {
             </span>
           </h1>
           <p className='mx-auto max-w-2xl text-lg text-gray-600 sm:text-xl'>
-            We&apos;re building the future of automotive service with AI-powered
+            {`We're building the future of automotive service with AI-powered
             diagnostics, digital workflows, and an open ecosystem for
-            innovation.
+            innovation.`}
           </p>
         </div>
       </section>
@@ -66,10 +66,10 @@ export default function About() {
               Our Mission
             </h2>
             <p className='text-lg text-gray-600'>
-              At Kabeiri, we&apos;re on a mission to transform the automotive
+              {`At Kabeiri, we're on a mission to transform the automotive
               service industry by creating a transparent, efficient, and
               innovative ecosystem that benefits everyone - from car owners to
-              mechanics and developers.
+              mechanics and developers.`}
             </p>
           </div>
           <div>

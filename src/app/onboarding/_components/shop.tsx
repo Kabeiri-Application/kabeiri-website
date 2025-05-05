@@ -1,3 +1,5 @@
+'use client';
+
 import { startTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -5,40 +7,31 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { setShopInfo } from '@/app/flow/actions';
-import { shopSchema, type ShopSchema } from '@/app/flow/schema';
-import { useOnboardingStore } from '@/app/flow/store';
+import { shopSchema, type ShopSchema } from '@/app/onboarding/schema';
+import { useOnboardingStore } from '@/app/onboarding/store';
 
 export function ShopForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { shopInfo, setShopInfo: setStoreShopInfo } = useOnboardingStore();
+  const { shopInfo, setShopInfo } = useOnboardingStore();
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<ShopSchema>({
     resolver: zodResolver(shopSchema),
     defaultValues: shopInfo,
   });
 
-  const onSubmit = async (data: ShopSchema) => {
-    startTransition(async () => {
-      setStoreShopInfo(data);
-      // const response = await setShopInfo(data);
-      const response = await setShopInfo();
+  const onSubmit = (data: ShopSchema) => {
+    startTransition(() => {
+      setShopInfo(data);
 
-      if (response?.error) {
-        setError('root.serverError', {
-          message: response.error,
-        });
-        return;
-      }
-
-      // On success, navigate to next step
-      router.push('/dashboard');
+      // Navigate to review step
+      const params = new URLSearchParams(searchParams);
+      params.set('step', 'review');
+      router.push(`?${params.toString()}`);
     });
   };
 
@@ -48,10 +41,17 @@ export function ShopForm() {
     router.push(`?${params.toString()}`);
   };
 
+  const handleSkip = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set('step', 'review');
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <div className='space-y-6'>
       <div className='flex items-center gap-4'>
         <button
+          type='button'
           onClick={handleBack}
           className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100'>
           <ArrowLeft className='size-5' />
@@ -158,18 +158,54 @@ export function ShopForm() {
           )}
         </div>
 
-        {errors.root?.serverError && (
-          <p className='mt-1 text-sm text-red-500'>
-            {errors.root.serverError.message}
-          </p>
-        )}
+        <div>
+          <label htmlFor='phone' className='mb-2 block text-sm font-medium'>
+            Business Phone
+          </label>
+          <input
+            {...register('phone')}
+            type='tel'
+            id='phone'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.phone && (
+            <p className='mt-1 text-sm text-red-500'>{errors.phone.message}</p>
+          )}
+        </div>
 
-        <button
-          type='submit'
-          disabled={isSubmitting}
-          className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
-          {isSubmitting ? 'Saving...' : 'Complete Setup'}
-        </button>
+        <div>
+          <label
+            htmlFor='businessPhotoUrl'
+            className='mb-2 block text-sm font-medium'>
+            Business Photo URL
+          </label>
+          <input
+            {...register('businessPhotoUrl')}
+            type='url'
+            id='businessPhotoUrl'
+            className='w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black'
+          />
+          {errors.businessPhotoUrl && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.businessPhotoUrl.message}
+            </p>
+          )}
+        </div>
+
+        <div className='flex gap-4'>
+          <button
+            type='button'
+            onClick={handleSkip}
+            className='flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-50'>
+            Skip for now
+          </button>
+          <button
+            type='submit'
+            disabled={isSubmitting}
+            className='flex-1 rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
+            Continue
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -188,6 +224,7 @@ export function ShopInfo() {
             Tell us about your shop so we can help you get started with your
             business.
           </p>
+          <p>You can skip this step and set it up later if you prefer.</p>
         </div>
       </div>
     </>

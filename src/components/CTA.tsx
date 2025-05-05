@@ -11,8 +11,8 @@ export function CTA({ className }: { className?: string }) {
           Join the Automotive Revolution
         </h2>
         <p className='mx-auto mb-6 max-w-2xl text-base text-gray-100 sm:mb-8 sm:text-lg'>
-          Whether you&apos;re a car owner, mechanic, or developer, be part of
-          the platform that&apos;s reshaping the future of automotive care.
+          {`Whether you're a car owner, mechanic, or developer, be part of
+          the platform that's reshaping the future of automotive care.`}
         </p>
         <div className='flex flex-col justify-center gap-3 sm:gap-4 md:flex-row'>
           <Link href='/signup' className='w-full md:w-auto'>
