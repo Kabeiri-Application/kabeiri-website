@@ -10,6 +10,7 @@ import {
   PersonalForm,
   PersonalInfo,
 } from '@/app/onboarding/_components/personal';
+import { ReviewForm, ReviewInfo } from '@/app/onboarding/_components/review';
 import { ShopForm, ShopInfo } from '@/app/onboarding/_components/shop';
 import { cn } from '@/utils/cn';
 
@@ -31,6 +32,12 @@ const STEPS = {
     name: 'Shop',
     infoComponent: <ShopInfo />,
     formComponent: <ShopForm />,
+  },
+  review: {
+    index: 3,
+    name: 'Review',
+    infoComponent: <ReviewInfo />,
+    formComponent: <ReviewForm />,
   },
 } as const;
 
@@ -54,7 +61,7 @@ function OnboardingContent() {
   return (
     <div className='flex min-h-screen'>
       {/* Left Column - Brand and Info */}
-      <div className='relative flex w-2/5 flex-col bg-gray-50 p-10'>
+      <div className='fixed left-0 flex h-screen w-2/5 flex-col bg-gray-50 p-10'>
         {/* Brand and Content */}
         <div className='flex flex-1 flex-col'>
           <div className='mb-10'>
@@ -84,9 +91,11 @@ function OnboardingContent() {
       </div>
 
       {/* Right Column - Forms */}
-      <div className='flex w-3/5 items-center justify-center bg-white p-10'>
-        <div className='w-full max-w-md'>
-          {STEPS[currentStep].formComponent}
+      <div className='ml-[40%] flex min-h-screen w-3/5 bg-white'>
+        <div className='flex w-full items-start justify-center overflow-y-auto p-10'>
+          <div className='w-full max-w-md'>
+            {STEPS[currentStep].formComponent}
+          </div>
         </div>
       </div>
     </div>

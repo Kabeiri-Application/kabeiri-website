@@ -1,3 +1,5 @@
+'use client';
+
 import { startTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -5,46 +7,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { setPersonalInfo } from '@/app/onboarding/actions';
-import {
-  addressSchema,
-  type AddressSchema,
-  type PersonalSchema,
-} from '@/app/onboarding/schema';
+import { addressSchema, type AddressSchema } from '@/app/onboarding/schema';
 import { useOnboardingStore } from '@/app/onboarding/store';
 
 export function AddressForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { addressInfo, personalInfo, setAddressInfo } = useOnboardingStore();
+  const { addressInfo, setAddressInfo } = useOnboardingStore();
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<AddressSchema>({
     resolver: zodResolver(addressSchema),
     defaultValues: addressInfo,
   });
 
-  const onSubmit = async (data: AddressSchema) => {
-    startTransition(async () => {
+  const onSubmit = (data: AddressSchema) => {
+    startTransition(() => {
       setAddressInfo(data);
 
-      const response = await setPersonalInfo({
-        ...(personalInfo as Required<PersonalSchema>),
-        ...data,
-      });
-
-      if (response?.error) {
-        setError('root.serverError', {
-          message: response.error,
-        });
-        return;
-      }
-
-      // On success, navigate to next step
+      // Navigate to next step
       const params = new URLSearchParams(searchParams);
       params.set('step', 'shop');
       router.push(`?${params.toString()}`);
@@ -61,6 +45,7 @@ export function AddressForm() {
     <div className='space-y-6'>
       <div className='flex items-center gap-4'>
         <button
+          type='button'
           onClick={handleBack}
           className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100'>
           <ArrowLeft className='size-5' />
@@ -138,17 +123,11 @@ export function AddressForm() {
           )}
         </div>
 
-        {errors.root?.serverError && (
-          <p className='mt-1 text-sm text-red-500'>
-            {errors.root.serverError.message}
-          </p>
-        )}
-
         <button
           type='submit'
           disabled={isSubmitting}
           className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
-          {isSubmitting ? 'Saving...' : 'Continue'}
+          Continue
         </button>
       </form>
     </div>

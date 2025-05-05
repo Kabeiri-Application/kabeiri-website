@@ -1,3 +1,5 @@
+'use client';
+
 import { startTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -22,11 +24,11 @@ export function PersonalForm() {
     defaultValues: personalInfo,
   });
 
-  const onSubmit = async (data: PersonalSchema) => {
+  const onSubmit = (data: PersonalSchema) => {
     startTransition(() => {
       setPersonalInfo(data);
 
-      // On success, navigate to next step
+      // Navigate to next step
       const params = new URLSearchParams(searchParams);
       params.set('step', 'address');
       router.push(`?${params.toString()}`);
@@ -193,7 +195,7 @@ export function PersonalForm() {
           type='submit'
           disabled={isSubmitting}
           className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
-          {isSubmitting ? 'Saving...' : 'Continue'}
+          Continue
         </button>
       </form>
     </div>
@@ -210,7 +212,7 @@ export function PersonalInfo() {
       <div className='mb-8 max-w-md text-lg text-gray-600'>
         <div className='flex flex-col gap-4'>
           <p>Sign up and create your profile to get started with Kabeiri.</p>
-          <p>We&apos;ll help you set up your account step by step.</p>
+          <p>We'll help you set up your account step by step.</p>
         </div>
       </div>
     </>
