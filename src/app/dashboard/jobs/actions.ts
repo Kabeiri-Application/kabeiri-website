@@ -67,10 +67,7 @@ export async function getOrganizationId() {
     });
     return profile?.organization;
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getOrganizationId:', error);
   }
 }
 

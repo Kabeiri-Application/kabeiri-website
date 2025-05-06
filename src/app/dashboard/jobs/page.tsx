@@ -98,7 +98,7 @@ const columns = [
 export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [organization, setOrganization] = useState();
+  const [organization, setOrganization] = useState('');
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
