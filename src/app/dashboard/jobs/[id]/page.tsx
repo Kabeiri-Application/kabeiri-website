@@ -6,7 +6,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 
 import { Button } from '@/components/Button';
 import {
@@ -27,40 +26,15 @@ import {
   getServices,
   getVehicles,
 } from '../actions';
-import { JobStatus } from '../types';
-
-type Job = {
-  id: number;
-  title: string;
-  description: string;
-  customer: { id: string; firstName: string; lastName: string };
-  vehicle: {
-    id: string;
-    year: string;
-    make: string;
-    model: string;
-  };
-  service: { id: string; title: string };
-  status: 'in progress' | 'pending' | 'complete';
-  assigned_to: { id: string; firstName: string; lastName: string };
-  due_date?: string | Date;
-};
-
-type Customer = { id: string; firstName: string; lastName: string };
-
-type Employee = { id: string; firstName: string; lastName: string };
-
-type Service = { id: string; title: string };
-
-type Vehicle = {
-  id: string;
-  make: string;
-  model: string;
-  year: string;
-  vin: string;
-  licensePlate: string;
-  color: string;
-};
+import {
+  Customer,
+  Employee,
+  Job,
+  jobFormSchema,
+  JobStatus,
+  Service,
+  Vehicle,
+} from '../schema';
 
 export default function Page() {
   const [job, setJob] = useState<Job | null>(null);
@@ -107,7 +81,11 @@ export default function Page() {
     try {
       const data = await getJob(jobID as string);
       setJob(data as unknown as Job);
-      setSelectedCustomer(data?.customer?.id);
+      if (data && 'customer' in data && data.customer) {
+        setSelectedCustomer(data.customer.id);
+      } else {
+        console.error('Invalid job data:', data);
+      }
     } catch (error) {
       console.error('Error fetching job data:', error);
     }
@@ -118,30 +96,18 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const formSchema = z.object({
-    title: z.string().min(1, 'Title must be at least 1 characters'),
-    description: z.string().min(1, 'Description must be at least 1 characters'),
-    customer: z.string().min(1, 'Customer is required'),
-    vehicle: z.string().min(1, 'Vehicle is required'),
-    service: z.string().min(1, 'Service is required'),
-    due_date: z.string(),
-    assigned_to: z.string().min(1, 'Assigned to is required'),
-    status: z.nativeEnum(JobStatus),
-  });
-
-  type FormInputs = z.infer<typeof formSchema>;
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
+  } = useForm<jobFormSchema>({ resolver: zodResolver(jobFormSchema) });
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+  const onSubmit: SubmitHandler<jobFormSchema> = (data) => {
     editJob(
       {
         ...data,
         organization,
+        status: data.status || JobStatus.PENDING, // Provide a default value if status is undefined
       },
       jobID as string
     );

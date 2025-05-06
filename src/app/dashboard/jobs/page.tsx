@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 
 import {
   createJob,
@@ -28,39 +27,15 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
-import { JobStatus } from './types';
-
-type Job = {
-  id: number;
-  title: string;
-  description: string;
-  customer: { id: string; firstName: string; lastName: string };
-  vehicle: {
-    year: string;
-    make: string;
-    model: string;
-  };
-  service: { id: string; title: string };
-  status: 'in progress' | 'pending' | 'complete';
-  assigned_to: { id: string; firstName: string; lastName: string };
-  due_date?: string | Date;
-};
-
-type Customer = { id: string; firstName: string; lastName: string };
-
-type Employee = { id: string; firstName: string; lastName: string };
-
-type Service = { id: string; title: string };
-
-type Vehicle = {
-  id: string;
-  make: string;
-  model: string;
-  year: string;
-  vin: string;
-  licensePlate: string;
-  color: string;
-};
+import {
+  Customer,
+  Employee,
+  Job,
+  jobFormSchema,
+  JobStatus,
+  Service,
+  Vehicle,
+} from './schema';
 
 const columnHelper = createColumnHelper<Job>();
 
@@ -120,22 +95,10 @@ const columns = [
   }),
 ];
 
-const formSchema = z.object({
-  title: z.string().min(1, 'Title must be at least 1 characters'),
-  description: z.string().min(1, 'Last name must be at least 1 characters'),
-  customer: z.string().min(1, 'Customer is required'),
-  vehicle: z.string().min(1, 'Vehicle is required'),
-  service: z.string().min(1, 'Service is required'),
-  due_date: z.string(),
-  assigned_to: z.string().min(1, 'Assigned to is required'),
-});
-
-type FormInputs = z.infer<typeof formSchema>;
-
 export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [organization, setOrganization] = useState('');
+  const [organization, setOrganization] = useState();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -146,43 +109,29 @@ export default function JobsPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
+  } = useForm<jobFormSchema>({ resolver: zodResolver(jobFormSchema) });
 
   // TODO: IMPROVE ERROR HANDLING
   const fetchData = async () => {
-    const organizationId = await getOrganizationId();
-    if (typeof organizationId === 'string') {
+    try {
+      const organizationId = await getOrganizationId();
       setOrganization(organizationId);
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getJobs(organizationId).then((data) =>
-        setJobs(data as unknown as Job[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getEmployees(organizationId).then((data) =>
-        setEmployees(data as Employee[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getServices(organizationId).then((data) =>
-        setServices(data as Service[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getCustomers(organizationId).then((data) =>
-        setCustomers(data as Customer[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
+
+      // Fetch all data in parallel
+      const [jobs, employees, services, customers] = await Promise.all([
+        getJobs(organizationId),
+        getEmployees(organizationId),
+        getServices(organizationId),
+        getCustomers(organizationId),
+      ]);
+
+      // Set state with proper error handling
+      setJobs(jobs);
+      setEmployees(employees);
+      setServices(services);
+      setCustomers(customers);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
     }
   };
 
@@ -191,7 +140,7 @@ export default function JobsPage() {
     fetchData();
   }, []);
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+  const onSubmit: SubmitHandler<jobFormSchema> = (data) => {
     createJob({
       ...data,
       organization,

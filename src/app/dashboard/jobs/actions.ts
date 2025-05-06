@@ -13,9 +13,7 @@ import {
 } from '@/db/app.schema';
 import { auth } from '@/lib/auth';
 
-import { JobFormInputs } from './types';
-
-// TODO: IMPROVE ERROR HANDLING
+import { JobFormInputs } from './schema';
 
 export async function createJob(formData: JobFormInputs) {
   const session = await auth.api.getSession({ headers: await headers() });
