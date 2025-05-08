@@ -103,14 +103,13 @@ export default function JobsPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [vehicles, setVehicles] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
-  console.log(jobs);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<jobFormSchema>({ resolver: zodResolver(jobFormSchema) });
 
-  // TODO: IMPROVE ERROR HANDLING
   const fetchData = async () => {
     try {
       const organizationId = await getOrganizationId();
