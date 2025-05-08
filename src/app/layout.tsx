@@ -26,11 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <Script
-        id='react-scan'
-        crossOrigin='anonymous'
-        src='//unpkg.com/react-scan/dist/auto.global.js'
-      />
+      {process.env.NODE_ENV === 'development' && (
+        <Script
+          id='react-scan'
+          crossOrigin='anonymous'
+          src='//unpkg.com/react-scan/dist/auto.global.js'
+        />
+      )}
       {process.env.NODE_ENV === 'production' && (
         <Script
           defer
