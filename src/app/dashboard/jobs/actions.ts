@@ -8,24 +8,13 @@ import { db } from '@/db';
 import {
   carsTable,
   jobsTable,
+  NewJob,
   profilesTable,
   servicesTable,
 } from '@/db/app.schema';
 import { auth } from '@/lib/auth';
 
-interface FormData {
-  customer: string;
-  service: string;
-  description: string;
-  due_date: string | Date;
-  assigned_to: string;
-  title: string;
-  vehicle: string;
-  organization: string | null;
-}
-// TODO: IMPROVE ERROR HANDLING
-
-export async function createJob(formData: FormData) {
+export async function createJob(formData: NewJob) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false, error: 'Not authenticated' };
@@ -34,16 +23,30 @@ export async function createJob(formData: FormData) {
   try {
     await db.insert(jobsTable).values({
       ...formData,
-      due_date:
-        formData.due_date instanceof Date
-          ? formData.due_date
-          : new Date(formData.due_date),
       createdBy: session.user.id,
     });
     return { success: true };
   } catch (error) {
     console.error('Error in createJob:', error);
-    return { success: false, error };
+  }
+}
+
+export async function editJob(formData: NewJob, jobId: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { success: false, error: 'Not authenticated' };
+  }
+  try {
+    console.log('Editing job with ID:', jobId);
+    await db
+      .update(jobsTable)
+      .set({
+        ...formData,
+      })
+      .where(eq(jobsTable.id, jobId));
+    return { success: true };
+  } catch (error) {
+    console.error('Error in createJob:', error);
   }
 }
 
@@ -57,12 +60,11 @@ export async function getOrganizationId() {
     const profile = await db.query.profilesTable.findFirst({
       where: eq(profilesTable.id, session.user.id),
     });
-    return profile?.organization;
+    if (profile?.organization) {
+      return profile.organization;
+    }
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getOrganizationId:', error);
   }
 }
 
@@ -79,10 +81,7 @@ export async function getJobs(organizationId: string) {
       },
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getJobs:', error);
   }
 }
 
@@ -99,10 +98,7 @@ export async function getJob(jobId: string) {
       },
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getJob:', error);
   }
 }
 
@@ -112,10 +108,7 @@ export async function getServices(organizationId: string) {
       where: eq(servicesTable.organization, organizationId),
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getServices:', error);
   }
 }
 
@@ -128,10 +121,7 @@ export async function getCustomers(organizationId: string) {
       ),
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getCustomers:', error);
   }
 }
 
@@ -154,10 +144,7 @@ export async function getVehicles(customerId: string) {
       where: eq(carsTable.owner, customerId),
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getVehicles:', error);
   }
 }
 
@@ -170,9 +157,6 @@ export async function getEmployees(organizationId: string) {
       ),
     });
   } catch (error) {
-    return {
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    };
+    console.error('Error in getEmployees:', error);
   }
 }

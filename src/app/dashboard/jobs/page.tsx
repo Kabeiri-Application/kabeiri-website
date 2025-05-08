@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 
 import {
   createJob,
@@ -26,38 +25,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Car, Job, Service } from '@/db/app.schema';
+import { cn } from '@/lib/utils';
 
-type Job = {
-  id: number;
-  title: string;
-  description: string;
-  customer: { id: string; firstName: string; lastName: string };
-  vehicle: {
-    year: string;
-    make: string;
-    model: string;
-  };
-  service: { id: string; title: string };
-  status: 'In Progress' | 'Pending' | 'Completed';
-  assigned_to: { id: string; firstName: string; lastName: string };
-  due_date?: string | Date;
-};
-
-type Customer = { id: string; firstName: string; lastName: string };
-
-type Employee = { id: string; firstName: string; lastName: string };
-
-type Service = { id: string; title: string };
-
-type Vehicle = {
-  id: string;
-  make: string;
-  model: string;
-  year: string;
-  vin: string;
-  licensePlate: string;
-  color: string;
-};
+import { Customer, Employee, jobFormSchema, JobStatus } from './schema';
 
 const columnHelper = createColumnHelper<Job>();
 
@@ -74,69 +45,54 @@ const columns = [
     header: 'Due Date',
     cell: (info) =>
       info.getValue()
-        ? new Date(info.getValue() as string).toLocaleDateString()
+        ? new Date(info.getValue() ?? '').toLocaleDateString()
         : '',
   }),
   columnHelper.accessor('customer', {
     header: 'Customer',
-    cell: (info) => `${info.getValue().firstName} ${info.getValue().lastName}`,
+    cell: ({ row }) => {
+      const customer = row?.original?.customer as unknown as Customer;
+      return `${customer?.firstName ?? ''} ${customer?.lastName ?? ''}`;
+    },
   }),
   columnHelper.accessor('vehicle', {
     header: 'Vehicle',
-    cell: (info) =>
-      info.getValue().year +
-      ' ' +
-      info.getValue().make +
-      ' ' +
-      info.getValue().model,
+    cell: ({ row }) => {
+      const vehicle = row?.original?.vehicle as unknown as Car;
+      return `${vehicle?.year ?? ''} ${vehicle?.make ?? ''} ${vehicle?.model ?? ''}`;
+    },
   }),
   columnHelper.accessor('service', {
     header: 'Service',
-    cell: (info) => info.getValue().title,
+    cell: ({ row }) => {
+      const service = row?.original?.service as unknown as Service;
+      return service?.title ?? '';
+    },
   }),
   columnHelper.accessor('assigned_to', {
     header: 'Assigned To',
-    cell: (info) =>
-      `${info?.getValue()?.firstName} ${info?.getValue()?.lastName}`,
+    cell: ({ row }) => {
+      const employee = row?.original?.assigned_to as unknown as Employee;
+      return `${employee?.firstName ?? ''} ${employee?.lastName ?? ''}`;
+    },
   }),
 
   columnHelper.accessor('status', {
     header: 'Status',
     cell: (info) => (
       <span
-        className={
-          info.getValue() === 'Completed'
+        className={cn(
+          info.getValue() === 'complete'
             ? 'text-green-700'
-            : info.getValue() === 'In Progress'
+            : info.getValue() === 'in progress'
               ? 'text-yellow-600'
               : 'text-red-600'
-        }>
+        )}>
         {info.getValue()}
       </span>
     ),
   }),
-  // columnHelper.display({
-  //   id: 'actions',
-  //   header: 'Actions',
-  //   cell: () => (
-  //     <Button variant='secondary' size='sm'>
-  //       Update
-  //     </Button>
-  //   ),
-  // }),
 ];
-
-const formSchema = z.object({
-  title: z.string().min(1, 'Title must be at least 1 characters'),
-  description: z.string().min(1, 'Last name must be at least 1 characters'),
-  customer: z.string().min(1, 'Customer is required'),
-  vehicle: z.string().min(1, 'Vehicle is required'),
-  service: z.string().min(1, 'Service is required'),
-  due_date: z.string(),
-  assigned_to: z.string().min(1, 'Assigned to is required'),
-});
-
-type FormInputs = z.infer<typeof formSchema>;
 
 export default function JobsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
@@ -145,49 +101,40 @@ export default function JobsPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
-  console.log(jobs);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({ resolver: zodResolver(formSchema) });
-  // TODO: IMPROVE ERROR HANDLING
+  } = useForm<jobFormSchema>({ resolver: zodResolver(jobFormSchema) });
+
   const fetchData = async () => {
-    const organizationId = await getOrganizationId();
-    if (typeof organizationId === 'string') {
+    try {
+      const organizationId = await getOrganizationId();
+      if (!organizationId) {
+        throw new Error('Organization ID not found');
+      }
       setOrganization(organizationId);
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getJobs(organizationId).then((data) =>
-        setJobs(data as unknown as Job[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getEmployees(organizationId).then((data) =>
-        setEmployees(data as Employee[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getServices(organizationId).then((data) =>
-        setServices(data as Service[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
-    }
-    if (typeof organizationId === 'string') {
-      await getCustomers(organizationId).then((data) =>
-        setCustomers(data as Customer[])
-      );
-    } else {
-      console.error('Invalid organizationId:', organizationId);
+
+      // Fetch all data in parallel
+      const [jobs, employees, services, customers] = await Promise.all([
+        getJobs(organizationId),
+        getEmployees(organizationId),
+        getServices(organizationId),
+        getCustomers(organizationId),
+      ]);
+      if (!jobs || !employees || !services || !customers) {
+        throw new Error('Failed to fetch data');
+      }
+      // Set state with proper error handling
+      setJobs(jobs);
+      setEmployees(employees);
+      setServices(services);
+      setCustomers(customers);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
     }
   };
 
@@ -196,8 +143,13 @@ export default function JobsPage() {
     fetchData();
   }, []);
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    createJob({ ...data, organization });
+  const onSubmit: SubmitHandler<jobFormSchema> = (data) => {
+    createJob({
+      ...data,
+      due_date: new Date(data.due_date),
+      organization,
+      status: JobStatus.PENDING,
+    });
     setModalStatus(false);
     fetchData();
   };
@@ -206,7 +158,7 @@ export default function JobsPage() {
   useEffect(() => {
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
-        setVehicles(data as Vehicle[])
+        setVehicles(data as Car[])
       );
     };
     fetchCars();
