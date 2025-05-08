@@ -118,3 +118,18 @@ export const servicesTable = pgTable('services', {
   description: text().notNull(),
   price: numeric().notNull(),
 });
+
+export type Job = typeof jobsTable.$inferSelect;
+export type NewJob = typeof jobsTable.$inferInsert;
+
+export type Service = typeof servicesTable.$inferSelect;
+export type NewService = typeof servicesTable.$inferInsert;
+
+export type Organization = typeof organizationsTable.$inferSelect;
+export type NewOrganization = typeof organizationsTable.$inferInsert;
+
+export type Car = typeof carsTable.$inferSelect;
+export type NewCar = typeof carsTable.$inferInsert;
+
+export type Profile = typeof profilesTable.$inferSelect;
+export type NewProfile = typeof profilesTable.$inferInsert;

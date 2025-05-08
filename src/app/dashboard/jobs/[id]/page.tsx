@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Car, Service } from '@/db/app.schema';
 import { cn } from '@/lib/utils';
 
 import {
@@ -26,15 +27,7 @@ import {
   getServices,
   getVehicles,
 } from '../actions';
-import {
-  Customer,
-  Employee,
-  Job,
-  jobFormSchema,
-  JobStatus,
-  Service,
-  Vehicle,
-} from '../schema';
+import { Customer, Employee, Job, jobFormSchema, JobStatus } from '../schema';
 
 export default function Page() {
   const [job, setJob] = useState<Job | null>(null);
@@ -45,7 +38,7 @@ export default function Page() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Car[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState('');
 
   const jobID = params.id;
@@ -106,6 +99,7 @@ export default function Page() {
     editJob(
       {
         ...data,
+        due_date: new Date(data.due_date),
         organization,
         status: data.status || JobStatus.PENDING, // Provide a default value if status is undefined
       },
@@ -118,7 +112,7 @@ export default function Page() {
   useEffect(() => {
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
-        setVehicles(data as Vehicle[])
+        setVehicles(data as Car[])
       );
     };
     fetchCars();

@@ -25,17 +25,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Car, Job, Service } from '@/db/app.schema';
 import { cn } from '@/lib/utils';
 
-import {
-  Customer,
-  Employee,
-  Job,
-  jobFormSchema,
-  JobStatus,
-  Service,
-  Vehicle,
-} from './schema';
+import { Customer, Employee, jobFormSchema, JobStatus } from './schema';
 
 const columnHelper = createColumnHelper<Job>();
 
@@ -52,30 +45,36 @@ const columns = [
     header: 'Due Date',
     cell: (info) =>
       info.getValue()
-        ? new Date(info.getValue() as string).toLocaleDateString()
+        ? new Date(info.getValue() ?? '').toLocaleDateString()
         : '',
   }),
   columnHelper.accessor('customer', {
     header: 'Customer',
-    cell: (info) => `${info.getValue().firstName} ${info.getValue().lastName}`,
+    cell: ({ row }) => {
+      const customer = row?.original?.customer as unknown as Customer;
+      return `${customer?.firstName ?? ''} ${customer?.lastName ?? ''}`;
+    },
   }),
   columnHelper.accessor('vehicle', {
     header: 'Vehicle',
-    cell: (info) =>
-      info.getValue().year +
-      ' ' +
-      info.getValue().make +
-      ' ' +
-      info.getValue().model,
+    cell: ({ row }) => {
+      const vehicle = row?.original?.vehicle as unknown as Car;
+      return `${vehicle?.year ?? ''} ${vehicle?.make ?? ''} ${vehicle?.model ?? ''}`;
+    },
   }),
   columnHelper.accessor('service', {
     header: 'Service',
-    cell: (info) => info.getValue().title,
+    cell: ({ row }) => {
+      const service = row?.original?.service as unknown as Service;
+      return service?.title ?? '';
+    },
   }),
   columnHelper.accessor('assigned_to', {
     header: 'Assigned To',
-    cell: (info) =>
-      `${info?.getValue()?.firstName} ${info?.getValue()?.lastName}`,
+    cell: ({ row }) => {
+      const employee = row?.original?.assigned_to as unknown as Employee;
+      return `${employee?.firstName ?? ''} ${employee?.lastName ?? ''}`;
+    },
   }),
 
   columnHelper.accessor('status', {
@@ -102,7 +101,7 @@ export default function JobsPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
   console.log(jobs);
   const {
@@ -115,6 +114,9 @@ export default function JobsPage() {
   const fetchData = async () => {
     try {
       const organizationId = await getOrganizationId();
+      if (!organizationId) {
+        throw new Error('Organization ID not found');
+      }
       setOrganization(organizationId);
 
       // Fetch all data in parallel
@@ -124,7 +126,9 @@ export default function JobsPage() {
         getServices(organizationId),
         getCustomers(organizationId),
       ]);
-
+      if (!jobs || !employees || !services || !customers) {
+        throw new Error('Failed to fetch data');
+      }
       // Set state with proper error handling
       setJobs(jobs);
       setEmployees(employees);
@@ -143,6 +147,7 @@ export default function JobsPage() {
   const onSubmit: SubmitHandler<jobFormSchema> = (data) => {
     createJob({
       ...data,
+      due_date: new Date(data.due_date),
       organization,
       status: JobStatus.PENDING,
     });
@@ -154,7 +159,7 @@ export default function JobsPage() {
   useEffect(() => {
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
-        setVehicles(data as Vehicle[])
+        setVehicles(data as Car[])
       );
     };
     fetchCars();

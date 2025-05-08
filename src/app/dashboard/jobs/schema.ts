@@ -74,5 +74,3 @@ export const jobFormSchema = z.object({
 });
 
 export type jobFormSchema = z.infer<typeof jobFormSchema>;
-
-export type ApiResponse<T> = T | { error: string };
