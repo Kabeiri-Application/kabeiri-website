@@ -7,8 +7,10 @@ import {
   Bell,
   DollarSign,
   LayoutDashboard,
+  Menu,
   MessageSquare,
   Package,
+  PencilRuler,
   Store,
   User,
   Wrench,
@@ -31,6 +33,7 @@ export function Sidebar() {
     },
     { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
     { name: 'Pricing', href: '/dashboard/pricing', icon: DollarSign },
+    { name: 'Services', href: '/dashboard/services', icon: PencilRuler },
   ];
 
   return (
