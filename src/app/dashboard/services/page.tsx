@@ -1,7 +1,174 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+
+import { Button } from '@/components/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { NewService, Service } from '@/db/app.schema';
+
+import { getOrganizationId, getServices } from '../jobs/actions';
+import { createService } from './actions';
+import { serviceFormSchema } from './schema'; // Import the schema
+
 export default function Page() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [organizationId, setOrganizationId] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [modalStatus, setModalStatus] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewService>({
+    resolver: zodResolver(serviceFormSchema),
+  });
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const organizationId = await getOrganizationId();
+      if (!organizationId) {
+        throw new Error('Organization ID not found');
+      }
+      if (organizationId) {
+        setOrganizationId(organizationId);
+      }
+      const services = await getServices(organizationId);
+      if (!services) {
+        throw new Error('Failed to fetch data');
+      }
+      setServices(services);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const onSubmit: SubmitHandler<NewService> = (data) => {
+    console.log('Form data:', data);
+    createService(data, organizationId);
+    setModalStatus(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <div className='size-8 animate-spin rounded-full border-4 border-primary border-t-transparent' />
+      </div>
+    );
+  }
+
   return (
     <main className='p-8'>
-      <p>Hello World</p>
+      <Dialog open={modalStatus} onOpenChange={setModalStatus}>
+        <div className='mx-auto max-w-7xl'>
+          <div className='mb-8 flex items-center justify-between'>
+            <h1 className='text-3xl font-bold text-gray-900'>Auto Services</h1>
+            <DialogTrigger className='flex flex-row items-center rounded-full bg-black px-4 py-2 text-white transition hover:bg-gray-800'>
+              <Plus className='mr-2 size-5' />
+              New Service
+            </DialogTrigger>
+          </div>
+
+          <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className='group relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md'>
+                <div className='mb-4 flex items-center justify-between'>
+                  <div className='flex items-center'>
+                    <h2 className='text-xl font-semibold text-gray-900'>
+                      {service.title}
+                    </h2>
+                  </div>
+                </div>
+                <p className='text-gray-600'>
+                  Description: {service.description}
+                </p>
+                <p className='text-gray-600'>{`Price: $${service.price}`}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <DialogContent className='max-h-full overflow-y-scroll'>
+          <DialogHeader>
+            <DialogTitle className='text-3xl font-bold text-gray-900'>
+              Create a Service
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Title
+              </label>
+              <input
+                {...register('title')}
+                placeholder='Title'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.title && (
+                <span className='text-sm text-red-500'>
+                  {errors.title.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Description
+              </label>
+              <textarea
+                rows={4}
+                {...register('description')}
+                placeholder='Description'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.description && (
+                <span className='text-sm text-red-500'>
+                  {errors.description.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Price
+              </label>
+              <input
+                type='number'
+                min={0.0}
+                step={0.01}
+                {...register('price')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.price && (
+                <span className='text-sm text-red-500'>
+                  {errors.price.message}
+                </span>
+              )}
+            </div>
+            <Button
+              type='submit'
+              className='my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800'>
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
