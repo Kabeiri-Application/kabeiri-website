@@ -1,22 +1,22 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import Script from 'next/script';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 
-import '@/app/globals.css';
+import "@/app/globals.css";
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'Kabeiri',
-  description: 'The Operating System for Modern Auto Service',
+  title: "Kabeiri",
+  description: "The Operating System for Modern Auto Service",
 };
 
 export default function RootLayout({
@@ -25,23 +25,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      {process.env.NODE_ENV === 'development' && (
+    <html lang="en">
+      {process.env.NODE_ENV === "development" && (
         <Script
-          id='react-scan'
-          crossOrigin='anonymous'
-          src='//unpkg.com/react-scan/dist/auto.global.js'
+          id="react-scan"
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
         />
       )}
-      {process.env.NODE_ENV === 'production' && (
+      {process.env.NODE_ENV === "production" && (
         <Script
           defer
-          src='https://umami.kabeiri.app/script.js'
-          data-website-id='7fdac713-b6cb-4ff8-b5f8-9ca1cabf3594'
+          src="https://umami.kabeiri.app/script.js"
+          data-website-id="7fdac713-b6cb-4ff8-b5f8-9ca1cabf3594"
         />
       )}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>

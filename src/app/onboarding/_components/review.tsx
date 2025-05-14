@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 
 import {
   createOrganization,
   createUserAccount,
   createUserProfile,
-} from '@/app/onboarding/actions';
-import { useOnboardingStore } from '@/app/onboarding/store';
+} from "@/app/onboarding/actions";
+import { useOnboardingStore } from "@/app/onboarding/store";
 
 type SubmissionStatus = {
   account?: boolean;
@@ -38,7 +38,7 @@ export function ReviewForm() {
       });
 
       if (!accountResult.success || !accountResult.data?.userId) {
-        throw new Error(accountResult.error || 'Failed to create account');
+        throw new Error(accountResult.error || "Failed to create account");
       }
       setStatus((prev) => ({ ...prev, account: true }));
 
@@ -49,7 +49,7 @@ export function ReviewForm() {
       });
 
       if (!profileResult.success) {
-        throw new Error(profileResult.error || 'Failed to create profile');
+        throw new Error(profileResult.error || "Failed to create profile");
       }
       setStatus((prev) => ({ ...prev, profile: true }));
 
@@ -57,11 +57,11 @@ export function ReviewForm() {
       if (shopInfo.shopName) {
         const orgResult = await createOrganization(
           accountResult.data.userId,
-          shopInfo
+          shopInfo,
         );
 
         if (!orgResult.success) {
-          throw new Error(orgResult.error || 'Failed to create organization');
+          throw new Error(orgResult.error || "Failed to create organization");
         }
         setStatus((prev) => ({ ...prev, organization: true }));
       }
@@ -70,11 +70,11 @@ export function ReviewForm() {
       reset();
 
       // Success! Redirect to dashboard
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error) {
       setStatus((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Something went wrong',
+        error: error instanceof Error ? error.message : "Something went wrong",
       }));
     } finally {
       setIsSubmitting(false);
@@ -82,107 +82,108 @@ export function ReviewForm() {
   };
 
   return (
-    <div className='space-y-8'>
-      <div className='flex items-center justify-between'>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
         <button
-          type='button'
+          type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className='rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 disabled:opacity-50'>
-          <ArrowLeft className='size-5' />
+          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 disabled:opacity-50"
+        >
+          <ArrowLeft className="size-5" />
         </button>
-        <h1 className='text-2xl font-semibold'>Review Your Information</h1>
-        <div className='w-8' />
+        <h1 className="text-2xl font-semibold">Review Your Information</h1>
+        <div className="w-8" />
       </div>
 
-      <div className='rounded-lg border p-6 shadow-xs'>
-        <h2 className='mb-4 text-lg font-medium'>Personal Information</h2>
-        <dl className='grid grid-cols-2 gap-4'>
+      <div className="rounded-lg border p-6 shadow-xs">
+        <h2 className="mb-4 text-lg font-medium">Personal Information</h2>
+        <dl className="grid grid-cols-2 gap-4">
           <div>
-            <dt className='text-sm text-gray-600'>Name</dt>
+            <dt className="text-sm text-gray-600">Name</dt>
             <dd>
               {personalInfo.firstName} {personalInfo.lastName}
             </dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>Username</dt>
+            <dt className="text-sm text-gray-600">Username</dt>
             <dd>{personalInfo.username}</dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>Email</dt>
+            <dt className="text-sm text-gray-600">Email</dt>
             <dd>{personalInfo.email}</dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>Phone</dt>
+            <dt className="text-sm text-gray-600">Phone</dt>
             <dd>{personalInfo.phoneNumber}</dd>
           </div>
         </dl>
       </div>
 
-      <div className='rounded-lg border p-6 shadow-xs'>
-        <h2 className='mb-4 text-lg font-medium'>Address</h2>
-        <dl className='grid grid-cols-2 gap-4'>
-          <div className='col-span-2'>
-            <dt className='text-sm text-gray-600'>Street Address</dt>
+      <div className="rounded-lg border p-6 shadow-xs">
+        <h2 className="mb-4 text-lg font-medium">Address</h2>
+        <dl className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <dt className="text-sm text-gray-600">Street Address</dt>
             <dd>{addressInfo.address}</dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>City</dt>
+            <dt className="text-sm text-gray-600">City</dt>
             <dd>{addressInfo.city}</dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>State</dt>
+            <dt className="text-sm text-gray-600">State</dt>
             <dd>{addressInfo.state}</dd>
           </div>
           <div>
-            <dt className='text-sm text-gray-600'>ZIP Code</dt>
+            <dt className="text-sm text-gray-600">ZIP Code</dt>
             <dd>{addressInfo.zipCode}</dd>
           </div>
         </dl>
       </div>
 
       {shopInfo.shopName && (
-        <div className='rounded-lg border p-6 shadow-xs'>
-          <h2 className='mb-4 text-lg font-medium'>Shop Information</h2>
-          <dl className='grid grid-cols-2 gap-4'>
-            <div className='col-span-2'>
-              <dt className='text-sm text-gray-600'>Shop Name</dt>
+        <div className="rounded-lg border p-6 shadow-xs">
+          <h2 className="mb-4 text-lg font-medium">Shop Information</h2>
+          <dl className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <dt className="text-sm text-gray-600">Shop Name</dt>
               <dd>{shopInfo.shopName}</dd>
             </div>
-            <div className='col-span-2'>
-              <dt className='text-sm text-gray-600'>Street Address</dt>
+            <div className="col-span-2">
+              <dt className="text-sm text-gray-600">Street Address</dt>
               <dd>{shopInfo.address}</dd>
             </div>
             <div>
-              <dt className='text-sm text-gray-600'>City</dt>
+              <dt className="text-sm text-gray-600">City</dt>
               <dd>{shopInfo.city}</dd>
             </div>
             <div>
-              <dt className='text-sm text-gray-600'>State</dt>
+              <dt className="text-sm text-gray-600">State</dt>
               <dd>{shopInfo.state}</dd>
             </div>
             <div>
-              <dt className='text-sm text-gray-600'>ZIP Code</dt>
+              <dt className="text-sm text-gray-600">ZIP Code</dt>
               <dd>{shopInfo.zipCode}</dd>
             </div>
             {shopInfo.website && (
               <div>
-                <dt className='text-sm text-gray-600'>Website</dt>
+                <dt className="text-sm text-gray-600">Website</dt>
                 <dd>{shopInfo.website}</dd>
               </div>
             )}
             <div>
-              <dt className='text-sm text-gray-600'>Business Phone</dt>
+              <dt className="text-sm text-gray-600">Business Phone</dt>
               <dd>{shopInfo.phone}</dd>
             </div>
             {shopInfo.businessPhotoUrl && (
               <div>
-                <dt className='text-sm text-gray-600'>Business Photo</dt>
+                <dt className="text-sm text-gray-600">Business Photo</dt>
                 <dd>
                   <Image
                     src={shopInfo.businessPhotoUrl}
-                    alt='Business'
-                    className='mt-1 size-24 rounded-lg object-cover'
+                    alt="Business"
+                    className="mt-1 size-24 rounded-lg object-cover"
                   />
                 </dd>
               </div>
@@ -192,44 +193,45 @@ export function ReviewForm() {
       )}
 
       {status.error && (
-        <div className='rounded-lg bg-red-50 p-4 text-red-700'>
-          <div className='flex items-center gap-2'>
-            <XCircle className='size-5' />
+        <div className="rounded-lg bg-red-50 p-4 text-red-700">
+          <div className="flex items-center gap-2">
+            <XCircle className="size-5" />
             <p>{status.error}</p>
           </div>
         </div>
       )}
 
       {(status.account || status.profile || status.organization) && (
-        <div className='space-y-2'>
+        <div className="space-y-2">
           {status.account && (
-            <div className='flex items-center gap-2 text-green-700'>
-              <CheckCircle2 className='size-5' />
+            <div className="flex items-center gap-2 text-green-700">
+              <CheckCircle2 className="size-5" />
               <p>Account created successfully</p>
             </div>
           )}
           {status.profile && (
-            <div className='flex items-center gap-2 text-green-700'>
-              <CheckCircle2 className='size-5' />
+            <div className="flex items-center gap-2 text-green-700">
+              <CheckCircle2 className="size-5" />
               <p>Profile created successfully</p>
             </div>
           )}
           {status.organization && (
-            <div className='flex items-center gap-2 text-green-700'>
-              <CheckCircle2 className='size-5' />
+            <div className="flex items-center gap-2 text-green-700">
+              <CheckCircle2 className="size-5" />
               <p>Organization created successfully</p>
             </div>
           )}
         </div>
       )}
 
-      <div className='flex justify-end'>
+      <div className="flex justify-end">
         <button
-          type='button'
+          type="button"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className='rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90 disabled:opacity-50'>
-          {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          className="rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90 disabled:opacity-50"
+        >
+          {isSubmitting ? "Creating Account..." : "Create Account"}
         </button>
       </div>
     </div>
@@ -239,12 +241,12 @@ export function ReviewForm() {
 export function ReviewInfo() {
   return (
     <>
-      <h2 className='mb-6 text-3xl font-semibold tracking-tight'>
+      <h2 className="mb-6 text-3xl font-semibold tracking-tight">
         Almost there!
       </h2>
 
-      <div className='mb-8 max-w-md text-lg text-gray-600'>
-        <div className='flex flex-col gap-4'>
+      <div className="mb-8 max-w-md text-lg text-gray-600">
+        <div className="flex flex-col gap-4">
           <p>Please review your information before creating your account.</p>
           <p>Make sure everything is correct before proceeding.</p>
         </div>

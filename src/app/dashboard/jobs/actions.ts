@@ -1,23 +1,23 @@
-'use server';
+"use server";
 
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq } from "drizzle-orm";
 
-import { db } from '@/db';
+import { db } from "@/db";
 import {
   carsTable,
   jobsTable,
   NewJob,
   profilesTable,
   servicesTable,
-} from '@/db/app.schema';
-import { auth } from '@/lib/auth';
+} from "@/db/app.schema";
+import { auth } from "@/lib/auth";
 
 export async function createJob(formData: NewJob) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   try {
@@ -27,17 +27,17 @@ export async function createJob(formData: NewJob) {
     });
     return { success: true };
   } catch (error) {
-    console.error('Error in createJob:', error);
+    console.error("Error in createJob:", error);
   }
 }
 
 export async function editJob(formData: NewJob, jobId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
   try {
-    console.log('Editing job with ID:', jobId);
+    console.log("Editing job with ID:", jobId);
     await db
       .update(jobsTable)
       .set({
@@ -46,14 +46,14 @@ export async function editJob(formData: NewJob, jobId: string) {
       .where(eq(jobsTable.id, jobId));
     return { success: true };
   } catch (error) {
-    console.error('Error in createJob:', error);
+    console.error("Error in createJob:", error);
   }
 }
 
 export async function getOrganizationId() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    throw new Error('Not authenticated');
+    throw new Error("Not authenticated");
   }
 
   try {
@@ -64,7 +64,7 @@ export async function getOrganizationId() {
       return profile.organization;
     }
   } catch (error) {
-    console.error('Error in getOrganizationId:', error);
+    console.error("Error in getOrganizationId:", error);
   }
 }
 
@@ -81,7 +81,7 @@ export async function getJobs(organizationId: string) {
       },
     });
   } catch (error) {
-    console.error('Error in getJobs:', error);
+    console.error("Error in getJobs:", error);
   }
 }
 
@@ -98,7 +98,7 @@ export async function getJob(jobId: string) {
       },
     });
   } catch (error) {
-    console.error('Error in getJob:', error);
+    console.error("Error in getJob:", error);
   }
 }
 
@@ -108,7 +108,7 @@ export async function getServices(organizationId: string) {
       where: eq(servicesTable.organization, organizationId),
     });
   } catch (error) {
-    console.error('Error in getServices:', error);
+    console.error("Error in getServices:", error);
   }
 }
 
@@ -117,11 +117,11 @@ export async function getCustomers(organizationId: string) {
     return await db.query.profilesTable.findMany({
       where: and(
         eq(profilesTable.organization, organizationId),
-        eq(profilesTable.role, 'customer')
+        eq(profilesTable.role, "customer"),
       ),
     });
   } catch (error) {
-    console.error('Error in getCustomers:', error);
+    console.error("Error in getCustomers:", error);
   }
 }
 
@@ -133,7 +133,7 @@ export async function getCustomer(customerId: string) {
   } catch (error) {
     return {
       error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
+        error instanceof Error ? error.message : "An unknown error occurred",
     };
   }
 }
@@ -144,7 +144,7 @@ export async function getVehicles(customerId: string) {
       where: eq(carsTable.owner, customerId),
     });
   } catch (error) {
-    console.error('Error in getVehicles:', error);
+    console.error("Error in getVehicles:", error);
   }
 }
 
@@ -153,10 +153,10 @@ export async function getEmployees(organizationId: string) {
     return await db.query.profilesTable.findMany({
       where: and(
         eq(profilesTable.organization, organizationId),
-        eq(profilesTable.role, 'user')
+        eq(profilesTable.role, "user"),
       ),
     });
   } catch (error) {
-    console.error('Error in getEmployees:', error);
+    console.error("Error in getEmployees:", error);
   }
 }

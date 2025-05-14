@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        pathname: '/400x400/**/white',
+        protocol: "https",
+        hostname: "placehold.co",
+        pathname: "/400x400/**/white",
       },
     ],
     unoptimized: true,
@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/signup',
-        destination: '/onboarding',
+        source: "/signup",
+        destination: "/onboarding",
         permanent: true,
       },
     ];

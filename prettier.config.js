@@ -11,23 +11,23 @@
  */
 const config = {
   plugins: [
-    '@ianvs/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
   ],
-  tailwindFunctions: ['cva', 'cn'],
-  importOrderTypeScriptVersion: '5.0.0',
+  tailwindFunctions: ["cva", "cn"],
+  importOrderTypeScriptVersion: "5.0.0",
   importOrder: [
-    '<BUILTIN_MODULES>',
-    '',
-    '^(react/(.*)$)|^(react$)',
-    '^(next(.*)$)|^(next$)',
-    '',
-    '<THIRD_PARTY_MODULES>',
-    '',
-    '^@/(.*)$',
-    '',
-    '^[./]',
-    '^[../]',
+    "<BUILTIN_MODULES>",
+    "",
+    "^(react/(.*)$)|^(react$)",
+    "^(next(.*)$)|^(next$)",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@/(.*)$",
+    "",
+    "^[./]",
+    "^[../]",
   ],
 };
 
