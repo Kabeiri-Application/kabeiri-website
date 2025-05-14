@@ -3,9 +3,9 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Bell, Settings } from "lucide-react";
 
-import { Switch } from "@/components/Switch";
 import { Table } from "@/components/Table";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 type Notification = {
   message: string;
