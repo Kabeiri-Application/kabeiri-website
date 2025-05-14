@@ -22,7 +22,7 @@ import {
   jobFormSchema,
   JobStatus,
 } from "@/app/dashboard/jobs/schema";
-import { Table } from "@/components/Table";
+import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -3,7 +3,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 
-import { Table } from "@/components/Table";
+import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
 
 type Part = {

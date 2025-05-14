@@ -9,8 +9,8 @@ import {
   Workflow,
 } from "lucide-react";
 
-import { CTA } from "@/components/CTA";
-import { FeatureCard } from "@/components/FeatureCard";
+import { CTA } from "@/components/cta";
+import { FeatureCard } from "@/components/feature-card";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {

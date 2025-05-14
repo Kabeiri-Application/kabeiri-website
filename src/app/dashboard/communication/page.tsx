@@ -3,7 +3,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Send } from "lucide-react";
 
-import { Table } from "@/components/Table";
+import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
 
 type Message = {
