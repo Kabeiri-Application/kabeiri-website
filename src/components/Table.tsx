@@ -26,7 +26,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const router = useRouter();
 
   return (
-    <div className='rounded-2xl bg-white p-6 shadow-sm'>
+    <div className='rounded-2xl bg-white p-6 shadow-xs'>
       <div className='overflow-x-auto'>
         <table className='w-full'>
           <thead>

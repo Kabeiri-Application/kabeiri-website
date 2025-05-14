@@ -55,7 +55,7 @@ export default function MarketplacePage() {
             <input
               type='text'
               placeholder='Search parts or rental spaces...'
-              className='w-full rounded-lg border border-gray-200 bg-white py-3 pl-12 pr-4 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+              className='w-full rounded-lg border border-gray-200 bg-white py-3 pl-12 pr-4 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
             />
           </div>
 
@@ -63,7 +63,7 @@ export default function MarketplacePage() {
           <div className='flex gap-4'>
             <Button>Car Parts</Button>
             <Button variant='secondary'>Rental Spaces</Button>
-            <select className='rounded-lg border border-gray-200 bg-white px-4 py-2 text-base focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'>
+            <select className='rounded-lg border border-gray-200 bg-white px-4 py-2 text-base focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'>
               <option>All Categories</option>
               <option>Brakes</option>
               <option>Filters</option>

@@ -47,7 +47,7 @@ export default function About() {
           <h1 className='mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl'>
             Revolutionizing
             <br />
-            <span className='bg-gradient-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent'>
+            <span className='bg-linear-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent'>
               Automotive Care
             </span>
           </h1>
@@ -94,7 +94,7 @@ export default function About() {
           {TEAM_MEMBERS.map((member, index) => (
             <div
               key={index}
-              className='group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:shadow-md'>
+              className='group relative overflow-hidden rounded-2xl bg-white shadow-xs transition-all duration-200 hover:shadow-md'>
               <div className='relative aspect-square'>
                 <Image
                   src={member.image}
@@ -105,7 +105,7 @@ export default function About() {
                   sizes='(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
                 />
               </div>
-              <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent'>
+              <div className='absolute inset-0 bg-linear-to-t from-black/60 to-transparent'>
                 <div className='absolute bottom-0 p-6'>
                   <h3 className='text-xl font-semibold text-white'>
                     {member.name}

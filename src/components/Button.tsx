@@ -12,7 +12,7 @@ const button = tv({
       'secondary-white':
         'border-2 border-white text-white enabled:hover:bg-white enabled:hover:text-black',
       'primary-gradient':
-        'bg-gradient-to-r from-purple-600 to-pink-600 text-white enabled:hover:opacity-90',
+        'bg-linear-to-r from-purple-600 to-pink-600 text-white enabled:hover:opacity-90',
     },
     size: {
       sm: 'px-4 py-2 text-sm',

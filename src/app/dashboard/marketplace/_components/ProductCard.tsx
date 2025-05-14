@@ -20,7 +20,7 @@ export function ProductCard({
   status,
 }: ProductCardProps) {
   return (
-    <div className='rounded-2xl bg-white p-6 shadow-sm'>
+    <div className='rounded-2xl bg-white p-6 shadow-xs'>
       <div className='mb-4 flex items-start justify-between'>
         <div>
           <h3 className='text-xl font-bold'>{name}</h3>

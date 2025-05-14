@@ -13,7 +13,7 @@ export function Header() {
 
   return (
     <header className='fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md'>
-      <div className='flex cursor-progress items-center justify-center bg-gradient-to-b from-green-700 to-yellow-500 py-2'>
+      <div className='flex cursor-progress items-center justify-center bg-linear-to-b from-green-700 to-yellow-500 py-2'>
         <span className='font-bold text-white'>
           🚧 This site is under construction 🚧
         </span>
@@ -22,7 +22,7 @@ export function Header() {
         <div className='flex items-center justify-between'>
           <Link href='/' className='relative -top-1 text-2xl font-bold'>
             Kabeiri
-            <span className='absolute -bottom-4 right-0 rounded-full rounded-tl-none bg-gradient-to-b from-green-700 to-yellow-500 px-2 py-0.5 text-xs font-semibold text-white'>
+            <span className='absolute -bottom-4 right-0 rounded-full rounded-tl-none bg-linear-to-b from-green-700 to-yellow-500 px-2 py-0.5 text-xs font-semibold text-white'>
               BETA
             </span>
           </Link>
@@ -54,7 +54,7 @@ export function Header() {
           {session ? (
             <Link
               href='/account'
-              className='group relative rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2'>
+              className='group relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2'>
               {session.user.image ? (
                 <Image
                   src={session.user.image}

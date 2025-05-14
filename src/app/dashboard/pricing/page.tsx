@@ -73,7 +73,7 @@ export default function PricingPage() {
 
         <div className='mb-8 grid gap-6 lg:grid-cols-2'>
           {/* Quick Price Update */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>Quick Price Update</h2>
             <form className='space-y-4'>
               <div>
@@ -84,7 +84,7 @@ export default function PricingPage() {
                 </label>
                 <select
                   id='service'
-                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'>
+                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'>
                   <option>Select a service</option>
                   <option>Oil Change</option>
                   <option>Brake Inspection</option>
@@ -105,7 +105,7 @@ export default function PricingPage() {
                     id='price'
                     type='text'
                     placeholder='0.00'
-                    className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pl-8 text-base focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                    className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pl-8 text-base focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
                   />
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function PricingPage() {
           </div>
 
           {/* Bulk Price Adjustment */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>Bulk Price Adjustment</h2>
             <div className='space-y-4'>
               <div>
@@ -128,7 +128,7 @@ export default function PricingPage() {
                     id='percentage'
                     type='text'
                     placeholder='0'
-                    className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pr-8 text-base focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                    className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pr-8 text-base focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
                   />
                   <span className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-500'>
                     %
@@ -144,7 +144,7 @@ export default function PricingPage() {
         </div>
 
         {/* Service Pricing List */}
-        <div className='rounded-2xl bg-white p-6 shadow-sm'>
+        <div className='rounded-2xl bg-white p-6 shadow-xs'>
           <h2 className='mb-6 text-2xl font-bold'>Service Pricing List</h2>
           <Table columns={columns} data={data} />
         </div>

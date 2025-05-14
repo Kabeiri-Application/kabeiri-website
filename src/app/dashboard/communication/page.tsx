@@ -86,19 +86,19 @@ export default function CommunicationPage() {
 
         <div className='mb-8 grid gap-6 lg:grid-cols-2'>
           {/* New Message */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>New Message</h2>
             <form className='space-y-4'>
               <div>
                 <input
-                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
                   type='email'
                   placeholder='Customer Email'
                 />
               </div>
               <div>
                 <input
-                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
                   type='text'
                   placeholder='Subject'
                 />
@@ -106,7 +106,7 @@ export default function CommunicationPage() {
               <div>
                 <textarea
                   rows={6}
-                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                  className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base placeholder:text-gray-500 focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
                   placeholder='Message'
                 />
               </div>
@@ -118,7 +118,7 @@ export default function CommunicationPage() {
           </div>
 
           {/* Message Templates */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>Message Templates</h2>
             <div className='space-y-4'>
               <button className='w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-base hover:bg-gray-50'>
@@ -135,7 +135,7 @@ export default function CommunicationPage() {
         </div>
 
         {/* Recent Messages */}
-        <div className='rounded-2xl bg-white p-6 shadow-sm'>
+        <div className='rounded-2xl bg-white p-6 shadow-xs'>
           <h2 className='mb-6 text-2xl font-bold'>Recent Messages</h2>
           <Table columns={columns} data={data} />
         </div>

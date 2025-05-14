@@ -36,7 +36,7 @@ export default function LoginPage() {
                 type='email'
                 autoComplete='username email'
                 required
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
               />
             </div>
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
                 type='password'
                 autoComplete='current-password'
                 required
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-purple-500 focus:outline-hidden focus:ring-2 focus:ring-purple-500'
               />
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function LoginPage() {
             <Button
               type='submit'
               // variant='primary-gradient'
-              className='w-full bg-gradient-to-r from-yellow-500 to-green-700 text-white'
+              className='w-full bg-linear-to-r from-yellow-500 to-green-700 text-white'
               disabled={pending}>
               Sign in
             </Button>

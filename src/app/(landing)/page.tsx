@@ -27,7 +27,7 @@ export default function Home() {
             <h2 className='mb-6 text-5xl font-bold tracking-tight sm:mb-8 sm:text-6xl lg:text-7xl'>
               The Future of
               <br />
-              <span className='bg-gradient-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent'>
+              <span className='bg-linear-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent'>
                 Automotive Repair
               </span>
             </h2>
@@ -49,7 +49,7 @@ export default function Home() {
 
       <section
         id='features'
-        className='scroll-mt-16 bg-gradient-to-b from-gray-50 to-white py-16 sm:py-24'>
+        className='scroll-mt-16 bg-linear-to-b from-gray-50 to-white py-16 sm:py-24'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6'>
           <div className='grid grid-cols-1 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-20 md:grid-cols-2 lg:grid-cols-3'>
             <FeatureCard

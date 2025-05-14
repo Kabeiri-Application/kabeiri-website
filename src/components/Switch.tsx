@@ -25,7 +25,7 @@ export function Switch({ defaultChecked = false, onChange }: SwitchProps) {
       aria-checked={enabled}
       onClick={handleClick}
       className={cn(
-        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
         enabled ? 'bg-purple-600' : 'bg-gray-200'
       )}>
       <span className='sr-only'>Toggle notification</span>

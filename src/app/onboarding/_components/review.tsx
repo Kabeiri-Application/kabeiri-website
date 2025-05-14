@@ -95,7 +95,7 @@ export function ReviewForm() {
         <div className='w-8' />
       </div>
 
-      <div className='rounded-lg border p-6 shadow-sm'>
+      <div className='rounded-lg border p-6 shadow-xs'>
         <h2 className='mb-4 text-lg font-medium'>Personal Information</h2>
         <dl className='grid grid-cols-2 gap-4'>
           <div>
@@ -119,7 +119,7 @@ export function ReviewForm() {
         </dl>
       </div>
 
-      <div className='rounded-lg border p-6 shadow-sm'>
+      <div className='rounded-lg border p-6 shadow-xs'>
         <h2 className='mb-4 text-lg font-medium'>Address</h2>
         <dl className='grid grid-cols-2 gap-4'>
           <div className='col-span-2'>
@@ -142,7 +142,7 @@ export function ReviewForm() {
       </div>
 
       {shopInfo.shopName && (
-        <div className='rounded-lg border p-6 shadow-sm'>
+        <div className='rounded-lg border p-6 shadow-xs'>
           <h2 className='mb-4 text-lg font-medium'>Shop Information</h2>
           <dl className='grid grid-cols-2 gap-4'>
             <div className='col-span-2'>

@@ -83,20 +83,20 @@ export default function Pricing() {
             <h1 className='mb-4 text-4xl font-bold tracking-tight md:text-5xl'>
               Simple pricing for
               <br />
-              <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
+              <span className='bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
                 every automotive business
               </span>
             </h1>
 
             <div className='mt-8 flex justify-center'>
               <div className='relative'>
-                <div className='absolute -right-10 -top-4 z-10 rounded-full rounded-bl-none bg-gradient-to-b from-purple-600 to-pink-600 px-3 py-1 text-xs font-semibold text-white shadow-lg'>
+                <div className='absolute -right-10 -top-4 z-10 rounded-full rounded-bl-none bg-linear-to-b from-purple-600 to-pink-600 px-3 py-1 text-xs font-semibold text-white shadow-lg'>
                   Save TBD%
                 </div>
-                <div className='relative inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-sm'>
+                <div className='relative inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-xs'>
                   <div
                     className={cn(
-                      'absolute inset-y-1 w-[120px] rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-sm transition-transform duration-200 ease-in-out',
+                      'absolute inset-y-1 w-[120px] rounded-full bg-linear-to-r from-purple-600 to-pink-600 shadow-xs transition-transform duration-200 ease-in-out',
                       billingPeriod === 'yearly' && 'translate-x-[120px]'
                     )}
                     aria-hidden='true'
@@ -170,13 +170,13 @@ const PricingCard = ({
   return (
     <div
       className={cn(
-        'relative flex flex-col justify-between rounded-2xl border bg-gradient-to-b from-white to-gray-50/50 p-8 shadow-sm transition-all duration-200',
+        'relative flex flex-col justify-between rounded-2xl border bg-linear-to-b from-white to-gray-50/50 p-8 shadow-xs transition-all duration-200',
         highlighted
           ? 'scale-105 border-purple-200 bg-purple-50 ring-1 ring-purple-200 hover:scale-[1.06] hover:shadow-md'
           : 'border-gray-200 hover:scale-[1.01] hover:shadow-md'
       )}>
       {highlighted && (
-        <div className='absolute -top-3 right-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 text-sm font-medium text-white shadow-sm'>
+        <div className='absolute -top-3 right-8 rounded-full bg-linear-to-r from-purple-600 to-pink-600 px-3 py-1 text-sm font-medium text-white shadow-xs'>
           Most Popular
         </div>
       )}

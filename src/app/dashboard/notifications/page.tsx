@@ -81,7 +81,7 @@ export default function NotificationsPage() {
 
         <div className='mb-8 grid gap-6 lg:grid-cols-2'>
           {/* Notification Preferences */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>
               Notification Preferences
             </h2>
@@ -106,7 +106,7 @@ export default function NotificationsPage() {
           </div>
 
           {/* Notification Summary */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-6 text-2xl font-bold'>Notification Summary</h2>
             <div className='mb-6 flex items-center gap-2'>
               <Bell className='size-6 text-blue-600' />
@@ -118,7 +118,7 @@ export default function NotificationsPage() {
         </div>
 
         {/* Recent Notifications */}
-        <div className='rounded-2xl bg-white p-6 shadow-sm'>
+        <div className='rounded-2xl bg-white p-6 shadow-xs'>
           <h2 className='mb-6 text-2xl font-bold'>Recent Notifications</h2>
           <Table columns={columns} data={data} />
         </div>

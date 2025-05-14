@@ -228,7 +228,7 @@ export default function Page() {
                 defaultValue={job?.title}
                 {...register('title')}
                 placeholder='Title'
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'
               />
               {errors.title && (
                 <span className='text-sm text-red-500'>
@@ -245,7 +245,7 @@ export default function Page() {
                 rows={4}
                 {...register('description')}
                 placeholder='Description'
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'
               />
               {errors.description && (
                 <span className='text-sm text-red-500'>
@@ -262,7 +262,7 @@ export default function Page() {
                 {...register('customer', {
                   onChange: (e) => setSelectedCustomer(e.target.value),
                 })}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a Customer</option>
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
@@ -284,7 +284,7 @@ export default function Page() {
                 // disabled={!job?.customer.id}
                 defaultValue={job?.vehicle.id}
                 {...register('vehicle')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700 disabled:opacity-50'>
                 <option value=''>Select a vehicle</option>
                 {vehicles.length > 0 ? (
                   vehicles.map((vehicle) => (
@@ -309,7 +309,7 @@ export default function Page() {
               <select
                 defaultValue={job?.service.id}
                 {...register('service')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a service</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
@@ -336,7 +336,7 @@ export default function Page() {
                 min={new Date().toISOString().split('T')[0]}
                 {...register('due_date')}
                 type='date'
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'
               />
               {errors.due_date && (
                 <span className='text-sm text-red-500'>
@@ -351,7 +351,7 @@ export default function Page() {
               <select
                 defaultValue={job?.assigned_to?.id}
                 {...register('assigned_to')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select a mechanic</option>
                 {employees.map((mechanic) => (
                   <option key={mechanic.id} value={mechanic.id}>
@@ -372,7 +372,7 @@ export default function Page() {
               <select
                 defaultValue={job?.status}
                 {...register('status')}
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'>
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:outline-hidden focus:ring-2 focus:ring-green-700'>
                 <option value=''>Select Status</option>
                 <option value='in progress'>In Progress</option>
                 <option value='pending'>Pending</option>

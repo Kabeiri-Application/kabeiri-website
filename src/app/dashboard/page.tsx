@@ -9,7 +9,7 @@ export default function DashboardPage() {
         {/* Stats Grid */}
         <div className='mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
           {/* Total Jobs */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <div className='flex items-center gap-4'>
               <div className='flex size-12 items-center justify-center rounded-xl bg-purple-100'>
                 <Wrench className='size-6 text-purple-600' />
@@ -22,7 +22,7 @@ export default function DashboardPage() {
           </div>
 
           {/* In Progress */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <div className='flex items-center gap-4'>
               <div className='flex size-12 items-center justify-center rounded-xl bg-blue-100'>
                 <BarChart3 className='size-6 text-blue-600' />
@@ -35,7 +35,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Revenue */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <div className='flex items-center gap-4'>
               <div className='flex size-12 items-center justify-center rounded-xl bg-green-100'>
                 <DollarSign className='size-6 text-green-600' />
@@ -48,7 +48,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Avg. Completion Time */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <div className='flex items-center gap-4'>
               <div className='flex size-12 items-center justify-center rounded-xl bg-pink-100'>
                 <Clock className='size-6 text-pink-600' />
@@ -66,7 +66,7 @@ export default function DashboardPage() {
         {/* Recent Jobs and Inventory Grid */}
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
           {/* Recent Jobs */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-4 text-lg font-bold'>Recent Jobs</h2>
             <div className='space-y-4'>
               <div className='flex items-center justify-between'>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Low Inventory Alert */}
-          <div className='rounded-2xl bg-white p-6 shadow-sm'>
+          <div className='rounded-2xl bg-white p-6 shadow-xs'>
             <h2 className='mb-4 text-lg font-bold'>Low Inventory Alert</h2>
             <div className='space-y-4'>
               <div className='flex items-center justify-between'>
