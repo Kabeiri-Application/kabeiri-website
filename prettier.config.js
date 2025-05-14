@@ -10,16 +10,11 @@
  * @type { PrettierConfig | SortImportsConfig | TailwindConfig }
  */
 const config = {
-  singleQuote: true,
-  jsxSingleQuote: true,
-  bracketSameLine: true,
-  htmlWhitespaceSensitivity: 'ignore',
-  trailingComma: 'es5',
   plugins: [
     '@ianvs/prettier-plugin-sort-imports',
     'prettier-plugin-tailwindcss',
   ],
-  tailwindFunctions: ['tv', 'cn'],
+  tailwindFunctions: ['cva', 'cn'],
   importOrderTypeScriptVersion: '5.0.0',
   importOrder: [
     '<BUILTIN_MODULES>',
