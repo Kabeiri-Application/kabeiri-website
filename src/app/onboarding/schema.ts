@@ -1,21 +1,5 @@
 import { z } from "zod";
 
-export const signupSchema = z
-  .object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
-  })
-  .superRefine((val, ctx) => {
-    if (val.password !== val.confirmPassword) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Passwords do not match",
-        path: ["confirmPassword"],
-      });
-    }
-  });
-
 export const personalSchema = z
   .object({
     email: z.string().email("Please enter a valid email"),
@@ -57,7 +41,6 @@ export const shopSchema = z.object({
   businessPhotoUrl: z.string().optional(),
 });
 
-export type SignupSchema = z.infer<typeof signupSchema>;
 export type PersonalSchema = z.infer<typeof personalSchema>;
 export type AddressSchema = z.infer<typeof addressSchema>;
 export type ShopSchema = z.infer<typeof shopSchema>;
