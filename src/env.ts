@@ -17,11 +17,11 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     DATABASE_URL: z.string().startsWith("postgresql://"),
-    // BETTER_AUTH_SECRET: z.string().startsWith("sk."), // TODO: Change secret to have sk. prefix
     BETTER_AUTH_URL:
       process.env.NODE_ENV === "production"
         ? z.string().startsWith("https://")
         : z.string().startsWith("http://"),
+    // BETTER_AUTH_SECRET: z.string().startsWith("sk."), // TODO: Change secret to have sk. prefix
     BETTER_AUTH_SECRET: z.string().min(1),
   },
   /**
