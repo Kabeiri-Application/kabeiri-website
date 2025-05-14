@@ -13,8 +13,8 @@
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write .",
+    "format": "prettier --check . --ignore-path .gitignore",
+    "format:fix": "prettier --write . --ignore-path .gitignore",
     "spellcheck": "cspell lint --quiet .",
     "typecheck": "tsc",
     "clean": "git clean -xdf node_modules .next tsconfig.tsbuildinfo"
