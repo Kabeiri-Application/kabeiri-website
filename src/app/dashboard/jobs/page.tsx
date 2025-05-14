@@ -16,6 +16,12 @@ import {
   getServices,
   getVehicles,
 } from "@/app/dashboard/jobs/actions";
+import {
+  Customer,
+  Employee,
+  jobFormSchema,
+  JobStatus,
+} from "@/app/dashboard/jobs/schema";
 import { Button } from "@/components/Button";
 import { Table } from "@/components/Table";
 import {
@@ -27,8 +33,6 @@ import {
 } from "@/components/ui/dialog";
 import { Car, Job, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
-
-import { Customer, Employee, jobFormSchema, JobStatus } from "./schema";
 
 const columnHelper = createColumnHelper<Job>();
 

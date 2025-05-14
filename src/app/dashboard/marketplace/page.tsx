@@ -2,9 +2,8 @@
 
 import { Search, ShoppingCart } from "lucide-react";
 
+import { ProductCard } from "@/app/dashboard/marketplace/_components/ProductCard";
 import { Button } from "@/components/Button";
-
-import { ProductCard } from "./_components/ProductCard";
 
 const products = [
   {

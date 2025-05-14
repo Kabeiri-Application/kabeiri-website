@@ -7,6 +7,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
+import {
+  editJob,
+  getCustomers,
+  getEmployees,
+  getJob,
+  getOrganizationId,
+  getServices,
+  getVehicles,
+} from "@/app/dashboard/jobs/actions";
+import {
+  Customer,
+  Employee,
+  Job,
+  jobFormSchema,
+  JobStatus,
+} from "@/app/dashboard/jobs/schema";
 import { Button } from "@/components/Button";
 import {
   Dialog,
@@ -17,17 +33,6 @@ import {
 } from "@/components/ui/dialog";
 import { Car, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
-
-import {
-  editJob,
-  getCustomers,
-  getEmployees,
-  getJob,
-  getOrganizationId,
-  getServices,
-  getVehicles,
-} from "../actions";
-import { Customer, Employee, Job, jobFormSchema, JobStatus } from "../schema";
 
 export default function Page() {
   const [job, setJob] = useState<Job | null>(null);

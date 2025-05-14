@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { user } from "./auth.schema";
+import { user } from "@/db/auth.schema";
 
 export const rolesEnum = pgEnum("role", ["admin", "owner", "customer", "user"]);
 export const jobStatusEnum = pgEnum("status", [

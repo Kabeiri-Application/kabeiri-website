@@ -3,9 +3,8 @@
 import { useActionState } from "react";
 import Link from "next/link";
 
+import { login } from "@/app/(auth)/login/actions";
 import { Button } from "@/components/Button";
-
-import { login } from "./actions";
 
 const initialState = {
   error: "",
