@@ -1,6 +1,10 @@
-import 'dotenv/config';
-
 import type { Config } from 'drizzle-kit';
+
+try {
+  process.loadEnvFile('.env.local');
+} catch {
+  console.warn('Warning: .env.local file was not found');
+}
 
 if (!process.env.DATABASE_URL) {
   throw new Error('Missing DATABASE_URL');
