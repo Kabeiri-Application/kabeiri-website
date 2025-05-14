@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/Button';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 export function CTA({ className }: { className?: string }) {
   return (

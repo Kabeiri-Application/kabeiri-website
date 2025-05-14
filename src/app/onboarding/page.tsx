@@ -11,7 +11,7 @@ import {
 } from '@/app/onboarding/_components/personal';
 import { ReviewForm, ReviewInfo } from '@/app/onboarding/_components/review';
 import { ShopForm, ShopInfo } from '@/app/onboarding/_components/shop';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 const STEPS = {
   personal: {

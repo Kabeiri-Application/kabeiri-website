@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 
 import { Button } from '@/components/Button';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 export default function Pricing() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>(
