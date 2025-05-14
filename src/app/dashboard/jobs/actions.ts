@@ -8,9 +8,9 @@ import { db } from "@/db";
 import {
   carsTable,
   jobsTable,
-  NewJob,
   profilesTable,
   servicesTable,
+  type NewJob,
 } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 

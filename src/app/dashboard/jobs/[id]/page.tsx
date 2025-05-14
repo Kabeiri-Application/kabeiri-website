@@ -17,11 +17,11 @@ import {
   getVehicles,
 } from "@/app/dashboard/jobs/actions";
 import {
-  Customer,
-  Employee,
-  Job,
   jobFormSchema,
   JobStatus,
+  type Customer,
+  type Employee,
+  type Job,
 } from "@/app/dashboard/jobs/schema";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +31,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Car, Service } from "@/db/app.schema";
+import type { Car, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
 
 export default function Page() {

@@ -3,10 +3,10 @@
 import { useRouter } from "next/navigation";
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type ColumnDef,
 } from "@tanstack/react-table";
 
 interface TableProps<TData> {
