@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function CTA({ className }: { className?: string }) {
@@ -16,12 +16,12 @@ export function CTA({ className }: { className?: string }) {
         </p>
         <div className="flex flex-col justify-center gap-3 sm:gap-4 md:flex-row">
           <Link href="/signup" className="w-full md:w-auto">
-            <Button variant="primary-white" className="w-full md:w-auto">
+            <Button variant="default" className="w-full md:w-auto">
               Get started now →
             </Button>
           </Link>
           <Link href="mailto:partners@kabeiri.app" className="w-full md:w-auto">
-            <Button variant="secondary-white" className="w-full md:w-auto">
+            <Button variant="outline" className="w-full md:w-auto">
               Become a Partner
             </Button>
           </Link>

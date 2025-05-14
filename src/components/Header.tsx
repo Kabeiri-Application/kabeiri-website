@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { User } from "lucide-react";
 
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
 export function Header() {
@@ -72,9 +72,7 @@ export function Header() {
             </Link>
           ) : (
             <Link href="/login">
-              <Button variant="primary" size="sm">
-                Login
-              </Button>
+              <Button>Login</Button>
             </Link>
           )}
         </div>

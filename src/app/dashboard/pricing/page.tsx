@@ -3,8 +3,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/Button";
 import { Table } from "@/components/Table";
+import { Button } from "@/components/ui/button";
 
 type Service = {
   name: string;

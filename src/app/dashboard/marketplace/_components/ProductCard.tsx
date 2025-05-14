@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
   name: string;
@@ -47,7 +47,7 @@ export function ProductCard({
           <p className="text-2xl font-bold">${price.toFixed(2)}</p>
           <p className="text-sm text-gray-600">Rating: {rating}/5</p>
         </div>
-        <Button variant="primary">Add to Cart</Button>
+        <Button>Add to Cart</Button>
       </div>
     </div>
   );

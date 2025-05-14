@@ -22,8 +22,8 @@ import {
   jobFormSchema,
   JobStatus,
 } from "@/app/dashboard/jobs/schema";
-import { Button } from "@/components/Button";
 import { Table } from "@/components/Table";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,

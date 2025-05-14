@@ -9,9 +9,9 @@ import {
   Workflow,
 } from "lucide-react";
 
-import { Button } from "@/components/Button";
 import { CTA } from "@/components/CTA";
 import { FeatureCard } from "@/components/FeatureCard";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -37,7 +37,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <Link href="/signup">
-                <Button variant="primary">Join the Revolution</Button>
+                <Button>Join the Revolution</Button>
               </Link>
               <Link href="/#features">
                 <Button variant="secondary">Explore the Platform →</Button>

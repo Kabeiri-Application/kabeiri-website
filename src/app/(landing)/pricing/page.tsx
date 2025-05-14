@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Check } from "lucide-react";
 
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Pricing() {
@@ -205,7 +205,7 @@ const PricingCard = ({
       </div>
       <Button
         className="mt-8 w-full"
-        variant={highlighted ? "primary-gradient" : "secondary"}
+        variant={highlighted ? "default" : "outline"}
         size="lg"
         disabled
       >
