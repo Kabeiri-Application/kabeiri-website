@@ -1,80 +1,179 @@
-import { headers } from "next/headers";
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
 
-import { User } from "lucide-react";
+import type { User } from "better-auth";
+import { UserIcon } from "lucide-react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { authClient } from "@/lib/auth-client";
 
-export async function Header() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export function Header() {
+  const { data: session } = authClient.useSession();
 
   return (
-    <header className="bg-card fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md">
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="from-primary to-primary/80 flex cursor-progress items-center justify-center bg-linear-to-b py-2">
         <span className="font-bold">🚧 This site is under construction 🚧</span>
       </div>
 
-      <nav className="mx-auto max-w-7xl px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="relative -top-1 text-2xl font-bold">
+      <div className="border-border/70 dark:border-border mx-auto w-full max-w-[1400px] min-[1800px]:max-w-screen-2xl">
+        <div className="flex h-14 w-full items-center gap-2 md:gap-4">
+          <Link href="/" className="relative -top-1 mr-4 text-xl font-bold">
             Kabeiri
-            <span className="from-primary to-primary/80 absolute right-0 -bottom-4 rounded-full rounded-tl-none bg-linear-to-b px-2 py-0.5 text-xs font-semibold">
+            <span className="from-primary to-primary/80 absolute right-0 -bottom-4 scale-75 rounded-full rounded-tl-none bg-linear-to-b px-2 py-0.5 text-xs font-semibold">
               BETA
             </span>
           </Link>
 
-          <div className="text-muted-foreground absolute left-1/2 -translate-x-1/2 text-lg font-semibold transition-colors">
-            <div className="hidden items-center gap-8 md:flex">
-              {session ? (
-                <Link href="/dashboard" className="hover:text-primary">
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link href="/#features" className="hover:text-primary">
-                    Features
-                  </Link>
-                  <Link href="/pricing" className="hover:text-primary">
-                    Pricing
-                  </Link>
-                  <Link href="/about" className="hover:text-primary">
-                    About
-                  </Link>
-                </>
-              )}
-            </div>
+          <div className="mr-4 hidden md:flex">
+            <nav className="flex items-center gap-4 text-sm xl:gap-6">
+              <Link
+                href="/#features"
+                className="text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="/#pricing"
+                className="text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/#about"
+                className="text-foreground/80 hover:text-foreground transition-colors"
+              >
+                About
+              </Link>
+            </nav>
           </div>
 
-          {session ? (
-            <Link
-              href="/account"
-              className="group ring-ring relative rounded-full focus:ring-2 focus:outline-hidden"
-            >
-              {session.user.image ? (
-                <Image
-                  src={session.user.image}
-                  alt="Profile"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover transition-opacity group-hover:opacity-80"
-                />
+          <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
+            {/* <div className="hidden w-full flex-1 md:flex md:w-auto md:flex-none">
+              <CommandMenu />
+            </div> */}
+            <nav className="flex items-center gap-4 text-sm xl:gap-6">
+              {session ? (
+                <>
+                  <Button asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+
+                  <UserDropdown user={session.user} />
+                </>
               ) : (
-                <div className="bg-primary group-hover:bg-primary/80 flex size-10 items-center justify-center rounded-full transition-colors">
-                  <User />
-                </div>
+                <Button asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
               )}
-            </Link>
-          ) : (
-            <Link href="/login">
-              <Button>Login</Button>
-            </Link>
-          )}
+            </nav>
+          </div>
         </div>
-      </nav>
+      </div>
     </header>
+  );
+}
+
+function UserDropdown({ user }: { user: User }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Avatar className="size-full">
+            <AvatarImage src={user.image ?? undefined} />
+            <AvatarFallback>
+              <UserIcon />
+            </AvatarFallback>
+          </Avatar>
+          <span className="sr-only">Profile</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>
+          <span className="text-foreground">{user.name}</span>
+          <br />
+          <span className="text-foreground/80 text-sm">{user.email}</span>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/profile">Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/billing">Billing</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings">Settings</Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/team">Team</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>Email</DropdownMenuItem>
+                <DropdownMenuItem>Code</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/support">Support</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioGroup value={"system"}>
+                  <DropdownMenuRadioItem value="system">
+                    System
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="light">
+                    Light
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="dark">
+                    Dark
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="hover:!bg-destructive/50"
+          onClick={async () => await authClient.signOut()}
+        >
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
