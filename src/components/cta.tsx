@@ -15,16 +15,12 @@ export function CTA({ className }: { className?: string }) {
           the platform that's reshaping the future of automotive care.`}
         </p>
         <div className="flex flex-col justify-center gap-3 sm:gap-4 md:flex-row">
-          <Link href="/signup" className="w-full md:w-auto">
-            <Button variant="default" className="w-full md:w-auto">
-              Get started now →
-            </Button>
-          </Link>
-          <Link href="mailto:partners@kabeiri.app" className="w-full md:w-auto">
-            <Button variant="outline" className="w-full md:w-auto">
-              Become a Partner
-            </Button>
-          </Link>
+          <Button variant="default" className="w-full md:w-auto" asChild>
+            <Link href="/signup">Get started now →</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="mailto:partners@kabeiri.app">Become a Partner</Link>
+          </Button>
         </div>
       </div>
     </section>

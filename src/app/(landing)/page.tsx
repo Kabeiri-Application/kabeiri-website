@@ -31,12 +31,12 @@ export default function Home() {
               repair shops, and vehicle owners alike
             </p>
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-              <Link href="/signup">
-                <Button>Join the Revolution</Button>
-              </Link>
-              <Link href="/#features">
-                <Button variant="outline">Explore the Platform →</Button>
-              </Link>
+              <Button asChild>
+                <Link href="/signup">Join the Revolution</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/#features">Explore the Platform →</Link>
+              </Button>
             </div>
           </div>
         </div>
