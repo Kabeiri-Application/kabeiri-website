@@ -34,7 +34,7 @@ export function Header() {
         <span className="font-bold">🚧 This site is under construction 🚧</span>
       </div>
 
-      <div className="border-border/70 dark:border-border mx-auto w-full max-w-[1400px] min-[1800px]:max-w-screen-2xl">
+      <div className="border-border/70 dark:border-border mx-auto w-full max-w-[1400px] px-4 min-[1800px]:max-w-screen-2xl">
         <div className="flex h-14 w-full items-center gap-2 md:gap-4">
           <Link href="/" className="relative -top-1 mr-4 text-xl font-bold">
             Kabeiri
