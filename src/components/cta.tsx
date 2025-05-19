@@ -10,7 +10,7 @@ export function CTA({ className }: { className?: string }) {
         <h2 className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl">
           Join the Automotive Revolution
         </h2>
-        <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-base sm:mb-8 sm:text-lg">
+        <p className="text-foreground/80 mx-auto mb-6 max-w-2xl text-base sm:mb-8 sm:text-lg">
           {`Whether you're a car owner, mechanic, or developer, be part of
           the platform that's reshaping the future of automotive care.`}
         </p>
