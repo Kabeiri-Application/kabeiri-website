@@ -1,12 +1,14 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/logo";
+
 export function Footer() {
   return (
     <footer className="border-t">
       <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Kabeiri</h3>
+            <Logo />
             <p className="text-muted-foreground">
               The Operating System for Modern Auto Service
             </p>

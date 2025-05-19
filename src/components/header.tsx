@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
 
+import { Logo } from "./logo";
+
 export function Header() {
   const { data: session } = authClient.useSession();
 
@@ -36,13 +38,7 @@ export function Header() {
 
       <div className="border-border/70 dark:border-border mx-auto w-full max-w-7xl px-4 min-[1800px]:max-w-screen-2xl">
         <div className="flex h-14 w-full items-center gap-2 md:gap-4">
-          <Link href="/" className="relative -top-1 mr-4 text-xl font-bold">
-            Kabeiri
-            <span className="from-primary to-primary/80 absolute right-0 -bottom-4 scale-75 rounded-full rounded-tl-none bg-linear-to-b px-2 py-0.5 text-xs font-semibold">
-              BETA
-            </span>
-          </Link>
-
+          <Logo className="mr-4" />
           <div className="mr-4 hidden md:flex">
             <nav className="flex items-center gap-4 text-sm xl:gap-6">
               <Link
