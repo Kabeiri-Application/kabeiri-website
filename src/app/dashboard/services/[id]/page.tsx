@@ -90,7 +90,7 @@ export default function ServiceDetailPage() {
 
       <div className='mx-auto max-w-5xl space-y-8'>
         <div className='flex items-center justify-between'>
-          <h1 className='text-3xl font-bold'>{service.title}</h1>
+          <h1 className='text-3xl font-bold'>{service?.title}</h1>
         </div>
 
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -100,14 +100,14 @@ export default function ServiceDetailPage() {
             <div className='space-y-2'>
               <p>
                 <span className='font-medium'>Title: </span>
-                {service.title}
+                {service?.title}
               </p>
               <p>
                 <span className='font-medium'>Description: </span>
-                {service.description}
+                {service?.description}
               </p>
               <p>
-                <span className='font-medium'>Price: </span>${service.price}
+                <span className='font-medium'>Price: </span>${service?.price}
               </p>
             </div>
           </div>
@@ -118,11 +118,15 @@ export default function ServiceDetailPage() {
             <div className='space-y-2'>
               <p>
                 <span className='font-medium'>Created: </span>
-                {new Date(service.createdAt).toLocaleDateString()}
+                {service?.createdAt
+                  ? new Date(service.createdAt).toLocaleDateString()
+                  : 'N/A'}
               </p>
               <p>
                 <span className='font-medium'>Last Updated: </span>
-                {new Date(service.updatedAt).toLocaleDateString()}
+                {service?.updatedAt
+                  ? new Date(service.updatedAt).toLocaleDateString()
+                  : 'N/A'}
               </p>
             </div>
           </div>
