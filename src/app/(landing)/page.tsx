@@ -15,23 +15,18 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="bg-white">
+    <main>
       <section className="flex min-h-screen items-center justify-center px-4 sm:px-6">
         <div className="mx-auto max-w-7xl pt-16 sm:pt-20">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-4 flex items-center justify-center">
-              {/* <span className='rounded-full border border-purple-600 px-3 py-1 text-sm font-semibold text-purple-600 sm:px-4 sm:text-base'>
-                The Future of Automotive Care
-              </span> */}
-            </div>
             <h2 className="mb-6 text-5xl font-bold tracking-tight sm:mb-8 sm:text-6xl lg:text-7xl">
               The Future of
               <br />
-              <span className="bg-linear-to-r from-yellow-500 to-green-700 bg-clip-text text-transparent">
+              <span className="from-primary to-primary/80 bg-linear-to-r bg-clip-text text-transparent">
                 Automotive Repair
               </span>
             </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-gray-600 sm:mb-12 sm:text-xl md:text-2xl">
+            <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg leading-relaxed sm:mb-12 sm:text-xl md:text-2xl">
               Revolutionizing the automotive repair experience for mechanics,
               repair shops, and vehicle owners alike
             </p>
@@ -47,16 +42,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="features"
-        className="scroll-mt-16 bg-linear-to-b from-gray-50 to-white py-16 sm:py-24"
-      >
+      <section id="features" className="scroll-mt-16 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-20 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 sm:size-12">
-                  <Workflow className="size-5 text-blue-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 sm:size-12 dark:bg-blue-900">
+                  <Workflow className="size-5 text-blue-600 sm:size-6 dark:text-blue-400" />
                 </div>
               }
               title="Digital Workflows"
@@ -65,8 +57,8 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12">
-                  <Truck className="size-5 text-purple-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12 dark:bg-purple-900">
+                  <Truck className="size-5 text-purple-600 sm:size-6 dark:text-purple-400" />
                 </div>
               }
               title="Inventory Management System"
@@ -75,8 +67,8 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-pink-100 sm:size-12">
-                  <Download className="size-5 text-pink-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-pink-100 sm:size-12 dark:bg-pink-900">
+                  <Download className="size-5 text-pink-600 sm:size-6 dark:text-pink-400" />
                 </div>
               }
               title="Open APIs"
@@ -85,8 +77,8 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-green-100 sm:size-12">
-                  <ShoppingCart className="size-5 text-green-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-green-100 sm:size-12 dark:bg-green-900">
+                  <ShoppingCart className="size-5 text-green-600 sm:size-6 dark:text-green-400" />
                 </div>
               }
               title="Marketplace"
@@ -95,8 +87,8 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-orange-100 sm:size-12">
-                  <Users className="size-5 text-orange-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-orange-100 sm:size-12 dark:bg-orange-900">
+                  <Users className="size-5 text-orange-600 sm:size-6 dark:text-orange-400" />
                 </div>
               }
               title="Multi-User Access"
@@ -105,8 +97,8 @@ export default function Home() {
 
             <FeatureCard
               icon={
-                <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 sm:size-12">
-                  <ShieldCheck className="size-5 text-indigo-600 sm:size-6" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 sm:size-12 dark:bg-indigo-900">
+                  <ShieldCheck className="size-5 text-indigo-600 sm:size-6 dark:text-indigo-400" />
                 </div>
               }
               title="Enterprise Security"
