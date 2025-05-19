@@ -42,3 +42,22 @@ export async function getService(serviceId: string) {
     console.error('Error in getService:', error);
   }
 }
+
+export async function editService(formData: NewService, serviceId: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    console.error('Not authenticated');
+  }
+  try {
+    console.log('Editing service with ID:', serviceId);
+    await db
+      .update(servicesTable)
+      .set({
+        ...formData,
+      })
+      .where(eq(servicesTable.id, serviceId));
+    return { success: true };
+  } catch (error) {
+    console.error('Error in createJob:', error);
+  }
+}

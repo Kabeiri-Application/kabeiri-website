@@ -3,12 +3,21 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Pencil } from 'lucide-react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Service } from '@/db/app.schema';
 
-import { getService } from '../actions';
+import { editService, getService } from '../actions';
+import { serviceFormSchema } from '../schema';
 
 export default function ServiceDetailPage() {
   const params = useParams();
@@ -39,7 +48,21 @@ export default function ServiceDetailPage() {
 
   useEffect(() => {
     fetchData();
-  }, [serviceId]);
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<serviceFormSchema>({
+    resolver: zodResolver(serviceFormSchema),
+  });
+  const onSubmit: SubmitHandler<serviceFormSchema> = (data) => {
+    console.log('Form data:', data);
+    editService(data, serviceId as string);
+    setModalStatus(false);
+    fetchData();
+  };
 
   if (loading) {
     return (
@@ -107,8 +130,70 @@ export default function ServiceDetailPage() {
       </div>
 
       <Dialog open={modalStatus} onOpenChange={setModalStatus}>
-        <DialogContent>
-          {/* Add your edit form here similar to the jobs page */}
+        <DialogContent className='max-h-full overflow-y-scroll'>
+          <DialogHeader>
+            <DialogTitle className='text-3xl font-bold text-gray-900'>
+              Create a Service
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Title
+              </label>
+              <input
+                defaultValue={service?.title}
+                {...register('title')}
+                placeholder='Title'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.title && (
+                <span className='text-sm text-red-500'>
+                  {errors.title.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Description
+              </label>
+              <textarea
+                defaultValue={service?.description}
+                rows={4}
+                {...register('description')}
+                placeholder='Description'
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.description && (
+                <span className='text-sm text-red-500'>
+                  {errors.description.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Price
+              </label>
+              <input
+                defaultValue={service?.price}
+                type='number'
+                min={0.0}
+                step={0.01}
+                {...register('price')}
+                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-700'
+              />
+              {errors.price && (
+                <span className='text-sm text-red-500'>
+                  {errors.price.message}
+                </span>
+              )}
+            </div>
+            <Button
+              type='submit'
+              className='my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800'>
+              Submit
+            </Button>
+          </form>
         </DialogContent>
       </Dialog>
     </main>
