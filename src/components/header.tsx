@@ -47,19 +47,19 @@ export function Header() {
             <nav className="flex items-center gap-4 text-sm xl:gap-6">
               <Link
                 href="/#features"
-                className="text-foreground/80 hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Features
               </Link>
               <Link
                 href="/pricing"
-                className="text-foreground/80 hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Pricing
               </Link>
               <Link
                 href="/about"
-                className="text-foreground/80 hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 About
               </Link>

@@ -18,7 +18,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/#features"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Features
                 </Link>
@@ -26,7 +26,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/pricing"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Pricing
                 </Link>
@@ -40,7 +40,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/about"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   About
                 </Link>
@@ -48,7 +48,7 @@ export function Footer() {
               <li>
                 <Link
                   href="mailto:hello@kabeiri.app"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Contact
                 </Link>
@@ -62,7 +62,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Privacy
                 </Link>
@@ -70,7 +70,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Terms
                 </Link>
