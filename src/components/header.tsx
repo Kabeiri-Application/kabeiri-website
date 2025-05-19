@@ -51,13 +51,13 @@ export function Header() {
                 Features
               </Link>
               <Link
-                href="/#pricing"
+                href="/pricing"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
                 Pricing
               </Link>
               <Link
-                href="/#about"
+                href="/about"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
                 About
