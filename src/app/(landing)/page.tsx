@@ -35,7 +35,7 @@ export default function Home() {
                 <Button>Join the Revolution</Button>
               </Link>
               <Link href="/#features">
-                <Button variant="secondary">Explore the Platform →</Button>
+                <Button variant="outline">Explore the Platform →</Button>
               </Link>
             </div>
           </div>
