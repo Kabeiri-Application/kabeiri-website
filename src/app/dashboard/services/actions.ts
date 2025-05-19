@@ -2,6 +2,8 @@
 
 import { headers } from 'next/headers';
 
+import { eq } from 'drizzle-orm';
+
 import { db } from '@/db';
 import { NewService, servicesTable } from '@/db/app.schema';
 import { auth } from '@/lib/auth';
@@ -20,8 +22,23 @@ export async function createService(
       ...formData,
       organization: organizationId,
     });
-    return { success: true };
   } catch (error) {
     console.error('Error in createJob:', error);
+  }
+}
+
+export async function getService(serviceId: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    console.error('Not authenticated');
+  }
+
+  try {
+    const service = await db.query.servicesTable.findFirst({
+      where: eq(servicesTable.id, serviceId),
+    });
+    return service;
+  } catch (error) {
+    console.error('Error in getService:', error);
   }
 }

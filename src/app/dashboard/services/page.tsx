@@ -17,6 +17,7 @@ import {
 import { NewService, Service } from '@/db/app.schema';
 
 import { getOrganizationId, getServices } from '../jobs/actions';
+import ServiceCard from './_components/ServiceCard';
 import { createService } from './actions';
 import { serviceFormSchema } from './schema'; // Import the schema
 
@@ -64,6 +65,7 @@ export default function Page() {
     console.log('Form data:', data);
     createService(data, organizationId);
     setModalStatus(false);
+    fetchData();
   };
 
   if (isLoading) {
@@ -88,21 +90,7 @@ export default function Page() {
 
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
             {services.map((service) => (
-              <div
-                key={service.id}
-                className='group relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md'>
-                <div className='mb-4 flex items-center justify-between'>
-                  <div className='flex items-center'>
-                    <h2 className='text-xl font-semibold text-gray-900'>
-                      {service.title}
-                    </h2>
-                  </div>
-                </div>
-                <p className='text-gray-600'>
-                  Description: {service.description}
-                </p>
-                <p className='text-gray-600'>{`Price: $${service.price}`}</p>
-              </div>
+              <ServiceCard key={service.id} {...service} />
             ))}
           </div>
         </div>
