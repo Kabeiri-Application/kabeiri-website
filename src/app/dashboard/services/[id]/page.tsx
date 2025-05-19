@@ -26,7 +26,7 @@ export default function ServiceDetailPage() {
   const [loading, setLoading] = useState(true);
 
   const serviceId = typeof params.id === 'string' ? params.id : '';
-  console.log('Service ID:', serviceId);
+
   const fetchData = async () => {
     setLoading(true);
     try {
