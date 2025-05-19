@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import Link from "next/link";
 
 import type { User } from "better-auth";
@@ -92,6 +93,8 @@ export function Header() {
 }
 
 function UserDropdown({ user }: { user: User }) {
+  const { theme, setTheme } = useTheme();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -151,7 +154,7 @@ function UserDropdown({ user }: { user: User }) {
             <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup value={"system"}>
+                <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                   <DropdownMenuRadioItem value="system">
                     System
                   </DropdownMenuRadioItem>
