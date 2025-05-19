@@ -108,7 +108,7 @@ function UserDropdown({ user }: { user: User }) {
           <span className="sr-only">Profile</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56" side="bottom" align="end">
         <DropdownMenuLabel>
           <span className="text-foreground">{user.name}</span>
           <br />
