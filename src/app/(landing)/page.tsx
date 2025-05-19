@@ -15,9 +15,9 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main>
+    <>
       <section className="flex min-h-screen items-center justify-center px-4 sm:px-6">
-        <div className="mx-auto max-w-7xl pt-16 sm:pt-20">
+        <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="mb-6 text-5xl font-bold tracking-tight sm:mb-8 sm:text-6xl lg:text-7xl">
               The Future of
@@ -109,6 +109,6 @@ export default function Home() {
       </section>
 
       <CTA className="mb-24" />
-    </main>
+    </>
   );
 }

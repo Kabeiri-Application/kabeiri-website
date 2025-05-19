@@ -9,7 +9,8 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      {children}
+      {/* pt-14 is to account for the header height */}
+      <main className="pt-14">{children}</main>
       <Footer />
     </>
   );
