@@ -76,70 +76,70 @@ export default function Pricing() {
   ] as const;
 
   return (
-    <main className="bg-white">
-      <section className="flex min-h-screen items-center justify-center py-32">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-              Simple pricing for
-              <br />
-              <span className="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                every automotive business
-              </span>
-            </h1>
+    <section className="flex min-h-screen items-center justify-center py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
+            Simple pricing for
+            <br />
+            <span className="from-primary to-primary/80 bg-linear-to-r bg-clip-text text-transparent">
+              every automotive business
+            </span>
+          </h1>
 
-            <div className="mt-8 flex justify-center">
-              <div className="relative">
-                <div className="absolute -top-4 -right-10 z-10 rounded-full rounded-bl-none bg-linear-to-b from-purple-600 to-pink-600 px-3 py-1 text-xs font-semibold text-white shadow-lg">
-                  Save TBD%
-                </div>
-                <div className="relative inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-xs">
-                  <div
-                    className={cn(
-                      "absolute inset-y-1 w-[120px] rounded-full bg-linear-to-r from-purple-600 to-pink-600 shadow-xs transition-transform duration-200 ease-in-out",
-                      billingPeriod === "yearly" && "translate-x-[120px]",
-                    )}
-                    aria-hidden="true"
-                  />
-                  <button
-                    onClick={() => setBillingPeriod("monthly")}
-                    className={cn(
-                      "relative w-[120px] rounded-full py-2 text-sm font-medium transition-colors duration-200",
-                      billingPeriod === "monthly"
-                        ? "text-white"
-                        : "text-gray-600 hover:text-gray-900",
-                    )}
-                  >
-                    Monthly
-                  </button>
-                  <button
-                    onClick={() => setBillingPeriod("yearly")}
-                    className={cn(
-                      "relative w-[120px] rounded-full py-2 text-sm font-medium transition-colors duration-200",
-                      billingPeriod === "yearly"
-                        ? "text-white"
-                        : "text-gray-600 hover:text-gray-900",
-                    )}
-                  >
-                    Yearly
-                  </button>
-                </div>
+          <div className="mt-8 flex justify-center">
+            <div className="relative">
+              <div className="from-primary to-primary/80 absolute -top-4 -right-10 z-10 rounded-full rounded-bl-none bg-linear-to-b px-3 py-1 text-xs font-semibold shadow-lg">
+                Save TBD%
+              </div>
+              <div className="bg-card relative inline-flex rounded-full border p-1 shadow-xs">
+                <div
+                  className={cn(
+                    "from-primary to-primary/80 absolute inset-y-1 w-[120px] rounded-full bg-linear-to-r shadow-xs transition-transform duration-200 ease-in-out",
+                    billingPeriod === "yearly" && "translate-x-[120px]",
+                  )}
+                  aria-hidden="true"
+                />
+                <button
+                  type="button"
+                  onClick={() => setBillingPeriod("monthly")}
+                  className={cn(
+                    "relative w-[120px] cursor-pointer rounded-full py-2 text-sm font-medium transition-colors duration-200",
+                    billingPeriod === "monthly"
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBillingPeriod("yearly")}
+                  className={cn(
+                    "relative w-[120px] cursor-pointer rounded-full py-2 text-sm font-medium transition-colors duration-200",
+                    billingPeriod === "yearly"
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  Yearly
+                </button>
               </div>
             </div>
           </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {plans.map((plan) => (
-              <PricingCard
-                key={plan.title}
-                {...plan}
-                billingPeriod={billingPeriod}
-              />
-            ))}
-          </div>
         </div>
-      </section>
-    </main>
+
+        <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {plans.map((plan) => (
+            <PricingCard
+              key={plan.title}
+              {...plan}
+              billingPeriod={billingPeriod}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -172,32 +172,33 @@ const PricingCard = ({
   return (
     <div
       className={cn(
-        "relative flex flex-col justify-between rounded-2xl border bg-linear-to-b from-white to-gray-50/50 p-8 shadow-xs transition-all duration-200",
-        highlighted
-          ? "scale-105 border-purple-200 bg-purple-50 ring-1 ring-purple-200 hover:scale-[1.06] hover:shadow-md"
-          : "border-gray-200 hover:scale-[1.01] hover:shadow-md",
+        "bg-card relative flex flex-col justify-between rounded-2xl border p-8 shadow-xs transition-all duration-200",
+        highlighted &&
+          "border-primary ring-primary bg-card scale-105 shadow-md ring-1",
       )}
     >
       {highlighted && (
-        <div className="absolute -top-3 right-8 rounded-full bg-linear-to-r from-purple-600 to-pink-600 px-3 py-1 text-sm font-medium text-white shadow-xs">
+        <div className="bg-primary absolute -top-4 right-8 rounded-full px-3 py-1 text-sm font-medium shadow-xs">
           Most Popular
         </div>
       )}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-        <p className="mt-2 min-h-[48px] text-sm text-gray-600">{description}</p>
+        <h3 className="text-2xl font-bold">{title}</h3>
+        <p className="text-muted-foreground mt-2 min-h-[48px] text-sm">
+          {description}
+        </p>
         <p className="mt-4">
           <span className="text-4xl font-bold">{displayPrice}</span>
           {price && (
-            <span className="font-semibold text-gray-600">
+            <span className="text-muted-foreground font-semibold">
               /{billingPeriod === "monthly" ? "mo" : "yr"}
             </span>
           )}
         </p>
-        <ul className="mt-8 space-y-4 text-sm text-gray-600">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-center">
-              <CheckIcon className="mr-3 size-5 text-purple-500" />
+        <ul className="text-muted-foreground mt-8 space-y-4 text-sm">
+          {features.map((feature) => (
+            <li key={feature} className="flex items-center">
+              <CheckIcon className="text-primary mr-3 size-5" />
               {feature}
             </li>
           ))}
@@ -206,7 +207,6 @@ const PricingCard = ({
       <Button
         className="mt-8 w-full"
         variant={highlighted ? "default" : "outline"}
-        size="lg"
         disabled
       >
         {!price ? "Contact Sales" : "Get Started"}
