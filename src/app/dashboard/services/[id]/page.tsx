@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
+import { editService, getService } from '@/app/dashboard/services/actions';
+import { serviceFormSchema } from '@/app/dashboard/services/schema';
 import { Button } from '@/components/Button';
 import {
   Dialog,
@@ -16,9 +18,6 @@ import {
 } from '@/components/ui/dialog';
 import { Service } from '@/db/app.schema';
 
-import { editService, getService } from '../actions';
-import { serviceFormSchema } from '../schema';
-
 export default function ServiceDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -26,15 +25,15 @@ export default function ServiceDetailPage() {
   const [modalStatus, setModalStatus] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const serviceId = params.id;
-
+  const serviceId = typeof params.id === 'string' ? params.id : '';
+  console.log('Service ID:', serviceId);
   const fetchData = async () => {
     setLoading(true);
     try {
       if (!serviceId) {
         throw new Error('Service ID not found');
       }
-      const service = await getService(serviceId as string);
+      const service = await getService(serviceId);
       if (!service) {
         throw new Error('Failed to fetch data');
       }
@@ -60,7 +59,7 @@ export default function ServiceDetailPage() {
   });
   const onSubmit: SubmitHandler<serviceFormSchema> = (data) => {
     console.log('Form data:', data);
-    editService(data, serviceId as string);
+    editService(data, serviceId);
     setModalStatus(false);
     fetchData();
   };
