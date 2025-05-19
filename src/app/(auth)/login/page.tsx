@@ -58,7 +58,7 @@ export default function SignIn() {
     <main className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Login</CardTitle>
           <CardDescription className="text-xs md:text-sm">
             Enter your email below to login to your account
           </CardDescription>
@@ -168,7 +168,7 @@ export default function SignIn() {
                     d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                   ></path>
                 </svg>
-                Sign in with Google
+                Continue with Google
               </Button>
               <Button
                 variant="outline"
@@ -207,7 +207,7 @@ export default function SignIn() {
                     d="M17.05 20.28c-.98.95-2.05.8-3.08.35c-1.09-.46-2.09-.48-3.24 0c-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8c1.18-.24 2.31-.93 3.57-.84c1.51.12 2.65.72 3.4 1.8c-3.12 1.87-2.38 5.98.48 7.13c-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25c.29 2.58-2.34 4.5-3.74 4.25"
                   ></path>
                 </svg>
-                Sign in with Apple
+                Continue with Apple
               </Button>
             </div>
           </div>
