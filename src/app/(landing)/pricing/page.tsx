@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Check } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -197,7 +197,7 @@ const PricingCard = ({
         <ul className="mt-8 space-y-4 text-sm text-gray-600">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center">
-              <Check className="mr-3 size-5 text-purple-500" />
+              <CheckIcon className="mr-3 size-5 text-purple-500" />
               {feature}
             </li>
           ))}

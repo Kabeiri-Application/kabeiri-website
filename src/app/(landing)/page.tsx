@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 import {
-  Download,
-  ShieldCheck,
-  ShoppingCart,
-  Truck,
-  Users,
-  Workflow,
+  DownloadIcon,
+  ShieldCheckIcon,
+  ShoppingCartIcon,
+  TruckIcon,
+  UsersIcon,
+  WorkflowIcon,
 } from "lucide-react";
 
 import { CTA } from "@/components/cta";
@@ -48,7 +48,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 sm:size-12 dark:bg-blue-900">
-                  <Workflow className="size-5 text-blue-600 sm:size-6 dark:text-blue-400" />
+                  <WorkflowIcon className="size-5 text-blue-600 sm:size-6 dark:text-blue-400" />
                 </div>
               }
               title="Digital Workflows"
@@ -58,7 +58,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-purple-100 sm:size-12 dark:bg-purple-900">
-                  <Truck className="size-5 text-purple-600 sm:size-6 dark:text-purple-400" />
+                  <TruckIcon className="size-5 text-purple-600 sm:size-6 dark:text-purple-400" />
                 </div>
               }
               title="Inventory Management System"
@@ -68,7 +68,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-pink-100 sm:size-12 dark:bg-pink-900">
-                  <Download className="size-5 text-pink-600 sm:size-6 dark:text-pink-400" />
+                  <DownloadIcon className="size-5 text-pink-600 sm:size-6 dark:text-pink-400" />
                 </div>
               }
               title="Open APIs"
@@ -78,7 +78,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-green-100 sm:size-12 dark:bg-green-900">
-                  <ShoppingCart className="size-5 text-green-600 sm:size-6 dark:text-green-400" />
+                  <ShoppingCartIcon className="size-5 text-green-600 sm:size-6 dark:text-green-400" />
                 </div>
               }
               title="Marketplace"
@@ -88,7 +88,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-orange-100 sm:size-12 dark:bg-orange-900">
-                  <Users className="size-5 text-orange-600 sm:size-6 dark:text-orange-400" />
+                  <UsersIcon className="size-5 text-orange-600 sm:size-6 dark:text-orange-400" />
                 </div>
               }
               title="Multi-User Access"
@@ -98,7 +98,7 @@ export default function Home() {
             <FeatureCard
               icon={
                 <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 sm:size-12 dark:bg-indigo-900">
-                  <ShieldCheck className="size-5 text-indigo-600 sm:size-6 dark:text-indigo-400" />
+                  <ShieldCheckIcon className="size-5 text-indigo-600 sm:size-6 dark:text-indigo-400" />
                 </div>
               }
               title="Enterprise Security"
