@@ -1,20 +1,20 @@
-'use server';
+"use server";
 
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 
-import { eq } from 'drizzle-orm';
+import { eq } from "drizzle-orm";
 
-import { db } from '@/db';
-import { NewService, servicesTable } from '@/db/app.schema';
-import { auth } from '@/lib/auth';
+import { db } from "@/db";
+import { NewService, servicesTable } from "@/db/app.schema";
+import { auth } from "@/lib/auth";
 
 export async function createService(
   formData: NewService,
-  organizationId: string
+  organizationId: string,
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   try {
@@ -23,14 +23,14 @@ export async function createService(
       organization: organizationId,
     });
   } catch (error) {
-    console.error('Error in createJob:', error);
+    console.error("Error in createJob:", error);
   }
 }
 
 export async function getService(serviceId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    console.error('Not authenticated');
+    console.error("Not authenticated");
   }
 
   try {
@@ -39,17 +39,17 @@ export async function getService(serviceId: string) {
     });
     return service;
   } catch (error) {
-    console.error('Error in getService:', error);
+    console.error("Error in getService:", error);
   }
 }
 
 export async function editService(formData: NewService, serviceId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    console.error('Not authenticated');
+    console.error("Not authenticated");
   }
   try {
-    console.log('Editing service with ID:', serviceId);
+    console.log("Editing service with ID:", serviceId);
     await db
       .update(servicesTable)
       .set({
@@ -58,6 +58,6 @@ export async function editService(formData: NewService, serviceId: string) {
       .where(eq(servicesTable.id, serviceId));
     return { success: true };
   } catch (error) {
-    console.error('Error in createJob:', error);
+    console.error("Error in createJob:", error);
   }
 }
