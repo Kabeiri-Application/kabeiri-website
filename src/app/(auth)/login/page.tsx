@@ -1,142 +1,225 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
-import Link from 'next/link';
+import { useRef, useState } from "react";
+import Link from "next/link";
 
-import { Button } from '@/components/Button';
+import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
-import { login } from './actions';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { signIn } from "@/lib/auth-client";
 
-const initialState = {
-  error: '',
-};
+export default function SignIn() {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
-export default function LoginPage() {
-  const [state, formAction, pending] = useActionState(login, initialState);
+  const handleSubmit = async () => {
+    const email = emailRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
+
+    if (!email || !password) return;
+
+    await signIn.email(
+      {
+        email,
+        password,
+        rememberMe,
+        callbackURL: "/dashboard",
+      },
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onResponse: () => {
+          setLoading(false);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+          setLoading(false);
+        },
+      },
+    );
+  };
 
   return (
-    <main className='flex min-h-screen items-center justify-center bg-white'>
-      <div className='m-4 w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg'>
-        <div className='text-center'>
-          <h1 className='text-3xl font-bold text-gray-900'>Welcome back</h1>
-          <p className='mt-2 text-gray-600'>Sign in to your account</p>
-        </div>
-
-        <form className='mt-8 space-y-6' action={formAction}>
-          <div className='space-y-4'>
-            <div>
-              <label
-                htmlFor='email'
-                className='block text-sm font-medium text-gray-700'>
-                Email address
-              </label>
-              <input
-                id='email'
-                name='email'
-                type='email'
-                autoComplete='username email'
+    <main className="flex min-h-screen items-center justify-center">
+      <Card className="w-full max-w-md shadow-none">
+        <CardHeader>
+          <CardTitle className="text-lg md:text-xl">Login</CardTitle>
+          <CardDescription className="text-xs md:text-sm">
+            Enter your email below to login to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="me@example.com"
                 required
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                ref={emailRef}
               />
             </div>
 
-            <div>
-              <label
-                htmlFor='password'
-                className='block text-sm font-medium text-gray-700'>
-                Password
-              </label>
-              <input
-                id='password'
-                name='password'
-                type='password'
-                autoComplete='current-password'
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="#"
+                  className="ml-auto inline-block text-sm underline"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+
+              <Input
+                id="password"
+                type="password"
+                placeholder="P@$$w0rd"
+                autoComplete="password"
                 required
-                className='mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                ref={passwordRef}
               />
             </div>
-          </div>
 
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center'>
-              <input
-                id='remember-me'
-                name='remember-me'
-                type='checkbox'
-                className='size-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember"
+                onClick={() => setRememberMe(!rememberMe)}
               />
-              <label
-                htmlFor='remember-me'
-                className='ml-2 block text-sm text-gray-700'>
-                Remember me
-              </label>
+              <Label htmlFor="remember">Remember me</Label>
             </div>
 
-            <div className='text-sm'>
-              <Link
-                href='#forgot-password'
-                className='font-medium text-green-700 hover:text-red-500'>
-                Forgot your password?
-              </Link>
-            </div>
-          </div>
-
-          {state.error && (
-            <div className='text-center text-red-500'>{state.error}</div>
-          )}
-
-          <div className='space-y-4'>
             <Button
-              type='submit'
-              // variant='primary-gradient'
-              className='w-full bg-gradient-to-r from-yellow-500 to-green-700 text-white'
-              disabled={pending}>
-              Sign in
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              onClick={handleSubmit}
+            >
+              {loading ? (
+                <Loader2Icon className="size-4 animate-spin" />
+              ) : (
+                <p> Login </p>
+              )}
             </Button>
 
-            <div className='text-center'>
-              <span className='text-sm text-gray-600'>
-                {`Don't have an account? `}
-                <Link
-                  href='/signup'
-                  className='font-medium text-green-700 hover:text-red-500'>
-                  Sign up
-                </Link>
-              </span>
+            <div className="flex w-full flex-col items-center justify-between gap-2">
+              <Button
+                variant="outline"
+                className="w-full gap-2"
+                disabled={loading || true}
+                onClick={async () => {
+                  await signIn.social(
+                    {
+                      provider: "google",
+                      callbackURL: "/dashboard",
+                    },
+                    {
+                      onRequest: () => {
+                        setLoading(true);
+                      },
+                      onResponse: () => {
+                        setLoading(false);
+                      },
+                      onError: (ctx) => {
+                        toast.error(ctx.error.message);
+                        setLoading(false);
+                      },
+                    },
+                  );
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="0.98em"
+                  height="1em"
+                  viewBox="0 0 256 262"
+                >
+                  <title>Google</title>
+                  <path
+                    fill="#4285F4"
+                    d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+                  ></path>
+                  <path
+                    fill="#34A853"
+                    d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+                  ></path>
+                  <path
+                    fill="#FBBC05"
+                    d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"
+                  ></path>
+                  <path
+                    fill="#EB4335"
+                    d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+                  ></path>
+                </svg>
+                Continue with Google
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full gap-2"
+                disabled={loading || true}
+                onClick={async () => {
+                  await signIn.social(
+                    {
+                      provider: "apple",
+                      callbackURL: "/dashboard",
+                    },
+                    {
+                      onRequest: () => {
+                        setLoading(true);
+                      },
+                      onResponse: () => {
+                        setLoading(false);
+                      },
+                      onError: (ctx) => {
+                        toast.error(ctx.error.message);
+                        setLoading(false);
+                      },
+                    },
+                  );
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                >
+                  <title>Apple</title>
+                  <path
+                    fill="currentColor"
+                    d="M17.05 20.28c-.98.95-2.05.8-3.08.35c-1.09-.46-2.09-.48-3.24 0c-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8c1.18-.24 2.31-.93 3.57-.84c1.51.12 2.65.72 3.4 1.8c-3.12 1.87-2.38 5.98.48 7.13c-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25c.29 2.58-2.34 4.5-3.74 4.25"
+                  ></path>
+                </svg>
+                Continue with Apple
+              </Button>
             </div>
           </div>
-        </form>
-
-        <div className='relative'>
-          <div className='absolute inset-0 flex items-center'>
-            <div className='w-full border-t border-gray-300' />
-          </div>
-          <div className='relative flex justify-center text-sm'>
-            <span className='bg-white px-2 text-gray-500'>
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className='flex flex-col gap-4 md:flex-row'>
-          <Button variant='secondary' className='w-full' disabled>
-            <span className='flex items-center justify-center'>
-              <svg className='mr-2 size-5' viewBox='0 0 24 24'>
-                <path d='M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z' />
-              </svg>
-              Google
-            </span>
+        </CardContent>
+        <CardFooter className="flex items-center justify-center">
+          <Button variant="link" asChild>
+            <Link href="/signup">
+              <p>{`Don't have an account? Sign up`}</p>
+            </Link>
           </Button>
-          <Button variant='secondary' className='w-full' disabled>
-            <span className='flex items-center justify-center'>
-              <svg className='mr-2 size-5' viewBox='0 0 24 24'>
-                <path d='M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701' />
-              </svg>
-              Apple
-            </span>
-          </Button>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </main>
   );
 }

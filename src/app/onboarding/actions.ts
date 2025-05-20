@@ -1,17 +1,17 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath } from "next/cache";
 
-import { eq } from 'drizzle-orm';
+import { eq } from "drizzle-orm";
 
 import type {
   AddressSchema,
   PersonalSchema,
   ShopSchema,
-} from '@/app/onboarding/schema';
-import { db } from '@/db';
-import { organizationsTable, profilesTable } from '@/db/app.schema';
-import { auth } from '@/lib/auth';
+} from "@/app/onboarding/schema";
+import { db } from "@/db";
+import { organizationsTable, profilesTable } from "@/db/app.schema";
+import { auth } from "@/lib/auth";
 
 type ActionResponse<T = undefined> = {
   success: boolean;
@@ -35,7 +35,7 @@ export async function createUserAccount(formData: {
     });
 
     if (!authResponse?.user?.id) {
-      throw new Error('Failed to create account');
+      throw new Error("Failed to create account");
     }
 
     return {
@@ -43,18 +43,18 @@ export async function createUserAccount(formData: {
       data: { userId: authResponse.user.id },
     };
   } catch (error: unknown) {
-    console.error('Error creating account:', error);
+    console.error("Error creating account:", error);
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create account',
+        error instanceof Error ? error.message : "Failed to create account",
     };
   }
 }
 
 export async function createUserProfile(
   userId: string,
-  formData: PersonalSchema & AddressSchema
+  formData: PersonalSchema & AddressSchema,
 ): Promise<ActionResponse> {
   try {
     await db.insert(profilesTable).values({
@@ -63,7 +63,7 @@ export async function createUserProfile(
       firstName: formData.firstName,
       lastName: formData.lastName,
       phone: formData.phoneNumber,
-      role: 'user',
+      role: "user",
       streetAddress: formData.address,
       city: formData.city,
       state: formData.state,
@@ -73,18 +73,18 @@ export async function createUserProfile(
 
     return { success: true };
   } catch (error: unknown) {
-    console.error('Error creating profile:', error);
+    console.error("Error creating profile:", error);
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create profile',
+        error instanceof Error ? error.message : "Failed to create profile",
     };
   }
 }
 
 export async function createOrganization(
   userId: string,
-  formData: ShopSchema
+  formData: ShopSchema,
 ): Promise<ActionResponse<{ organizationId: string }>> {
   try {
     // Create the organization
@@ -96,13 +96,13 @@ export async function createOrganization(
         city: formData.city,
         state: formData.state,
         zipCode: formData.zipCode,
-        phone: '', // TODO: Add phone to shop schema
-        website: formData.website || '',
+        phone: "", // TODO: Add phone to shop schema
+        website: formData.website || "",
       })
       .returning({ id: organizationsTable.id });
 
     if (!org?.id) {
-      throw new Error('Failed to create organization');
+      throw new Error("Failed to create organization");
     }
 
     // Update the user's profile with the organization ID and change role to owner
@@ -110,24 +110,24 @@ export async function createOrganization(
       .update(profilesTable)
       .set({
         organization: org.id,
-        role: 'owner',
+        role: "owner",
         updatedAt: new Date(),
       })
       .where(eq(profilesTable.id, userId));
 
-    revalidatePath('/onboarding');
+    revalidatePath("/onboarding");
     return {
       success: true,
       data: { organizationId: org.id },
     };
   } catch (error: unknown) {
-    console.error('Error creating organization:', error);
+    console.error("Error creating organization:", error);
     return {
       success: false,
       error:
         error instanceof Error
           ? error.message
-          : 'Failed to create organization',
+          : "Failed to create organization",
     };
   }
 }

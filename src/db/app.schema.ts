@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { relations } from "drizzle-orm";
 import {
   numeric,
   pgEnum,
@@ -7,18 +7,18 @@ import {
   timestamp,
   uuid,
   varchar,
-} from 'drizzle-orm/pg-core';
+} from "drizzle-orm/pg-core";
 
-import { user } from './auth.schema';
+import { user } from "@/db/auth.schema";
 
-export const rolesEnum = pgEnum('role', ['admin', 'owner', 'customer', 'user']);
-export const jobStatusEnum = pgEnum('status', [
-  'complete',
-  'in progress',
-  'pending',
+export const rolesEnum = pgEnum("role", ["admin", "owner", "customer", "user"]);
+export const jobStatusEnum = pgEnum("status", [
+  "complete",
+  "in progress",
+  "pending",
 ]);
 
-export const profilesTable = pgTable('profiles', {
+export const profilesTable = pgTable("profiles", {
   id: text()
     .primaryKey()
     .references(() => user.id),
@@ -40,7 +40,7 @@ export const profilesTable = pgTable('profiles', {
   zipCode: text().notNull(),
 });
 
-export const organizationsTable = pgTable('organizations', {
+export const organizationsTable = pgTable("organizations", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true })
@@ -57,7 +57,7 @@ export const organizationsTable = pgTable('organizations', {
   website: text(),
 });
 
-export const carsTable = pgTable('cars', {
+export const carsTable = pgTable("cars", {
   id: uuid().primaryKey().defaultRandom(),
   owner: text().references(() => profilesTable.id),
   make: text().notNull(),
@@ -68,7 +68,7 @@ export const carsTable = pgTable('cars', {
   color: text().notNull(),
 });
 
-export const jobsTable = pgTable('jobs', {
+export const jobsTable = pgTable("jobs", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true })
@@ -81,7 +81,7 @@ export const jobsTable = pgTable('jobs', {
   title: text().notNull(),
   service: uuid().references(() => servicesTable.id),
   description: text().notNull(),
-  status: jobStatusEnum().notNull().default('pending'),
+  status: jobStatusEnum().notNull().default("pending"),
   due_date: timestamp({ withTimezone: true }),
   assigned_to: text().references(() => profilesTable.id),
   createdBy: text().references(() => profilesTable.id),
@@ -114,7 +114,7 @@ export const jobRelations = relations(jobsTable, ({ one }) => ({
   }),
 }));
 
-export const servicesTable = pgTable('services', {
+export const servicesTable = pgTable("services", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true })

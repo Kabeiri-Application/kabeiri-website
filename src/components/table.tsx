@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+  type ColumnDef,
+} from "@tanstack/react-table";
 
 interface TableProps<TData> {
   data: TData[];
@@ -26,21 +26,22 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const router = useRouter();
 
   return (
-    <div className='rounded-2xl bg-white p-6 shadow-sm'>
-      <div className='overflow-x-auto'>
-        <table className='w-full'>
+    <div className="rounded-2xl bg-white p-6 shadow-xs">
+      <div className="overflow-x-auto">
+        <table className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className='border-b border-gray-200 pb-4 text-left text-sm font-medium text-gray-500'>
+                    className="border-b border-gray-200 pb-4 text-left text-sm font-medium text-gray-500"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </th>
                 ))}
@@ -53,14 +54,16 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 key={row.id}
                 onClick={() =>
                   clickable
-                    ? router.push(`/dashboard/jobs/${row.renderValue('id')}`)
+                    ? router.push(`/dashboard/jobs/${row.renderValue("id")}`)
                     : null
                 }
-                className={clickable ? 'cursor-pointer hover:bg-gray-50' : ''}>
+                className={clickable ? "cursor-pointer hover:bg-gray-50" : ""}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className='border-b border-gray-100 py-4 text-sm'>
+                    className="border-b border-gray-100 py-4 text-sm"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}

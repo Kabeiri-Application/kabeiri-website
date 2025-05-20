@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export enum JobStatus {
-  IN_PROGRESS = 'in progress',
-  PENDING = 'pending',
-  COMPLETE = 'complete',
+  IN_PROGRESS = "in progress",
+  PENDING = "pending",
+  COMPLETE = "complete",
 }
 
 export interface BaseEntity {
@@ -63,13 +63,13 @@ export interface JobFormInputs {
 }
 
 export const jobFormSchema = z.object({
-  title: z.string().min(1, 'Title must be at least 1 characters'),
-  description: z.string().min(1, 'Description must be at least 1 characters'),
-  customer: z.string().min(1, 'Customer is required'),
-  vehicle: z.string().min(1, 'Vehicle is required'),
-  service: z.string().min(1, 'Service is required'),
+  title: z.string().min(1, "Title must be at least 1 characters"),
+  description: z.string().min(1, "Description must be at least 1 characters"),
+  customer: z.string().min(1, "Customer is required"),
+  vehicle: z.string().min(1, "Vehicle is required"),
+  service: z.string().min(1, "Service is required"),
   due_date: z.string(),
-  assigned_to: z.string().min(1, 'Assigned to is required'),
+  assigned_to: z.string().min(1, "Assigned to is required"),
   status: z.nativeEnum(JobStatus).optional(),
 });
 

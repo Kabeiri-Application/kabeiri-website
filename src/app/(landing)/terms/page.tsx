@@ -1,60 +1,62 @@
 export default function Terms() {
   return (
-    <main className='bg-white pt-28'>
-      <section className='mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-4 py-32 sm:px-6 sm:py-24'>
-        <div className='mb-14 text-center'>
-          <h1 className='mb-4 text-4xl font-bold tracking-tight sm:text-5xl'>
-            Terms of Service
-          </h1>
-          <p className='text-lg text-gray-600'>
-            Last updated: {new Date().toLocaleDateString()}
-          </p>
-        </div>
+    <section className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-4 py-32 sm:px-6 sm:py-24">
+      <div className="mb-14 text-center">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
+          Terms of Service
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Last updated: {new Date().toLocaleDateString()}
+        </p>
+      </div>
 
-        {/* cspell:disable */}
-        <div className='w-full rounded-2xl bg-gray-50 p-8 sm:p-12'>
-          <h2 className='text-xl font-semibold text-gray-900'>
-            1. Agreement to Terms
-          </h2>
-          <p className='mb-8 text-gray-600'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris.
-          </p>
+      <div className="bg-card w-full rounded-2xl p-8 sm:p-12">
+        <h2 className="text-xl font-semibold">1. Agreement to Terms</h2>
+        <p className="text-muted-foreground mb-8">
+          {`By accessing or using Kabeiri's services, website, or
+            applications, you agree to be bound by these Terms of Service. If
+            you disagree with any part of these terms, you may not access our
+            services. Kabeiri reserves the right to update these terms at any
+            time, and your continued use constitutes acceptance of those
+            changes.`}
+        </p>
 
-          <h2 className='text-xl font-semibold text-gray-900'>
-            2. Use License
-          </h2>
-          <p className='mb-8 text-gray-600'>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident.
-          </p>
+        <h2 className="text-xl font-semibold">2. Use License</h2>
+        <p className="text-muted-foreground mb-8">
+          Kabeiri grants you a limited, non-exclusive, non-transferable license
+          to use our platform for personal or business purposes related to
+          automotive management, inventory, and communication services. This
+          license does not include any resale or commercial use of our service
+          or contents, or any derivative use of this service or its contents.
+        </p>
 
-          <h2 className='text-xl font-semibold text-gray-900'>3. Disclaimer</h2>
-          <p className='mb-8 text-gray-600'>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam.
-          </p>
+        <h2 className="text-xl font-semibold">3. Disclaimer</h2>
+        <p className="text-muted-foreground mb-8">
+          {`Kabeiri's services are provided "as is" without warranties of any
+            kind, either express or implied. Kabeiri does not warrant that the
+            service will be uninterrupted or error-free. Advice or information
+            obtained from Kabeiri's platform shall not create any warranty not
+            expressly stated in these terms.`}
+        </p>
 
-          <h2 className='text-xl font-semibold text-gray-900'>
-            4. Limitations
-          </h2>
-          <p className='mb-8 text-gray-600'>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-            fugit, sed quia consequuntur magni dolores eos qui ratione.
-          </p>
+        <h2 className="text-xl font-semibold">4. Limitations</h2>
+        <p className="text-muted-foreground mb-8">
+          In no event shall Kabeiri be liable for any indirect, incidental,
+          special, consequential, or punitive damages resulting from your access
+          to or use of, or inability to access or use, the service or any
+          content provided on or through the service, regardless of the theory
+          of liability.
+        </p>
 
-          <h2 className='text-xl font-semibold text-gray-900'>
-            5. Revisions and Errata
-          </h2>
-          <p className='mb-8 text-gray-600'>
-            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-            consectetur, adipisci velit, sed quia non numquam.
-          </p>
-        </div>
-        {/* cspell:enable */}
-      </section>
-    </main>
+        <h2 className="text-xl font-semibold">5. Revisions and Errata</h2>
+        <p className="text-muted-foreground mb-8">
+          Kabeiri may make changes to the content and features of its platform
+          at any time without notice. Kabeiri is not responsible for errors,
+          inaccuracies, or omissions in service descriptions or pricing
+          information. Kabeiri reserves the right to revise, update, or
+          discontinue any aspect of its services at its sole discretion.
+        </p>
+      </div>
+    </section>
   );
 }

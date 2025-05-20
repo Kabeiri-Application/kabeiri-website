@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import type {
   AddressSchema,
   PersonalSchema,
   ShopSchema,
-} from '@/app/onboarding/schema';
+} from "@/app/onboarding/schema";
 
 interface OnboardingStore {
   personalInfo: PersonalSchema;
@@ -19,30 +19,30 @@ interface OnboardingStore {
 
 const initialState = {
   personalInfo: {
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    username: '',
-    phoneNumber: '',
-    avatarUrl: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    username: "",
+    phoneNumber: "",
+    avatarUrl: "",
   },
   addressInfo: {
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
   },
   shopInfo: {
-    shopName: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    phone: '',
-    website: '',
-    businessPhotoUrl: '',
+    shopName: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+    website: "",
+    businessPhotoUrl: "",
   },
 };
 
@@ -56,7 +56,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
       reset: () => set(initialState),
     }),
     {
-      name: 'onboarding-store',
-    }
-  )
+      name: "onboarding-store",
+    },
+  ),
 );
