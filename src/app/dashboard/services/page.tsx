@@ -6,6 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
+import { getOrganizationId, getServices } from '@/app/dashboard/jobs/actions';
+import ServiceCard from '@/app/dashboard/services/_components/ServiceCard';
+import { createService } from '@/app/dashboard/services/actions';
+import { serviceFormSchema } from '@/app/dashboard/services/schema'; // Import the schema
 import { Button } from '@/components/Button';
 import {
   Dialog,
@@ -15,11 +19,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { NewService, Service } from '@/db/app.schema';
-
-import { getOrganizationId, getServices } from '../jobs/actions';
-import ServiceCard from './_components/ServiceCard';
-import { createService } from './actions';
-import { serviceFormSchema } from './schema'; // Import the schema
 
 export default function Page() {
   const [services, setServices] = useState<Service[]>([]);

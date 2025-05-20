@@ -8,7 +8,7 @@ export default function ServiceCard(service: Service) {
     <div
       onClick={() => router.push(`/dashboard/services/${service.id}`)}
       key={service.id}
-      className='group relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md'>
+      className='group relative cursor-pointer rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md'>
       <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center'>
           <h2 className='text-xl font-semibold text-gray-900'>

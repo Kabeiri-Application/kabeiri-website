@@ -22,7 +22,9 @@ export const profilesTable = pgTable('profiles', {
   id: text()
     .primaryKey()
     .references(() => user.id),
-  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp({ withTimezone: true }),
   username: text().notNull(),
@@ -41,7 +43,9 @@ export const profilesTable = pgTable('profiles', {
 export const organizationsTable = pgTable('organizations', {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
   businessName: text().notNull(),
   businessPhotoUrl: text(),
@@ -67,7 +71,9 @@ export const carsTable = pgTable('cars', {
 export const jobsTable = pgTable('jobs', {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
   customer: text().references(() => profilesTable.id),
   vehicle: uuid().references(() => carsTable.id),
@@ -111,7 +117,9 @@ export const jobRelations = relations(jobsTable, ({ one }) => ({
 export const servicesTable = pgTable('services', {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
   organization: uuid().references(() => organizationsTable.id),
   title: text().notNull(),
