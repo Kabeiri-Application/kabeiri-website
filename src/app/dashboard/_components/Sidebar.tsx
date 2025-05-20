@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   MessageSquare,
   Package,
+  PencilRuler,
   Store,
   User,
   Wrench,
@@ -22,6 +23,8 @@ export function Sidebar() {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Jobs', href: '/dashboard/jobs', icon: Wrench },
+    { name: 'Services', href: '/dashboard/services', icon: PencilRuler },
+
     { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
     { name: 'Marketplace', href: '/dashboard/marketplace', icon: Store },
     {
