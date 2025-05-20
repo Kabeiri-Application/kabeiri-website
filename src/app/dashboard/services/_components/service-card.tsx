@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 
 import type { Service } from "@/db/app.schema";
 
-export default function ServiceCard(service: Service) {
+export function ServiceCard(service: Service) {
   const router = useRouter();
   return (
     <div

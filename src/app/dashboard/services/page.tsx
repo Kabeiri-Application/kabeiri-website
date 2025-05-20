@@ -7,7 +7,7 @@ import { PlusIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { getOrganizationId, getServices } from "@/app/dashboard/jobs/actions";
-import ServiceCard from "@/app/dashboard/services/_components/ServiceCard";
+import { ServiceCard } from "@/app/dashboard/services/_components/service-card";
 import { createService } from "@/app/dashboard/services/actions";
 import { serviceFormSchema } from "@/app/dashboard/services/schema";
 import { Button } from "@/components/ui/button";
