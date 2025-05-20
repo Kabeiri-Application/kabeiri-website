@@ -56,7 +56,7 @@ export default function SignIn() {
 
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shadow-none">
         <CardHeader>
           <CardTitle className="text-lg md:text-xl">Login</CardTitle>
           <CardDescription className="text-xs md:text-sm">
