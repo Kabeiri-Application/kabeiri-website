@@ -71,7 +71,10 @@ export function CommandMenu() {
                 </CommandItem>
                 <CommandItem
                   onSelect={() =>
-                    runCommand(async () => await authClient.signOut())
+                    runCommand(async () => {
+                      await authClient.signOut();
+                      router.push("/");
+                    })
                   }
                 >
                   <LogOutIcon />
