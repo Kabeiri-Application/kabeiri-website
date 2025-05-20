@@ -52,12 +52,12 @@ export default function OnboardingPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left Column - Brand and Info */}
-      <div className="fixed left-0 flex h-screen w-2/5 flex-col bg-gray-50 p-10">
+      <div className="fixed left-0 flex h-screen w-2/5 flex-col p-10">
         {/* Brand and Content */}
         <div className="flex flex-1 flex-col">
           <div className="mb-10">
             <h1 className="text-4xl font-bold">Kabeiri</h1>
-            <p className="mt-2 text-xl text-gray-600">
+            <p className="text-muted-foreground mt-2 text-xl">
               Your journey starts here
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function OnboardingPage() {
               />
             </div>
 
-            <p className="text-sm text-gray-600">
+            <p className="text-muted-foreground text-sm">
               &copy; {new Date().getFullYear()} Kabeiri. All rights reserved.
             </p>
           </div>
@@ -82,7 +82,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Right Column - Forms */}
-      <div className="ml-[40%] flex min-h-screen w-3/5 bg-white">
+      <div className="bg-card ml-[40%] flex min-h-screen w-3/5">
         <div className="flex w-full items-start justify-center overflow-y-auto p-10">
           <div className="w-full max-w-md">
             {STEPS[currentStep].formComponent}
@@ -110,11 +110,11 @@ function CarStepper({
       {/* Progress Track */}
       <div className="relative mb-12">
         {/* Base Track */}
-        <div className="absolute top-1.5 left-0 h-1 w-full bg-gray-200" />
+        <div className="bg-border absolute top-1.5 left-0 h-1 w-full" />
 
         {/* Progress Bar */}
         <div
-          className="absolute top-1.5 left-0 h-1 bg-black transition-all duration-500 ease-in-out"
+          className="bg-primary absolute top-1.5 left-0 h-1 transition-all duration-500 ease-in-out"
           style={{ width: `${progress}%` }}
         />
 
@@ -144,8 +144,8 @@ function CarStepper({
                 {/* Step Marker */}
                 <div
                   className={cn(
-                    "relative z-10 size-4 rounded-full border-4 border-gray-200 bg-white transition-colors duration-700",
-                    isActive && "border-black bg-black",
+                    "border-border relative z-10 size-4 rounded-full border-4 bg-white transition-colors duration-700",
+                    isActive && "bg-primary border-border",
                   )}
                 />
 
@@ -153,7 +153,7 @@ function CarStepper({
                 <span
                   className={cn(
                     "absolute top-8 text-sm font-medium whitespace-nowrap transition-colors duration-700",
-                    isActive ? "text-black" : "text-gray-400",
+                    isActive ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
                   {stepNames[step]}

@@ -47,7 +47,7 @@ export function AddressForm() {
         <button
           type="button"
           onClick={handleBack}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100"
+          className="text-muted-foreground hover:bg-muted rounded-lg p-2 transition"
         >
           <ArrowLeftIcon className="size-5" />
         </button>
@@ -55,7 +55,7 @@ export function AddressForm() {
           {`What's your address?`}
         </h2>
       </div>
-      <p className="text-gray-600">
+      <p className="text-muted-foreground">
         This information will be used to verify your identity.
       </p>
 
@@ -68,10 +68,10 @@ export function AddressForm() {
             {...register("address")}
             type="text"
             id="address"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.address && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.address.message}
             </p>
           )}
@@ -85,10 +85,12 @@ export function AddressForm() {
             {...register("city")}
             type="text"
             id="city"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.city && (
-            <p className="mt-1 text-sm text-red-500">{errors.city.message}</p>
+            <p className="text-destructive mt-1 text-sm">
+              {errors.city.message}
+            </p>
           )}
         </div>
 
@@ -100,10 +102,12 @@ export function AddressForm() {
             {...register("state")}
             type="text"
             id="state"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.state && (
-            <p className="mt-1 text-sm text-red-500">{errors.state.message}</p>
+            <p className="text-destructive mt-1 text-sm">
+              {errors.state.message}
+            </p>
           )}
         </div>
 
@@ -115,10 +119,10 @@ export function AddressForm() {
             {...register("zipCode")}
             type="text"
             id="zipCode"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.zipCode && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.zipCode.message}
             </p>
           )}
@@ -127,7 +131,7 @@ export function AddressForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg px-4 py-2 transition disabled:opacity-50"
         >
           Continue
         </button>
@@ -143,7 +147,7 @@ export function AddressInfo() {
         Where are you located?
       </h2>
 
-      <div className="mb-8 max-w-md text-lg text-gray-600">
+      <div className="text-muted-foreground mb-8 max-w-md text-lg">
         <div className="flex flex-col gap-4">
           <p>
             We need your address to verify your identity and ensure a secure

@@ -41,7 +41,7 @@ export function PersonalForm() {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100"
+          className="text-muted-foreground hover:bg-muted rounded-lg p-2 transition"
         >
           <ArrowLeftIcon className="size-5" />
         </button>
@@ -49,7 +49,7 @@ export function PersonalForm() {
           Tell us about yourself
         </h2>
       </div>
-      <p className="text-gray-600">
+      <p className="text-muted-foreground">
         Your profile will be used to identify you.
       </p>
 
@@ -71,7 +71,7 @@ export function PersonalForm() {
                 {...register("firstName")}
                 type="text"
                 id="firstName"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+                className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
               />
               {errors.firstName && (
                 <p className="mt-1 text-sm text-red-500">
@@ -90,7 +90,7 @@ export function PersonalForm() {
                 {...register("lastName")}
                 type="text"
                 id="lastName"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+                className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
               />
               {errors.lastName && (
                 <p className="mt-1 text-sm text-red-500">
@@ -108,7 +108,7 @@ export function PersonalForm() {
               {...register("email")}
               type="email"
               id="email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+              className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-500">
@@ -128,7 +128,7 @@ export function PersonalForm() {
               {...register("phoneNumber")}
               type="text"
               id="phoneNumber"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+              className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
             />
             {errors.phoneNumber && (
               <p className="mt-1 text-sm text-red-500">
@@ -148,7 +148,7 @@ export function PersonalForm() {
               {...register("username")}
               type="text"
               id="username"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+              className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
             />
             {errors.username && (
               <p className="mt-1 text-sm text-red-500">
@@ -168,7 +168,7 @@ export function PersonalForm() {
               {...register("password")}
               type="password"
               id="password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+              className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-500">
@@ -188,7 +188,7 @@ export function PersonalForm() {
               {...register("confirmPassword")}
               type="password"
               id="confirmPassword"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+              className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
             />
             {errors.confirmPassword && (
               <p className="mt-1 text-sm text-red-500">
@@ -201,7 +201,7 @@ export function PersonalForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg px-4 py-2 transition disabled:opacity-50"
         >
           Continue
         </button>
@@ -217,7 +217,7 @@ export function PersonalInfo() {
         Create your account
       </h2>
 
-      <div className="mb-8 max-w-md text-lg text-gray-600">
+      <div className="text-muted-foreground mb-8 max-w-md text-lg">
         <div className="flex flex-col gap-4">
           <p>Sign up and create your profile to get started with Kabeiri.</p>
           <p>{`We'll help you set up your account step by step.`}</p>

@@ -88,7 +88,7 @@ export function ReviewForm() {
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 disabled:opacity-50"
+          className="text-muted-foreground hover:bg-muted rounded-lg p-2 transition disabled:opacity-50"
         >
           <ArrowLeftIcon className="size-5" />
         </button>
@@ -100,21 +100,21 @@ export function ReviewForm() {
         <h2 className="mb-4 text-lg font-medium">Personal Information</h2>
         <dl className="grid grid-cols-2 gap-4">
           <div>
-            <dt className="text-sm text-gray-600">Name</dt>
+            <dt className="text-muted-foreground text-sm">Name</dt>
             <dd>
               {personalInfo.firstName} {personalInfo.lastName}
             </dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">Username</dt>
+            <dt className="text-muted-foreground text-sm">Username</dt>
             <dd>{personalInfo.username}</dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">Email</dt>
+            <dt className="text-muted-foreground text-sm">Email</dt>
             <dd>{personalInfo.email}</dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">Phone</dt>
+            <dt className="text-muted-foreground text-sm">Phone</dt>
             <dd>{personalInfo.phoneNumber}</dd>
           </div>
         </dl>
@@ -124,19 +124,19 @@ export function ReviewForm() {
         <h2 className="mb-4 text-lg font-medium">Address</h2>
         <dl className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
-            <dt className="text-sm text-gray-600">Street Address</dt>
+            <dt className="text-muted-foreground text-sm">Street Address</dt>
             <dd>{addressInfo.address}</dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">City</dt>
+            <dt className="text-muted-foreground text-sm">City</dt>
             <dd>{addressInfo.city}</dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">State</dt>
+            <dt className="text-muted-foreground text-sm">State</dt>
             <dd>{addressInfo.state}</dd>
           </div>
           <div>
-            <dt className="text-sm text-gray-600">ZIP Code</dt>
+            <dt className="text-muted-foreground text-sm">ZIP Code</dt>
             <dd>{addressInfo.zipCode}</dd>
           </div>
         </dl>
@@ -147,38 +147,40 @@ export function ReviewForm() {
           <h2 className="mb-4 text-lg font-medium">Shop Information</h2>
           <dl className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <dt className="text-sm text-gray-600">Shop Name</dt>
+              <dt className="text-muted-foreground text-sm">Shop Name</dt>
               <dd>{shopInfo.shopName}</dd>
             </div>
             <div className="col-span-2">
-              <dt className="text-sm text-gray-600">Street Address</dt>
+              <dt className="text-muted-foreground text-sm">Street Address</dt>
               <dd>{shopInfo.address}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-600">City</dt>
+              <dt className="text-muted-foreground text-sm">City</dt>
               <dd>{shopInfo.city}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-600">State</dt>
+              <dt className="text-muted-foreground text-sm">State</dt>
               <dd>{shopInfo.state}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-600">ZIP Code</dt>
+              <dt className="text-muted-foreground text-sm">ZIP Code</dt>
               <dd>{shopInfo.zipCode}</dd>
             </div>
             {shopInfo.website && (
               <div>
-                <dt className="text-sm text-gray-600">Website</dt>
+                <dt className="text-muted-foreground text-sm">Website</dt>
                 <dd>{shopInfo.website}</dd>
               </div>
             )}
             <div>
-              <dt className="text-sm text-gray-600">Business Phone</dt>
+              <dt className="text-muted-foreground text-sm">Business Phone</dt>
               <dd>{shopInfo.phone}</dd>
             </div>
             {shopInfo.businessPhotoUrl && (
               <div>
-                <dt className="text-sm text-gray-600">Business Photo</dt>
+                <dt className="text-muted-foreground text-sm">
+                  Business Photo
+                </dt>
                 <dd>
                   <Image
                     src={shopInfo.businessPhotoUrl}
@@ -193,7 +195,7 @@ export function ReviewForm() {
       )}
 
       {status.error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-700">
+        <div className="bg-destructive/10 text-destructive rounded-lg p-4">
           <div className="flex items-center gap-2">
             <XCircleIcon className="size-5" />
             <p>{status.error}</p>
@@ -229,7 +231,7 @@ export function ReviewForm() {
           type="button"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="rounded-lg bg-black px-6 py-2 text-white transition hover:bg-black/90 disabled:opacity-50"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-6 py-2 transition disabled:opacity-50"
         >
           {isSubmitting ? "Creating Account..." : "Create Account"}
         </button>
@@ -245,7 +247,7 @@ export function ReviewInfo() {
         Almost there!
       </h2>
 
-      <div className="mb-8 max-w-md text-lg text-gray-600">
+      <div className="text-muted-foreground mb-8 max-w-md text-lg">
         <div className="flex flex-col gap-4">
           <p>Please review your information before creating your account.</p>
           <p>Make sure everything is correct before proceeding.</p>

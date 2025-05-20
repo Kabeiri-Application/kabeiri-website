@@ -53,7 +53,7 @@ export function ShopForm() {
         <button
           type="button"
           onClick={handleBack}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100"
+          className="text-muted-foreground hover:bg-muted rounded-lg p-2 transition"
         >
           <ArrowLeftIcon className="size-5" />
         </button>
@@ -61,7 +61,7 @@ export function ShopForm() {
           Tell us about your shop
         </h2>
       </div>
-      <p className="text-gray-600">
+      <p className="text-muted-foreground">
         This information will be used to setup your shop profile.
       </p>
 
@@ -74,10 +74,10 @@ export function ShopForm() {
             {...register("shopName")}
             type="text"
             id="shopName"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.shopName && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.shopName.message}
             </p>
           )}
@@ -90,10 +90,10 @@ export function ShopForm() {
           <input
             {...register("address")}
             id="address"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.address && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.address.message}
             </p>
           )}
@@ -106,10 +106,12 @@ export function ShopForm() {
           <input
             {...register("city")}
             id="city"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.city && (
-            <p className="mt-1 text-sm text-red-500">{errors.city.message}</p>
+            <p className="text-destructive mt-1 text-sm">
+              {errors.city.message}
+            </p>
           )}
         </div>
 
@@ -120,10 +122,12 @@ export function ShopForm() {
           <input
             {...register("state")}
             id="state"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.state && (
-            <p className="mt-1 text-sm text-red-500">{errors.state.message}</p>
+            <p className="text-destructive mt-1 text-sm">
+              {errors.state.message}
+            </p>
           )}
         </div>
 
@@ -134,10 +138,10 @@ export function ShopForm() {
           <input
             {...register("zipCode")}
             id="zipCode"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.zipCode && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.zipCode.message}
             </p>
           )}
@@ -150,10 +154,10 @@ export function ShopForm() {
           <input
             {...register("website")}
             id="website"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.website && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.website.message}
             </p>
           )}
@@ -167,10 +171,12 @@ export function ShopForm() {
             {...register("phone")}
             type="tel"
             id="phone"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.phone && (
-            <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
+            <p className="text-destructive mt-1 text-sm">
+              {errors.phone.message}
+            </p>
           )}
         </div>
 
@@ -185,10 +191,10 @@ export function ShopForm() {
             {...register("businessPhotoUrl")}
             type="url"
             id="businessPhotoUrl"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 transition focus:border-transparent focus:ring-2 focus:ring-black"
+            className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
           {errors.businessPhotoUrl && (
-            <p className="mt-1 text-sm text-red-500">
+            <p className="text-destructive mt-1 text-sm">
               {errors.businessPhotoUrl.message}
             </p>
           )}
@@ -198,14 +204,14 @@ export function ShopForm() {
           <button
             type="button"
             onClick={handleSkip}
-            className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-50"
+            className="border-border text-muted-foreground hover:bg-muted flex-1 rounded-lg border px-4 py-2 transition"
           >
             Skip for now
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-50"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 flex-1 rounded-lg px-4 py-2 transition disabled:opacity-50"
           >
             Continue
           </button>
@@ -222,7 +228,7 @@ export function ShopInfo() {
         Setup your shop
       </h2>
 
-      <div className="mb-8 max-w-md text-lg text-gray-600">
+      <div className="text-muted-foreground mb-8 max-w-md text-lg">
         <div className="flex flex-col gap-4">
           <p>
             Tell us about your shop so we can help you get started with your
