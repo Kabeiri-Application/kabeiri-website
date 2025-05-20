@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 
+import { CommandMenu } from "@/components/command-menu";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { env } from "@/env";
@@ -55,6 +56,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster position="top-center" />
+          <CommandMenu />
         </ThemeProvider>
       </body>
     </html>
