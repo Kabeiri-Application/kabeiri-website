@@ -33,7 +33,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 fixed top-0 z-50 w-full border-b backdrop-blur">
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/80 fixed top-0 z-50 w-full border-b backdrop-blur-lg">
       <div className="from-primary to-primary/80 flex cursor-progress items-center justify-center bg-linear-to-b py-2">
         <span className="font-bold">🚧 This site is under construction 🚧</span>
       </div>
