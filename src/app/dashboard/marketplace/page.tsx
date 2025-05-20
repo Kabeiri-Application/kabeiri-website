@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart } from "lucide-react";
+import { SearchIcon, ShoppingCartIcon } from "lucide-react";
 
 import { ProductCard } from "@/app/dashboard/marketplace/_components/product-card";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ export default function MarketplacePage() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Marketplace</h1>
           <Button variant="secondary">
-            <ShoppingCart className="mr-2 size-5" />
+            <ShoppingCartIcon className="mr-2 size-5" />
             Cart (0)
           </Button>
         </div>
@@ -50,7 +50,7 @@ export default function MarketplacePage() {
         <div className="mb-8 space-y-4">
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-gray-400" />
+            <SearchIcon className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search parts or rental spaces..."

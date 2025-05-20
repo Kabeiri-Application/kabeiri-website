@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeftIcon, CheckCircle2Icon, XCircleIcon } from "lucide-react";
 
 import {
   createOrganization,
@@ -90,7 +90,7 @@ export function ReviewForm() {
           disabled={isSubmitting}
           className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 disabled:opacity-50"
         >
-          <ArrowLeft className="size-5" />
+          <ArrowLeftIcon className="size-5" />
         </button>
         <h1 className="text-2xl font-semibold">Review Your Information</h1>
         <div className="w-8" />
@@ -195,7 +195,7 @@ export function ReviewForm() {
       {status.error && (
         <div className="rounded-lg bg-red-50 p-4 text-red-700">
           <div className="flex items-center gap-2">
-            <XCircle className="size-5" />
+            <XCircleIcon className="size-5" />
             <p>{status.error}</p>
           </div>
         </div>
@@ -205,19 +205,19 @@ export function ReviewForm() {
         <div className="space-y-2">
           {status.account && (
             <div className="flex items-center gap-2 text-green-700">
-              <CheckCircle2 className="size-5" />
+              <CheckCircle2Icon className="size-5" />
               <p>Account created successfully</p>
             </div>
           )}
           {status.profile && (
             <div className="flex items-center gap-2 text-green-700">
-              <CheckCircle2 className="size-5" />
+              <CheckCircle2Icon className="size-5" />
               <p>Profile created successfully</p>
             </div>
           )}
           {status.organization && (
             <div className="flex items-center gap-2 text-green-700">
-              <CheckCircle2 className="size-5" />
+              <CheckCircle2Icon className="size-5" />
               <p>Organization created successfully</p>
             </div>
           )}

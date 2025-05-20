@@ -1,7 +1,7 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
@@ -66,7 +66,7 @@ export default function PricingPage() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Pricing Management</h1>
           <Button>
-            <Plus className="mr-2 size-5" />
+            <PlusIcon className="mr-2 size-5" />
             Add Service
           </Button>
         </div>

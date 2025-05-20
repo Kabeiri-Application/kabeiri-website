@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -176,7 +176,7 @@ export default function JobsPage() {
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-3xl font-bold">Job List</h1>
             <DialogTrigger className="flex flex-row items-center rounded-full bg-black px-4 py-2 text-white transition hover:bg-gray-800">
-              <Plus className="mr-2 size-5" />
+              <PlusIcon className="mr-2 size-5" />
               New Job
             </DialogTrigger>
           </div>

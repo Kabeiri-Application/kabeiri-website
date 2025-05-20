@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { Car } from "lucide-react";
+import { CarIcon } from "lucide-react";
 
 import { AddressForm, AddressInfo } from "@/app/onboarding/_components/address";
 import {
@@ -131,7 +131,7 @@ function CarStepper({
                   : "translateX(-50%)",
           }}
         >
-          <Car className="size-10" />
+          <CarIcon className="size-10" />
         </div>
 
         {/* Steps */}

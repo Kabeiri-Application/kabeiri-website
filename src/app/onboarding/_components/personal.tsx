@@ -4,7 +4,7 @@ import { startTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, UserIcon } from "lucide-react";
+import { ArrowLeftIcon, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { personalSchema, type PersonalSchema } from "@/app/onboarding/schema";
@@ -43,7 +43,7 @@ export function PersonalForm() {
           onClick={() => router.back()}
           className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100"
         >
-          <ArrowLeft className="size-5" />
+          <ArrowLeftIcon className="size-5" />
         </button>
         <h2 className="text-2xl font-semibold tracking-tight">
           Tell us about yourself

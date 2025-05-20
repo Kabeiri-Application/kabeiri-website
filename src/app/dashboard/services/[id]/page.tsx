@@ -4,19 +4,19 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { editService, getService } from "@/app/dashboard/services/actions";
 import { serviceFormSchema } from "@/app/dashboard/services/schema";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Service } from "@/db/app.schema";
+import type { Service } from "@/db/app.schema";
 
 export default function ServiceDetailPage() {
   const params = useParams();
@@ -78,14 +78,14 @@ export default function ServiceDetailPage() {
           onClick={() => router.back()}
           className="flex items-center text-gray-600 hover:text-gray-900"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeftIcon className="size-4" />
           Back to Services
         </button>
         <button
           onClick={() => setModalStatus(true)}
           className="flex items-center text-gray-600 hover:text-gray-900"
         >
-          <Pencil className="size-4" />
+          <PencilIcon className="size-4" />
           Edit
         </button>
       </div>

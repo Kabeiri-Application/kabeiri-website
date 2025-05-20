@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { NewService, servicesTable } from "@/db/app.schema";
+import { servicesTable, type NewService } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 
 export async function createService(

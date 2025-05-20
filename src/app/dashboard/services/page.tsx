@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { getOrganizationId, getServices } from "@/app/dashboard/jobs/actions";
 import ServiceCard from "@/app/dashboard/services/_components/ServiceCard";
 import { createService } from "@/app/dashboard/services/actions";
-import { serviceFormSchema } from "@/app/dashboard/services/schema"; // Import the schema
-import { Button } from "@/components/Button";
+import { serviceFormSchema } from "@/app/dashboard/services/schema";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { NewService, Service } from "@/db/app.schema";
+import type { NewService, Service } from "@/db/app.schema";
 
 export default function Page() {
   const [services, setServices] = useState<Service[]>([]);
@@ -82,7 +82,7 @@ export default function Page() {
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Auto Services</h1>
             <DialogTrigger className="flex flex-row items-center rounded-full bg-black px-4 py-2 text-white transition hover:bg-gray-800">
-              <Plus className="mr-2 size-5" />
+              <PlusIcon className="mr-2 size-5" />
               New Service
             </DialogTrigger>
           </div>

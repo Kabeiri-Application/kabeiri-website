@@ -1,4 +1,9 @@
-import { BarChart3, Clock, DollarSign, Wrench } from "lucide-react";
+import {
+  BarChart3Icon,
+  ClockIcon,
+  DollarSignIcon,
+  WrenchIcon,
+} from "lucide-react";
 
 export default function DashboardPage() {
   return (
@@ -12,7 +17,7 @@ export default function DashboardPage() {
           <div className="rounded-2xl bg-white p-6 shadow-xs">
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-xl bg-purple-100">
-                <Wrench className="size-6 text-purple-600" />
+                <WrenchIcon className="size-6 text-purple-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Jobs</p>
@@ -25,7 +30,7 @@ export default function DashboardPage() {
           <div className="rounded-2xl bg-white p-6 shadow-xs">
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-xl bg-blue-100">
-                <BarChart3 className="size-6 text-blue-600" />
+                <BarChart3Icon className="size-6 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">In Progress</p>
@@ -38,7 +43,7 @@ export default function DashboardPage() {
           <div className="rounded-2xl bg-white p-6 shadow-xs">
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-xl bg-green-100">
-                <DollarSign className="size-6 text-green-600" />
+                <DollarSignIcon className="size-6 text-green-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
@@ -51,7 +56,7 @@ export default function DashboardPage() {
           <div className="rounded-2xl bg-white p-6 shadow-xs">
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-xl bg-pink-100">
-                <Clock className="size-6 text-pink-600" />
+                <ClockIcon className="size-6 text-pink-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">

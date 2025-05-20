@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { Service } from "@/db/app.schema";
+import type { Service } from "@/db/app.schema";
 
 export default function ServiceCard(service: Service) {
   const router = useRouter();

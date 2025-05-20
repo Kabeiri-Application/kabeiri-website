@@ -1,7 +1,7 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { Bell, Settings } from "lucide-react";
+import { BellIcon, SettingsIcon } from "lucide-react";
 
 import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
@@ -75,7 +75,7 @@ export default function NotificationsPage() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Notifications</h1>
           <Button variant="secondary">
-            <Settings className="mr-2 size-5" />
+            <SettingsIcon className="mr-2 size-5" />
             Settings
           </Button>
         </div>
@@ -110,7 +110,7 @@ export default function NotificationsPage() {
           <div className="rounded-2xl bg-white p-6 shadow-xs">
             <h2 className="mb-6 text-2xl font-bold">Notification Summary</h2>
             <div className="mb-6 flex items-center gap-2">
-              <Bell className="size-6 text-blue-600" />
+              <BellIcon className="size-6 text-blue-600" />
               <span className="text-xl font-bold">1</span>
               <span className="text-xl">New Notifications</span>
             </div>

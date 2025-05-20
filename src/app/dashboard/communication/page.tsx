@@ -1,7 +1,7 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { Send } from "lucide-react";
+import { SendIcon } from "lucide-react";
 
 import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
@@ -112,7 +112,7 @@ export default function CommunicationPage() {
                 />
               </div>
               <Button className="w-full">
-                <Send className="mr-2 size-5" />
+                <SendIcon className="mr-2 size-5" />
                 Send Message
               </Button>
             </form>

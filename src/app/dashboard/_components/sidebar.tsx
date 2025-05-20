@@ -4,15 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
-  Bell,
-  DollarSign,
-  LayoutDashboard,
-  MessageSquare,
-  Package,
-  PencilRuler,
-  Store,
-  User,
-  Wrench,
+  BellIcon,
+  DollarSignIcon,
+  LayoutDashboardIcon,
+  MessageSquareIcon,
+  PackageIcon,
+  PencilRulerIcon,
+  StoreIcon,
+  UserIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -21,19 +21,19 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Jobs", href: "/dashboard/jobs", icon: Wrench },
-    { name: "Services", href: "/dashboard/services", icon: PencilRuler },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboardIcon },
+    { name: "Jobs", href: "/dashboard/jobs", icon: WrenchIcon },
+    { name: "Services", href: "/dashboard/services", icon: PencilRulerIcon },
 
-    { name: "Inventory", href: "/dashboard/inventory", icon: Package },
-    { name: "Marketplace", href: "/dashboard/marketplace", icon: Store },
+    { name: "Inventory", href: "/dashboard/inventory", icon: PackageIcon },
+    { name: "Marketplace", href: "/dashboard/marketplace", icon: StoreIcon },
     {
       name: "Communication",
       href: "/dashboard/communication",
-      icon: MessageSquare,
+      icon: MessageSquareIcon,
     },
-    { name: "Notifications", href: "/dashboard/notifications", icon: Bell },
-    { name: "Pricing", href: "/dashboard/pricing", icon: DollarSign },
+    { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
+    { name: "Pricing", href: "/dashboard/pricing", icon: DollarSignIcon },
   ];
 
   return (
@@ -70,7 +70,7 @@ export function Sidebar() {
       </div>
 
       <div className="flex size-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 transition-colors group-hover:bg-purple-200">
-        <User />
+        <UserIcon className="size-5" />
       </div>
     </aside>
   );
