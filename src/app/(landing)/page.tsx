@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
 import {
+  ArrowRightIcon,
   DownloadIcon,
   ShieldCheckIcon,
   ShoppingCartIcon,
@@ -12,6 +15,7 @@ import {
 import { CTA } from "@/components/cta";
 import { FeatureCard } from "@/components/feature-card";
 import { Button } from "@/components/ui/button";
+import { scrollToElement } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -34,8 +38,16 @@ export default function Home() {
               <Button asChild>
                 <Link href="/signup">Join the Revolution</Link>
               </Button>
-              <Button variant="outline" asChild>
-                <Link href="/#features">Explore the Platform →</Link>
+              <Button
+                asChild
+                variant="outline"
+                className="group gap-1"
+                onClick={() => scrollToElement("#features")}
+              >
+                <Link href="/#features" scroll={false}>
+                  Explore the Platform
+                  <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
             </div>
           </div>

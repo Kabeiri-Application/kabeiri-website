@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import type { User } from "better-auth";
 import { UserIcon } from "lucide-react";
@@ -25,9 +26,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
+import { scrollToElement } from "@/lib/utils";
 
 export function Header() {
   const { data: session } = authClient.useSession();
+  const pathname = usePathname();
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 fixed top-0 z-50 w-full border-b backdrop-blur">
@@ -41,7 +44,9 @@ export function Header() {
           <div className="mr-4 hidden md:flex">
             <nav className="flex items-center gap-4 text-sm xl:gap-6">
               <Link
+                scroll={pathname !== "/"}
                 href="/#features"
+                onClick={() => pathname === "/" && scrollToElement("#features")}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Features

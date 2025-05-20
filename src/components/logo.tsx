@@ -1,11 +1,21 @@
-import Link from "next/link";
+"use client";
 
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { cn, scrollToTop } from "@/lib/utils";
 
 export function Logo({ className }: { className?: string }) {
+  const pathname = usePathname();
+
   return (
     <div className={cn("inline-block", className)}>
-      <Link href="/" className="relative -top-1 text-xl font-bold">
+      <Link
+        scroll={pathname !== "/"}
+        href="/"
+        onClick={() => pathname === "/" && scrollToTop()}
+        className="relative -top-1 text-xl font-bold"
+      >
         Kabeiri
         <span className="from-primary to-primary/80 absolute right-0 -bottom-4 scale-75 rounded-full rounded-tl-none bg-linear-to-b px-2 py-0.5 text-xs font-semibold">
           BETA

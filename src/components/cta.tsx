@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ArrowRightIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -15,8 +17,15 @@ export function CTA({ className }: { className?: string }) {
           the platform that's reshaping the future of automotive care.`}
         </p>
         <div className="flex flex-col justify-center gap-3 sm:gap-4 md:flex-row">
-          <Button variant="default" className="w-full md:w-auto" asChild>
-            <Link href="/signup">Get started now →</Link>
+          <Button
+            variant="default"
+            className="group w-full gap-1 md:w-auto"
+            asChild
+          >
+            <Link href="/signup">
+              Get started now
+              <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </Button>
           <Button variant="outline" asChild>
             <Link href="mailto:partners@kabeiri.app">Become a Partner</Link>
