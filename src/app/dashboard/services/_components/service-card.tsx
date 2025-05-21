@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 import {
   Card,
@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import type { Service } from '@/db/app.schema';
+} from "@/components/ui/card";
+import type { Service } from "@/db/app.schema";
 
 export function ServiceCard(service: Service) {
   const router = useRouter();
@@ -15,7 +15,8 @@ export function ServiceCard(service: Service) {
     <Card
       onClick={() => router.push(`/dashboard/services/${service.id}`)}
       key={service.id}
-      className='group relative cursor-pointer transition-all hover:scale-[1.1]'>
+      className="group relative cursor-pointer transition-all hover:scale-[1.1]"
+    >
       <CardHeader>
         <CardTitle>{service.title}</CardTitle>
       </CardHeader>
