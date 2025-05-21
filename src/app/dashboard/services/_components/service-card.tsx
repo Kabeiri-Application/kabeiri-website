@@ -15,7 +15,7 @@ export function ServiceCard(service: Service) {
     <Card
       onClick={() => router.push(`/dashboard/services/${service.id}`)}
       key={service.id}
-      className='group relative cursor-pointer transition-all hover:border-white'>
+      className='group relative cursor-pointer transition-all hover:scale-[1.1]'>
       <CardHeader>
         <CardTitle>{service.title}</CardTitle>
       </CardHeader>
