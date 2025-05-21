@@ -4,9 +4,9 @@ import { headers } from 'next/headers';
 
 import { eq } from 'drizzle-orm';
 
-import { db } from "@/db";
-import { servicesTable, type NewService } from "@/db/app.schema";
-import { auth } from "@/lib/auth";
+import { db } from '@/db';
+import { servicesTable, type NewService } from '@/db/app.schema';
+import { auth } from '@/lib/auth';
 
 export async function createService(
   formData: NewService,
