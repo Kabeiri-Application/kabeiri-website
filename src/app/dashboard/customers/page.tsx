@@ -55,7 +55,7 @@ export default function Page() {
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No customers found.</p>
+            <p>No customers found.</p>
           )}
         </div>
       </div>
