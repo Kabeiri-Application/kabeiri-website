@@ -15,6 +15,7 @@ export interface BaseEntity {
 export interface Customer extends BaseEntity {
   firstName: string;
   lastName: string;
+  streetAddress: string;
 }
 
 export interface Vehicle extends BaseEntity {
