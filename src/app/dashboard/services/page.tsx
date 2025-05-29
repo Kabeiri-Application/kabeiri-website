@@ -80,7 +80,7 @@ export default function Page() {
       <Dialog open={modalStatus} onOpenChange={setModalStatus}>
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">Auto Services</h1>
+            <h1 className="text-3xl font-bold">Auto Services</h1>
             <DialogTrigger className="flex flex-row items-center rounded-full bg-black px-4 py-2 text-white transition hover:bg-gray-800">
               <PlusIcon className="mr-2 size-5" />
               New Service
