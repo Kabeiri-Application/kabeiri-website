@@ -1,7 +1,11 @@
 export default function Page() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <h1 className="text-2xl font-bold">Vehicles Page</h1>
-    </div>
+    <main className="p-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Vehicles</h1>
+        </div>
+      </div>
+    </main>
   );
 }
