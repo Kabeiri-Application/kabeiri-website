@@ -5,12 +5,14 @@ import { usePathname } from "next/navigation";
 
 import {
   BellIcon,
-  DollarSignIcon,
+  CarIcon,
+  // DollarSignIcon,
   LayoutDashboardIcon,
-  MessageSquareIcon,
-  PackageIcon,
+  // MessageSquareIcon,
+  // PackageIcon,
   PencilRulerIcon,
-  StoreIcon,
+  UsersRoundIcon,
+  // StoreIcon,
   WrenchIcon,
 } from "lucide-react";
 
@@ -24,16 +26,17 @@ export function Sidebar() {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboardIcon },
     { name: "Jobs", href: "/dashboard/jobs", icon: WrenchIcon },
     { name: "Services", href: "/dashboard/services", icon: PencilRulerIcon },
-
-    { name: "Inventory", href: "/dashboard/inventory", icon: PackageIcon },
-    { name: "Marketplace", href: "/dashboard/marketplace", icon: StoreIcon },
-    {
-      name: "Communication",
-      href: "/dashboard/communication",
-      icon: MessageSquareIcon,
-    },
+    { name: "Vehicles", href: "/dashboard/vehicles", icon: CarIcon },
+    { name: "Customers", href: "/dashboard/customers", icon: UsersRoundIcon },
+    // { name: "Inventory", href: "/dashboard/inventory", icon: PackageIcon },
+    // { name: "Marketplace", href: "/dashboard/marketplace", icon: StoreIcon },
+    // {
+    //   name: "Communication",
+    //   href: "/dashboard/communication",
+    //   icon: MessageSquareIcon,
+    // },
     { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
-    { name: "Pricing", href: "/dashboard/pricing", icon: DollarSignIcon },
+    // { name: "Pricing", href: "/dashboard/pricing", icon: DollarSignIcon },
   ];
 
   return (
