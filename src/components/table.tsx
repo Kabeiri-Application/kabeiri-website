@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   flexRender,
@@ -30,9 +31,9 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface TableProps<TData> {
@@ -44,7 +45,7 @@ interface TableProps<TData> {
 
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
@@ -147,7 +148,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
           </TableBody>
         </DataTable>
       </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
