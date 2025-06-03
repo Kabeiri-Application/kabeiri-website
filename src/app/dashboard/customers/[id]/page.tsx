@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { editCustomer, getCustomers } from "@/app/dashboard/customers/actions";
-import { serviceFormSchema } from "@/app/dashboard/services/schema";
+import { editCustomer, getCustomer } from "@/app/dashboard/customers/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,7 +19,7 @@ import type { Profile } from "@/db/app.schema";
 
 import { customerFormSchema } from "../schema";
 
-export default function ServiceDetailPage() {
+export default function CustomerDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [customer, setCustomer] = useState<Profile>();
@@ -35,7 +34,7 @@ export default function ServiceDetailPage() {
       if (!customerId) {
         throw new Error("Service ID not found");
       }
-      const customer = await getCustomers(customerId);
+      const customer = await getCustomer(customerId);
       if (!customer) {
         throw new Error("Failed to fetch data");
       }
@@ -78,14 +77,14 @@ export default function ServiceDetailPage() {
       <div className="mx-auto mb-8 flex max-w-5xl items-center justify-between">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-gray-600 hover:text-gray-900"
+          className="hover:text-primary flex items-center"
         >
           <ArrowLeftIcon className="size-4" />
-          Back to Services
+          Back to Customers
         </button>
         <button
           onClick={() => setModalStatus(true)}
-          className="flex items-center text-gray-600 hover:text-gray-900"
+          className="hover:text-primary flex items-center"
         >
           <PencilIcon className="size-4" />
           Edit
@@ -100,40 +99,14 @@ export default function ServiceDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Service Information */}
+          {/* Customer Information */}
           <div className="rounded-lg border border-gray-200 p-6">
-            <h2 className="mb-4 text-xl font-semibold">Service Details</h2>
+            <h2 className="mb-4 text-xl font-semibold">Customer Details</h2>
             <div className="space-y-2">
-              {/* <p>
-                <span className="font-medium">Title: </span>
-                {service?.title}
-              </p>
               <p>
-                <span className="font-medium">Description: </span>
-                {service?.description}
-              </p> */}
-              <p>
-                {/* <span className="font-medium">Price: </span>${service?.price} */}
+                <span className="font-medium">Name: </span>
+                {customer?.firstName} {customer?.lastName}
               </p>
-            </div>
-          </div>
-
-          {/* Timing Information */}
-          <div className="rounded-lg border border-gray-200 p-6">
-            <h2 className="mb-4 text-xl font-semibold">Timing Details</h2>
-            <div className="space-y-2">
-              {/* <p>
-                <span className="font-medium">Created: </span>
-                {service?.createdAt
-                  ? new Date(service.createdAt).toLocaleDateString()
-                  : "N/A"}
-              </p>
-              <p>
-                <span className="font-medium">Last Updated: </span>
-                {service?.updatedAt
-                  ? new Date(service.updatedAt).toLocaleDateString()
-                  : "N/A"}
-              </p> */}
             </div>
           </div>
         </div>
@@ -143,7 +116,7 @@ export default function ServiceDetailPage() {
         <DialogContent className="max-h-full overflow-y-scroll">
           <DialogHeader>
             <DialogTitle className="text-3xl font-bold text-gray-900">
-              Create a Service
+              Create a Customer
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
