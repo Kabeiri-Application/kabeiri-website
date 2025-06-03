@@ -9,6 +9,7 @@ import { Profile } from "@/db/app.schema";
 
 export default function Page() {
   const [customers, setCustomers] = useState<Profile[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [organization, setOrganization] = useState("");
 
   const fetchData = async () => {
