@@ -1,13 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   flexRender,
+  SortingState,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
+
+import { Table as DataTable, TableRow } from "@/components/ui/table";
 
 interface TableProps<TData> {
   data: TData[];
@@ -17,10 +22,17 @@ interface TableProps<TData> {
 }
 
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
+     state: {
+      sorting,
+    },
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const router = useRouter();
@@ -28,7 +40,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   return (
     <div className="rounded-2xl bg-white p-6 shadow-xs">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <DataTable className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -50,7 +62,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr
+              <TableRow
                 key={row.id}
                 onClick={() =>
                   clickable
@@ -67,10 +79,10 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-              </tr>
+              </TableRow>
             ))}
           </tbody>
-        </table>
+        </DataTable>
       </div>
     </div>
   );
