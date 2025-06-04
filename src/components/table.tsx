@@ -45,7 +45,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const router = useRouter();
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-xs">
+    <div className="rounded-2xl p-6 shadow-xs">
       <div className="overflow-x-auto">
         <DataTable className="w-full">
           <TableHeader>
@@ -54,7 +54,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="border-b border-gray-200 pb-4 text-left text-sm font-medium text-gray-500"
+                    className="border-b pb-4 text-left text-sm font-medium"
                   >
                     {header.isPlaceholder
                       ? null
@@ -76,13 +76,10 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                     ? router.push(`/dashboard/jobs/${row.renderValue("id")}`)
                     : null
                 }
-                className={clickable ? "cursor-pointer hover:bg-gray-50" : ""}
+                className={clickable ? "hover:cursor-pointer" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="border-b border-gray-100 py-4 text-sm"
-                  >
+                  <TableCell key={cell.id} className="border-b py-4 text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
