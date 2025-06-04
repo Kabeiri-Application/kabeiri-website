@@ -2,21 +2,28 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 import {
-  flexRender,
   ColumnFiltersState,
+  flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  getFilteredRowModel,
   SortingState,
-  VisibilityState,
   useReactTable,
+  VisibilityState,
   type ColumnDef,
 } from "@tanstack/react-table";
 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table as DataTable,
   TableBody,
@@ -25,16 +32,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 interface TableProps<TData> {
   data: TData[];
@@ -139,7 +136,10 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 className={clickable ? "hover:cursor-pointer" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="border-b py-4 text-sm">
+                  <TableCell
+                    key={cell.id}
+                    className="border-b border-gray-100 py-4 text-sm"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
