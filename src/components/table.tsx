@@ -1,18 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   flexRender,
-  SortingState,
   getCoreRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
 
-import { Table as DataTable, TableRow } from "@/components/ui/table";
+import {
+  Table as DataTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface TableProps<TData> {
   data: TData[];
@@ -27,7 +34,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const table = useReactTable({
     data,
     columns,
-     state: {
+    state: {
       sorting,
     },
     getCoreRowModel: getCoreRowModel(),
@@ -41,11 +48,11 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
     <div className="rounded-2xl bg-white p-6 shadow-xs">
       <div className="overflow-x-auto">
         <DataTable className="w-full">
-          <thead>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th
+                  <TableHead
                     key={header.id}
                     className="border-b border-gray-200 pb-4 text-left text-sm font-medium text-gray-500"
                   >
@@ -55,12 +62,12 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                  </th>
+                  </TableHead>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -72,16 +79,16 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 className={clickable ? "cursor-pointer hover:bg-gray-50" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td
+                  <TableCell
                     key={cell.id}
                     className="border-b border-gray-100 py-4 text-sm"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </DataTable>
       </div>
     </div>
