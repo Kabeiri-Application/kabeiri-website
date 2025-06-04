@@ -136,10 +136,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 className={clickable ? "hover:cursor-pointer" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="border-b border-gray-100 py-4 text-sm"
-                  >
+                  <TableCell key={cell.id} className="border-b py-4 text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
