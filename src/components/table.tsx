@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -9,7 +8,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
@@ -36,7 +34,6 @@ import { DataTablePagination } from "./DataTablePagination";
 
 interface TableProps<TData> {
   data: TData[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   clickable?: boolean;
 }
@@ -81,42 +78,44 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
 
   return (
     <div className="rounded-2xl p-6 shadow-xs">
-      <div className="flex items-center justify-between py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
-          placeholder="Search"
+          placeholder="Search jobs..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-full sm:max-w-sm"
         />
-        <Button variant="outline" className="ml-2" onClick={() => resetState()}>
-          Clear All
-        </Button>
+        <div className="flex items-center justify-end gap-2">
+          <Button variant="outline" onClick={() => resetState()} size="sm">
+            Clear Filters
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <DataTable className="w-full">
