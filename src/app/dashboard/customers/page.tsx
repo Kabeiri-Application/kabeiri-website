@@ -48,7 +48,9 @@ export default function Page() {
             <h1 className="text-3xl font-bold">Customers</h1>
           </div>
           <div className="flex h-64 items-center justify-center">
-            <span className="text-gray-500">Loading...</span>
+            <div className="flex w-full flex-col items-center justify-center gap-4">
+              <div className="border-t-primary flex h-20 w-20 animate-spin items-center justify-center rounded-full border-4 border-transparent text-4xl" />
+            </div>
           </div>
         </div>
       </main>
