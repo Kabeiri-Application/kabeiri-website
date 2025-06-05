@@ -5,16 +5,13 @@ import { headers } from "next/headers";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { carsTable, NewProfile, profilesTable } from "@/db/app.schema";
+import { carsTable, customerTable, NewProfile } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 
 export async function getCustomers(organizationId: string) {
   try {
-    return await db.query.profilesTable.findMany({
-      where: and(
-        eq(profilesTable.organization, organizationId),
-        eq(profilesTable.role, "customer"),
-      ),
+    return await db.query.customerTable.findMany({
+      where: and(eq(customerTable.organization, organizationId)),
     });
   } catch (error) {
     console.error("Error in getCustomers:", error);
@@ -28,8 +25,8 @@ export async function getCustomer(customerId: string) {
   }
 
   try {
-    const service = await db.query.profilesTable.findFirst({
-      where: eq(profilesTable.id, customerId),
+    const service = await db.query.customerTable.findFirst({
+      where: eq(customerTable.id, customerId),
     });
     return service;
   } catch (error) {
@@ -45,11 +42,11 @@ export async function editCustomer(formData: NewProfile, customerId: string) {
   try {
     console.log("Editing service with ID:", customerId);
     await db
-      .update(profilesTable)
+      .update(customerTable)
       .set({
         ...formData,
       })
-      .where(eq(profilesTable.id, customerId));
+      .where(eq(customerTable.id, customerId));
     return { success: true };
   } catch (error) {
     console.error("Error in editCustomer:", error);

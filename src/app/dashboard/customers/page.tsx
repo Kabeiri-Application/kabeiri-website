@@ -2,15 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-import { set } from "zod";
-
 import { getCustomers } from "@/app/dashboard/customers/actions";
 import { CustomerCard } from "@/app/dashboard/customers/components/customer-card";
 import { getOrganizationId } from "@/app/dashboard/jobs/actions";
-import { Profile } from "@/db/app.schema";
+import { Customer } from "@/db/app.schema";
 
 export default function Page() {
-  const [customers, setCustomers] = useState<Profile[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [organization, setOrganization] = useState("");
