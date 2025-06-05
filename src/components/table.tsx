@@ -45,7 +45,8 @@ interface TableProps<TData> {
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -54,6 +55,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
       sorting,
       columnFilters,
       columnVisibility,
+      rowSelection,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -62,6 +64,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
   });
 
   const router = useRouter();

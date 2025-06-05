@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
 import { PlusIcon, MoreHorizontal, ArrowUpDown } from "lucide-react";
@@ -45,6 +47,28 @@ import { cn } from "@/lib/utils";
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
+  columnHelper.display({
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  }),
   columnHelper.accessor("id", {
     header: undefined,
     cell: undefined,
