@@ -184,7 +184,6 @@ export default function CustomerDetailPage() {
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
               <label className="block text-sm font-medium">First Name</label>
               <input
                 defaultValue={customer?.firstName}
