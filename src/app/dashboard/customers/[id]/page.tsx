@@ -178,15 +178,14 @@ export default function CustomerDetailPage() {
       <Dialog open={modalStatus} onOpenChange={setModalStatus}>
         <DialogContent className="max-h-full overflow-y-scroll">
           <DialogHeader>
-            <DialogTitle className="text-3xl font-bold text-gray-900">
+            <DialogTitle className="text-3xl font-bold">
               Edit Customer
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                First Name
-              </label>
+              <label className="block text-sm font-medium">First Name</label>
               <input
                 defaultValue={customer?.firstName}
                 {...register("firstName")}
@@ -200,9 +199,7 @@ export default function CustomerDetailPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Last Name
-              </label>
+              <label className="block text-sm font-medium">Last Name</label>
               <input
                 defaultValue={customer?.lastName}
                 {...register("lastName")}
@@ -216,9 +213,7 @@ export default function CustomerDetailPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
+              <label className="block text-sm font-medium">Phone Number</label>
               <input
                 defaultValue={customer?.phoneNumber}
                 {...register("phoneNumber")}
@@ -232,7 +227,7 @@ export default function CustomerDetailPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium">
                 Street Address
               </label>
               <input
