@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { NewProfile, profilesTable } from "@/db/app.schema";
+import { carsTable, NewProfile, profilesTable } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 
 export async function getCustomers(organizationId: string) {
@@ -53,5 +53,19 @@ export async function editCustomer(formData: NewProfile, customerId: string) {
     return { success: true };
   } catch (error) {
     console.error("Error in editCustomer:", error);
+  }
+}
+
+export async function getCars(customerId: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    console.error("Not authenticated");
+  }
+  try {
+    return await db.query.carsTable.findMany({
+      where: eq(carsTable.owner, customerId),
+    });
+  } catch (error) {
+    console.error("Error in getCustomers:", error);
   }
 }
