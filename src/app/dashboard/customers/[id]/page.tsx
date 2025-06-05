@@ -88,7 +88,7 @@ export default function CustomerDetailPage() {
     console.log("Form data:", data);
     editCustomer({ ...data, id: customerId });
     setModalStatus(false);
-    // fetchData();
+    fetchData();
   };
 
   if (loading) {
