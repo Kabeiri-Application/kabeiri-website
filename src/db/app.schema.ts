@@ -40,7 +40,7 @@ export const profilesTable = pgTable("profiles", {
   zipCode: text().notNull(),
 });
 
-export const customerTable = pgTable("customers", {
+export const customersTable = pgTable("customers", {
   id: uuid().primaryKey().defaultRandom(),
   updatedAt: timestamp({ withTimezone: true })
     .notNull()
@@ -81,7 +81,7 @@ export const carsTable = pgTable("cars", {
     .notNull()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
-  owner: uuid().references(() => customerTable.id),
+  owner: text().references(() => customersTable.id),
   make: text().notNull(),
   model: text().notNull(),
   year: text().notNull(),
@@ -165,5 +165,5 @@ export type NewCar = typeof carsTable.$inferInsert;
 export type Profile = typeof profilesTable.$inferSelect;
 export type NewProfile = typeof profilesTable.$inferInsert;
 
-export type Customer = typeof customerTable.$inferSelect;
-export type NewCustomer = typeof customerTable.$inferInsert;
+export type Customer = typeof customersTable.$inferSelect;
+export type NewCustomer = typeof customersTable.$inferInsert;
