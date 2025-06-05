@@ -40,6 +40,23 @@ export const profilesTable = pgTable("profiles", {
   zipCode: text().notNull(),
 });
 
+export const customerTable = pgTable("customers", {
+  id: uuid().primaryKey().defaultRandom(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp({ withTimezone: true }),
+  organization: uuid().references(() => organizationsTable.id),
+  phoneNumber: text().notNull(),
+  streetAddress: varchar().notNull(),
+  city: text().notNull(),
+  state: text().notNull(),
+  zipCode: text().notNull(),
+  firstName: text().notNull(),
+  lastName: text().notNull(),
+});
+
 export const organizationsTable = pgTable("organizations", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -59,13 +76,19 @@ export const organizationsTable = pgTable("organizations", {
 
 export const carsTable = pgTable("cars", {
   id: uuid().primaryKey().defaultRandom(),
-  owner: text().references(() => profilesTable.id),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  deletedAt: timestamp({ withTimezone: true }),
+  owner: uuid().references(() => customerTable.id),
   make: text().notNull(),
   model: text().notNull(),
   year: text().notNull(),
   vin: text().notNull(),
   licensePlate: text().notNull(),
   color: text().notNull(),
+  miles: numeric(),
 });
 
 export const jobsTable = pgTable("jobs", {
@@ -141,3 +164,6 @@ export type NewCar = typeof carsTable.$inferInsert;
 
 export type Profile = typeof profilesTable.$inferSelect;
 export type NewProfile = typeof profilesTable.$inferInsert;
+
+export type Customer = typeof customerTable.$inferSelect;
+export type NewCustomer = typeof customerTable.$inferInsert;

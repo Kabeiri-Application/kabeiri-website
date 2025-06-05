@@ -2,9 +2,9 @@ import { useRouter } from "next/navigation";
 
 import { UserIcon } from "lucide-react";
 
-import { Profile } from "@/db/app.schema";
+import { Customer } from "@/db/app.schema";
 
-export function CustomerCard(customer: Profile) {
+export function CustomerCard(customer: Customer) {
   const router = useRouter();
 
   return (
@@ -20,7 +20,7 @@ export function CustomerCard(customer: Profile) {
           {customer.firstName} {customer.lastName}
         </span>
       </div>
-      <div className="text-sm text-gray-500">{customer.phone}</div>
+      <div className="text-sm text-gray-500">{customer.phoneNumber}</div>
     </div>
   );
 }

@@ -19,14 +19,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Car, Profile } from "@/db/app.schema";
+import type { Car, Customer } from "@/db/app.schema";
 
 import { customerFormSchema } from "../schema";
 
 export default function CustomerDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [customer, setCustomer] = useState<Profile>();
+  const [customer, setCustomer] = useState<Customer>();
   const [cars, setCars] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -44,11 +44,6 @@ export default function CustomerDetailPage() {
         throw new Error("Failed to fetch data");
       }
       setCustomer(customer);
-      const cars = await getCars(customerId);
-      if (!cars) {
-        throw new Error("Failed to fetch cars for the customer");
-      }
-      setCars(cars);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -56,10 +51,31 @@ export default function CustomerDetailPage() {
     }
   };
 
+  const fetchCars = async () => {
+    try {
+      if (!customerId) {
+        throw new Error("Customer ID not found");
+      }
+      const cars = await getCars(customerId);
+      if (!cars) {
+        throw new Error("Failed to fetch cars for the customer");
+      }
+      setCars(cars);
+    } catch (error) {
+      console.error("Failed to fetch cars:", error);
+    }
+  };
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    fetchCars();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer]);
+
   console.log("Customer:", customer);
   console.log("Cars:", cars);
   const {
@@ -192,7 +208,38 @@ export default function CustomerDetailPage() {
                 </span>
               )}
             </div>
-
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <input
+                defaultValue={customer?.phoneNumber}
+                {...register("phoneNumber")}
+                placeholder="Phone Number"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.lastName && (
+                <span className="text-sm text-red-500">
+                  {errors.lastName.message}
+                </span>
+              )}
+            </div>{" "}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <input
+                defaultValue={customer?.lastName}
+                {...register("lastName")}
+                placeholder="Last Name"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.lastName && (
+                <span className="text-sm text-red-500">
+                  {errors.lastName.message}
+                </span>
+              )}
+            </div>
             <Button
               type="submit"
               className="my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800"
