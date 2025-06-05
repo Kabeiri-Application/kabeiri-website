@@ -9,7 +9,6 @@ import {
   ArrowUpDownIcon,
   ArrowUpIcon,
   FilterIcon,
-  MoreHorizontalIcon,
   PlusIcon,
 } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -43,16 +42,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import type { Car, Job, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
 
@@ -112,31 +103,53 @@ const columns = [
                 <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
-              <div className="mb-2 flex justify-between">
-                <span>Filter Customer</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => column.setFilterValue([])}
-                >
-                  Clear
-                </Button>
-              </div>
-              {options.map((opt) => (
-                <div key={opt} className="flex items-center space-x-1 py-1">
-                  <Checkbox
-                    checked={selected.includes(opt)}
-                    onCheckedChange={(checked) => {
-                      const next = checked
-                        ? [...selected, opt]
-                        : selected.filter((v) => v !== opt);
-                      column.setFilterValue(next);
-                    }}
-                  />
-                  <span className="capitalize">{opt}</span>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-64"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">
+                    Filter by Customer
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue([])}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
                 </div>
-              ))}
+                {selected.length > 0 && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {selected.length} selected
+                  </p>
+                )}
+              </div>
+              <div className="max-h-48 overflow-y-auto">
+                {options.map((opt) => (
+                  <div
+                    key={opt}
+                    className="flex items-center space-x-2 rounded px-1 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <Checkbox
+                      checked={selected.includes(opt)}
+                      onCheckedChange={(checked) => {
+                        const next = checked
+                          ? [...selected, opt]
+                          : selected.filter((v) => v !== opt);
+                        column.setFilterValue(next);
+                      }}
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {opt}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -179,31 +192,51 @@ const columns = [
                 <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
-              <div className="mb-2 flex justify-between">
-                <span>Filter Vehicle</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => column.setFilterValue([])}
-                >
-                  Clear
-                </Button>
-              </div>
-              {options.map((opt) => (
-                <div key={opt} className="flex items-center space-x-1 py-1">
-                  <Checkbox
-                    checked={selected.includes(opt)}
-                    onCheckedChange={(checked) => {
-                      const next = checked
-                        ? [...selected, opt]
-                        : selected.filter((v) => v !== opt);
-                      column.setFilterValue(next);
-                    }}
-                  />
-                  <span className="capitalize">{opt}</span>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-64"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Filter by Vehicle</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue([])}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
                 </div>
-              ))}
+                {selected.length > 0 && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {selected.length} selected
+                  </p>
+                )}
+              </div>
+              <div className="max-h-48 overflow-y-auto">
+                {options.map((opt) => (
+                  <div
+                    key={opt}
+                    className="flex items-center space-x-2 rounded px-1 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <Checkbox
+                      checked={selected.includes(opt)}
+                      onCheckedChange={(checked) => {
+                        const next = checked
+                          ? [...selected, opt]
+                          : selected.filter((v) => v !== opt);
+                        column.setFilterValue(next);
+                      }}
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {opt}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -247,31 +280,51 @@ const columns = [
                 <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
-              <div className="mb-2 flex justify-between">
-                <span>Filter Service</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => column.setFilterValue([])}
-                >
-                  Clear
-                </Button>
-              </div>
-              {options.map((opt) => (
-                <div key={opt} className="flex items-center space-x-1 py-1">
-                  <Checkbox
-                    checked={selected.includes(opt)}
-                    onCheckedChange={(checked) => {
-                      const next = checked
-                        ? [...selected, opt]
-                        : selected.filter((v) => v !== opt);
-                      column.setFilterValue(next);
-                    }}
-                  />
-                  <span className="capitalize">{opt}</span>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-64"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Filter by Service</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue([])}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
                 </div>
-              ))}
+                {selected.length > 0 && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {selected.length} selected
+                  </p>
+                )}
+              </div>
+              <div className="max-h-48 overflow-y-auto">
+                {options.map((opt) => (
+                  <div
+                    key={opt}
+                    className="flex items-center space-x-2 rounded px-1 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <Checkbox
+                      checked={selected.includes(opt)}
+                      onCheckedChange={(checked) => {
+                        const next = checked
+                          ? [...selected, opt]
+                          : selected.filter((v) => v !== opt);
+                        column.setFilterValue(next);
+                      }}
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {opt}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -295,18 +348,153 @@ const columns = [
   columnHelper.accessor("due_date", {
     enableSorting: false,
     header: ({ column }) => {
-      const selectedDate = column.getFilterValue() as string | undefined;
-      const dateObj = selectedDate ? new Date(selectedDate) : undefined;
+      const dateRange = column.getFilterValue() as
+        | { from?: Date; to?: Date }
+        | undefined;
+
       return (
-        <DatePicker
-          label="Due Date"
-          selected={dateObj}
-          onSelect={(day: Date | undefined) =>
-            column.setFilterValue(
-              day ? day.toISOString().split("T")[0] : undefined,
-            )
-          }
-        />
+        <div className="flex items-center">
+          <span className="font-medium">Due Date</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "ml-1",
+                  dateRange &&
+                    (dateRange.from || dateRange.to) &&
+                    "bg-blue-50 text-blue-600 dark:bg-blue-900 dark:text-blue-400",
+                )}
+              >
+                <FilterIcon
+                  className={cn(
+                    "h-4 w-4",
+                    dateRange &&
+                      (dateRange.from || dateRange.to) &&
+                      "fill-current",
+                  )}
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-80"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">
+                    Filter by Due Date
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue(undefined)}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
+                </div>
+                {dateRange && (dateRange.from || dateRange.to) && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {(() => {
+                      // Convert string dates to Date objects if needed
+                      const fromDate = dateRange.from
+                        ? new Date(dateRange.from)
+                        : null;
+                      const toDate = dateRange.to
+                        ? new Date(dateRange.to)
+                        : null;
+
+                      if (fromDate && toDate) {
+                        return `${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
+                      } else if (fromDate) {
+                        return `From ${fromDate.toLocaleDateString()}`;
+                      } else if (toDate) {
+                        return `Until ${toDate.toLocaleDateString()}`;
+                      }
+                      return "";
+                    })()}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-4 p-1">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300">
+                    From Date
+                  </label>
+                  <DatePicker
+                    selected={dateRange?.from}
+                    onSelect={(date) => {
+                      const current = dateRange || {};
+                      column.setFilterValue({ ...current, from: date });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300">
+                    To Date
+                  </label>
+                  <DatePicker
+                    selected={dateRange?.to}
+                    onSelect={(date) => {
+                      const current = dateRange || {};
+                      column.setFilterValue({ ...current, to: date });
+                    }}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 text-xs"
+                    onClick={() => {
+                      const today = new Date();
+                      const startOfWeek = new Date(today);
+                      const endOfWeek = new Date(today);
+                      // Get start of week (Sunday)
+                      startOfWeek.setDate(today.getDate() - today.getDay());
+                      // Get end of week (Saturday)
+                      endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
+                      column.setFilterValue({
+                        from: startOfWeek,
+                        to: endOfWeek,
+                      });
+                    }}
+                  >
+                    This Week
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 text-xs"
+                    onClick={() => {
+                      const today = new Date();
+                      const startOfMonth = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        1,
+                      );
+                      const endOfMonth = new Date(
+                        today.getFullYear(),
+                        today.getMonth() + 1,
+                        0,
+                      );
+                      column.setFilterValue({
+                        from: startOfMonth,
+                        to: endOfMonth,
+                      });
+                    }}
+                  >
+                    This Month
+                  </Button>
+                </div>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
     cell: (info) => {
@@ -315,13 +503,26 @@ const columns = [
       const d = new Date(raw);
       return isNaN(d.getTime()) ? "Invalid date" : d.toLocaleDateString();
     },
-    filterFn: (row, columnId, filterValue?: string) => {
-      if (!filterValue) return true;
+    filterFn: (row, columnId, filterValue?: { from?: Date; to?: Date }) => {
+      if (!filterValue || (!filterValue.from && !filterValue.to)) return true;
+
       const raw = row.getValue<string | Date>(columnId);
-      const rowDate = (raw instanceof Date ? raw : new Date(raw))
-        .toISOString()
-        .split("T")[0];
-      return rowDate === filterValue;
+      if (!raw) return false;
+
+      const rowDate = raw instanceof Date ? raw : new Date(raw);
+      if (isNaN(rowDate.getTime())) return false;
+
+      const { from, to } = filterValue;
+
+      if (from && to) {
+        return rowDate >= from && rowDate <= to;
+      } else if (from) {
+        return rowDate >= from;
+      } else if (to) {
+        return rowDate <= to;
+      }
+
+      return true;
     },
   }),
 
@@ -345,31 +546,53 @@ const columns = [
                 <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
-              <div className="mb-2 flex justify-between">
-                <span>Filter Assignee</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => column.setFilterValue([])}
-                >
-                  Clear
-                </Button>
-              </div>
-              {options.map((opt) => (
-                <div key={opt} className="flex items-center space-x-1 py-1">
-                  <Checkbox
-                    checked={selected.includes(opt)}
-                    onCheckedChange={(checked) => {
-                      const next = checked
-                        ? [...selected, opt]
-                        : selected.filter((v) => v !== opt);
-                      column.setFilterValue(next);
-                    }}
-                  />
-                  <span className="capitalize">{opt}</span>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-64"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">
+                    Filter by Assignee
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue([])}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
                 </div>
-              ))}
+                {selected.length > 0 && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {selected.length} selected
+                  </p>
+                )}
+              </div>
+              <div className="max-h-48 overflow-y-auto">
+                {options.map((opt) => (
+                  <div
+                    key={opt}
+                    className="flex items-center space-x-2 rounded px-1 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <Checkbox
+                      checked={selected.includes(opt)}
+                      onCheckedChange={(checked) => {
+                        const next = checked
+                          ? [...selected, opt]
+                          : selected.filter((v) => v !== opt);
+                        column.setFilterValue(next);
+                      }}
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {opt}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -392,27 +615,42 @@ const columns = [
       return (
         <div className="flex items-center">
           <span className="font-medium">Status</span>
-          <Popover>
-            <PopoverTrigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
                 <FilterIcon className="h-4 w-4" />
               </Button>
-            </PopoverTrigger>
-            {}
-            <PopoverContent align="start" side="bottom" sideOffset={4}>
-              <div className="mb-2 flex items-center justify-between">
-                <span className="font-medium">Filter Status</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => column.setFilterValue([])}
-                >
-                  Clear all
-                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="w-64"
+            >
+              <div className="mb-2 border-b pb-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Filter by Status</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.setFilterValue([])}
+                    className="h-6 px-2 text-xs"
+                  >
+                    Clear
+                  </Button>
+                </div>
+                {selected.length > 0 && (
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {selected.length} selected
+                  </p>
+                )}
               </div>
-              <div className="space-y-2">
+              <div className="max-h-48 overflow-y-auto">
                 {statusOptions.map(({ value, label }) => (
-                  <div key={value} className="flex items-center space-x-1">
+                  <div
+                    key={value}
+                    className="flex items-center space-x-2 rounded px-1 py-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
                     <Checkbox
                       checked={selected.includes(value)}
                       onCheckedChange={(checked) => {
@@ -422,12 +660,14 @@ const columns = [
                         column.setFilterValue(newValues);
                       }}
                     />
-                    <span className="capitalize">{label}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {label}
+                    </span>
                   </div>
                 ))}
               </div>
-            </PopoverContent>
-          </Popover>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },
@@ -447,39 +687,6 @@ const columns = [
     filterFn: (row, columnId, filterValues: string[]) => {
       const status = row.getValue<string>(columnId);
       return filterValues?.length ? filterValues.includes(status) : true;
-    },
-  }),
-  columnHelper.display({
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const job = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(job.id)}
-            >
-              Copy Job ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => console.log("View Job", job)}>
-              View Job
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Edit Job", job)}>
-              Edit Job
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
     },
   }),
 ];
@@ -546,20 +753,14 @@ export default function JobsPage() {
 
   // GETTING CUSTOMER VEHICLES
   useEffect(() => {
-    if (!selectedCustomer) {
-      setVehicles([]);
-      return;
-    }
+    if (!selectedCustomer) return;
     const fetchCars = async () => {
-      await getVehicles(selectedCustomer).then((data) => {
-        console.log("Vehicles data:", data);
-        setVehicles(data as Car[]);
-      });
+      await getVehicles(selectedCustomer).then((data) =>
+        setVehicles(data as Car[]),
+      );
     };
     fetchCars();
   }, [selectedCustomer]);
-
-  console.log("Vehicles:", vehicles);
 
   return (
     <main className="p-8">
