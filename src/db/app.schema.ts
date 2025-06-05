@@ -41,7 +41,7 @@ export const profilesTable = pgTable("profiles", {
 });
 
 export const customersTable = pgTable("customers", {
-  id: uuid().primaryKey().defaultRandom(),
+  id: text().primaryKey(),
   updatedAt: timestamp({ withTimezone: true })
     .notNull()
     .$onUpdate(() => new Date()),
@@ -77,9 +77,7 @@ export const organizationsTable = pgTable("organizations", {
 export const carsTable = pgTable("cars", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true })
-    .notNull()
-    .$onUpdate(() => new Date()),
+
   deletedAt: timestamp({ withTimezone: true }),
   owner: text().references(() => customersTable.id),
   make: text().notNull(),
