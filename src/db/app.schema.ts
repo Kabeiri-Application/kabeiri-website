@@ -96,7 +96,7 @@ export const jobsTable = pgTable("jobs", {
     .notNull()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
-  customer: text().references(() => profilesTable.id),
+  customer: text().references(() => customersTable.id),
   vehicle: uuid().references(() => carsTable.id),
   organization: uuid().references(() => organizationsTable.id),
   title: text().notNull(),
@@ -109,9 +109,9 @@ export const jobsTable = pgTable("jobs", {
 });
 
 export const jobRelations = relations(jobsTable, ({ one }) => ({
-  customer: one(profilesTable, {
+  customer: one(customersTable, {
     fields: [jobsTable.customer],
-    references: [profilesTable.id],
+    references: [customersTable.id],
   }),
   vehicle: one(carsTable, {
     fields: [jobsTable.vehicle],
