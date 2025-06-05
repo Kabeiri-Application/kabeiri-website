@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { carsTable, customersTable, NewProfile } from "@/db/app.schema";
+import { carsTable, customersTable, NewCustomer } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 
 export async function getCustomers(organizationId: string) {
@@ -34,19 +34,19 @@ export async function getCustomer(customerId: string) {
   }
 }
 
-export async function editCustomer(formData: NewProfile, customerId: string) {
+export async function editCustomer(formData: NewCustomer) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     console.error("Not authenticated");
   }
   try {
-    console.log("Editing service with ID:", customerId);
+    console.log("Editing service with ID:", formData.id);
     await db
       .update(customersTable)
       .set({
         ...formData,
       })
-      .where(eq(customersTable.id, customerId));
+      .where(eq(customersTable.id, formData.id));
     return { success: true };
   } catch (error) {
     console.error("Error in editCustomer:", error);
