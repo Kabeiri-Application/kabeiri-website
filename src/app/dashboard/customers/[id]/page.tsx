@@ -149,35 +149,6 @@ export default function CustomerDetailPage() {
               )}
             </div>
           </div>
-
-          {/* Vehicle Information */}
-          <div className="rounded-lg border border-gray-200 p-6">
-            <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
-            <div className="space-y-2">
-              {cars.length > 0 ? (
-                cars.map((car) => (
-                  <div key={car.id} className="border-b border-gray-200 pb-2">
-                    <p>
-                      <span className="font-medium">Make: </span>
-                      {car.make}
-                    </p>
-                    <p>
-                      <span className="font-medium">Model: </span>
-                      {car.model}
-                    </p>
-                    <p>
-                      <span className="font-medium">Year: </span>
-                      {car.year}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">
-                  No vehicles found for this customer.
-                </p>
-              )}
-            </div>
-          </div>
         </div>
       </div>
       <EditCustomerModal
