@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 
 import {
   flexRender,
+  ColumnFiltersState,
   getCoreRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
   SortingState,
+  VisibilityState,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
@@ -21,6 +25,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
+
 interface TableProps<TData> {
   data: TData[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,22 +44,64 @@ interface TableProps<TData> {
 
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
     columns,
     state: {
       sorting,
+      columnFilters,
+      columnVisibility,
     },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
   });
 
   const router = useRouter();
 
   return (
     <div className="rounded-2xl p-6 shadow-xs">
+      <div className="flex items-center justify-between py-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter jobs..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
       <div className="overflow-x-auto">
         <DataTable className="w-full">
           <TableHeader>
@@ -87,6 +143,24 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
             ))}
           </TableBody>
         </DataTable>
+      </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );
