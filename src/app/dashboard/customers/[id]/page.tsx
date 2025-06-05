@@ -7,7 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { editCustomer, getCustomer } from "@/app/dashboard/customers/actions";
+import {
+  editCustomer,
+  getCars,
+  getCustomer,
+} from "@/app/dashboard/customers/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Profile } from "@/db/app.schema";
+import type { Car, Profile } from "@/db/app.schema";
 
 import { customerFormSchema } from "../schema";
 
@@ -23,14 +27,15 @@ export default function CustomerDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [customer, setCustomer] = useState<Profile>();
+  const [cars, setCars] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const customerId = typeof params.id === "string" ? params.id : "";
 
   const fetchData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       if (!customerId) {
         throw new Error("Service ID not found");
       }
@@ -39,6 +44,11 @@ export default function CustomerDetailPage() {
         throw new Error("Failed to fetch data");
       }
       setCustomer(customer);
+      const cars = await getCars(customerId);
+      if (!cars) {
+        throw new Error("Failed to fetch cars for the customer");
+      }
+      setCars(cars);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -50,7 +60,8 @@ export default function CustomerDetailPage() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  console.log("Customer:", customer);
+  console.log("Cars:", cars);
   const {
     register,
     handleSubmit,
@@ -107,6 +118,35 @@ export default function CustomerDetailPage() {
                 <span className="font-medium">Name: </span>
                 {customer?.firstName} {customer?.lastName}
               </p>
+            </div>
+          </div>
+
+          {/* Vehicle Information */}
+          <div className="rounded-lg border border-gray-200 p-6">
+            <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
+            <div className="space-y-2">
+              {cars.length > 0 ? (
+                cars.map((car) => (
+                  <div key={car.id} className="border-b border-gray-200 pb-2">
+                    <p>
+                      <span className="font-medium">Make: </span>
+                      {car.make}
+                    </p>
+                    <p>
+                      <span className="font-medium">Model: </span>
+                      {car.model}
+                    </p>
+                    <p>
+                      <span className="font-medium">Year: </span>
+                      {car.year}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">
+                  No vehicles found for this customer.
+                </p>
+              )}
             </div>
           </div>
         </div>
