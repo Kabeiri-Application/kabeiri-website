@@ -35,11 +35,6 @@ export default function CustomerDetailPage() {
         throw new Error("Failed to fetch data");
       }
       setCustomer(customer);
-      const cars = await getCars(customerId);
-      if (!cars) {
-        throw new Error("Failed to fetch cars for the customer");
-      }
-      setCars(cars);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
