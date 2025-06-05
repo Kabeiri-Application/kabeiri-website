@@ -76,8 +76,6 @@ export default function CustomerDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
 
-  console.log("Customer:", customer);
-  console.log("Cars:", cars);
   const {
     register,
     handleSubmit,
@@ -85,11 +83,12 @@ export default function CustomerDetailPage() {
   } = useForm<customerFormSchema>({
     resolver: zodResolver(customerFormSchema),
   });
+
   const onSubmit: SubmitHandler<customerFormSchema> = (data) => {
     console.log("Form data:", data);
-    editCustomer(data, customerId);
+    editCustomer({ ...data, id: customerId });
     setModalStatus(false);
-    fetchData();
+    // fetchData();
   };
 
   if (loading) {
@@ -134,6 +133,14 @@ export default function CustomerDetailPage() {
                 <span className="font-medium">Name: </span>
                 {customer?.firstName} {customer?.lastName}
               </p>
+              <p>
+                <span className="font-medium">Phone Number: </span>
+                {customer?.phoneNumber}
+              </p>
+              <p>
+                <span className="font-medium">Street Address: </span>
+                {customer?.streetAddress}
+              </p>
             </div>
           </div>
 
@@ -172,7 +179,7 @@ export default function CustomerDetailPage() {
         <DialogContent className="max-h-full overflow-y-scroll">
           <DialogHeader>
             <DialogTitle className="text-3xl font-bold text-gray-900">
-              Create a Customer
+              Edit Customer
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -218,25 +225,25 @@ export default function CustomerDetailPage() {
                 placeholder="Phone Number"
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
               />
-              {errors.lastName && (
+              {errors.phoneNumber && (
                 <span className="text-sm text-red-500">
-                  {errors.lastName.message}
+                  {errors.phoneNumber.message}
                 </span>
               )}
-            </div>{" "}
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Last Name
+                Street Address
               </label>
               <input
-                defaultValue={customer?.lastName}
-                {...register("lastName")}
-                placeholder="Last Name"
+                defaultValue={customer?.streetAddress}
+                {...register("streetAddress")}
+                placeholder="Street Address"
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
               />
-              {errors.lastName && (
+              {errors.streetAddress && (
                 <span className="text-sm text-red-500">
-                  {errors.lastName.message}
+                  {errors.streetAddress.message}
                 </span>
               )}
             </div>
