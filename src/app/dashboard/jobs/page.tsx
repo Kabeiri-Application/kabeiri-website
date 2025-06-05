@@ -4,7 +4,15 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -97,6 +105,39 @@ const columns = [
       </span>
     ),
   }),
+  columnHelper.display({
+  id: "actions",
+  header: "Actions",
+  cell: ({ row }) => {
+    const job = row.original;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(job.id)}
+          >
+            Copy Job ID
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => console.log("View Job", job)}>
+            View Job
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => console.log("Edit Job", job)}>
+            Edit Job
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
+}),
 ];
 
 export default function JobsPage() {
