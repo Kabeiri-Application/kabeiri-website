@@ -35,6 +35,11 @@ export default function CustomerDetailPage() {
         throw new Error("Failed to fetch data");
       }
       setCustomer(customer);
+      const cars = await getCars(customerId);
+      if (!cars) {
+        throw new Error("Failed to fetch cars for the customer");
+      }
+      setCars(cars);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -142,6 +147,35 @@ export default function CustomerDetailPage() {
             <div className="space-y-2">
               {cars.length > 0 ? (
                 cars.map((car) => <CarListItem key={car.id} {...car} />)
+              ) : (
+                <p className="text-gray-500">
+                  No vehicles found for this customer.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Vehicle Information */}
+          <div className="rounded-lg border border-gray-200 p-6">
+            <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
+            <div className="space-y-2">
+              {cars.length > 0 ? (
+                cars.map((car) => (
+                  <div key={car.id} className="border-b border-gray-200 pb-2">
+                    <p>
+                      <span className="font-medium">Make: </span>
+                      {car.make}
+                    </p>
+                    <p>
+                      <span className="font-medium">Model: </span>
+                      {car.model}
+                    </p>
+                    <p>
+                      <span className="font-medium">Year: </span>
+                      {car.year}
+                    </p>
+                  </div>
+                ))
               ) : (
                 <p className="text-gray-500">
                   No vehicles found for this customer.
