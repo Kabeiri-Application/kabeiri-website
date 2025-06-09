@@ -2,19 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import { Checkbox } from "@/components/ui/checkbox";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { PlusIcon, MoreHorizontal, ArrowUpDown } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ArrowUpDownIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -34,6 +24,7 @@ import {
 } from "@/app/dashboard/jobs/schema";
 import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +32,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { Car, Job, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
 
@@ -80,7 +79,7 @@ const columns = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Job
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: (info) => info.getValue(),
@@ -138,38 +137,38 @@ const columns = [
     ),
   }),
   columnHelper.display({
-  id: "actions",
-  header: "Actions",
-  cell: ({ row }) => {
-    const job = row.original;
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const job = row.original;
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(job.id)}
-          >
-            Copy Job ID
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => console.log("View Job", job)}>
-            View Job
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => console.log("Edit Job", job)}>
-            Edit Job
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  },
-}),
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(job.id)}
+            >
+              Copy Job ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => console.log("View Job", job)}>
+              View Job
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => console.log("Edit Job", job)}>
+              Edit Job
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  }),
 ];
 
 export default function JobsPage() {
