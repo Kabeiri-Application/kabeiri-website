@@ -138,8 +138,9 @@ export default function CustomerDetailPage() {
                 {customer?.phoneNumber}
               </p>
               <p>
-                <span className="font-medium">Street Address: </span>
-                {customer?.streetAddress}
+                <span className="font-medium">Address: </span>
+                {customer?.streetAddress} {customer?.city},{" "}
+                {customer?.state.toUpperCase()} {customer?.zipCode}
               </p>
             </div>
           </div>
