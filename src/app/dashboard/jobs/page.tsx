@@ -143,6 +143,11 @@ const columns = [
         {info.getValue()}
       </span>
     ),
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const status = row.getValue<string>(columnId);
+
+      return filterValues?.length ? filterValues.includes(status) : true;
+    },
   }),
   columnHelper.display({
     id: "actions",
