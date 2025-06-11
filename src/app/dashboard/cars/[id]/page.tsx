@@ -3,11 +3,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-import { getCar } from "@/app/dashboard/cars/actions";
+import { editCar, getCar } from "@/app/dashboard/cars/actions";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Car } from "@/db/app.schema";
+
+import { carFormSchema } from "../schema";
 
 // import { Button } from "@/components/ui/button";
 
@@ -18,6 +28,8 @@ export default function CarDetailPage() {
 
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
+  const [modalStatus, setModalStatus] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -41,6 +53,21 @@ export default function CarDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<carFormSchema>({
+    resolver: zodResolver(carFormSchema),
+  });
+
+  const onSubmit: SubmitHandler<carFormSchema> = (data) => {
+    console.log("Form data:", data);
+    editCar(carId, { ...data });
+    setModalStatus(false);
+    fetchData();
+  };
+
   return (
     <main className="p-8">
       <div className="mx-auto max-w-7xl">
@@ -52,7 +79,10 @@ export default function CarDetailPage() {
             <ArrowLeftIcon className="size-4" />
             Back to Customer
           </button>
-          <Button className="flex items-center">
+          <Button
+            onClick={() => setModalStatus(true)}
+            className="flex items-center"
+          >
             <PencilIcon className="size-4" />
             Edit
           </Button>
@@ -107,6 +137,107 @@ export default function CarDetailPage() {
           </div>
         )}
       </div>
+      <Dialog open={modalStatus} onOpenChange={setModalStatus}>
+        <DialogContent className="max-h-full overflow-y-scroll">
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-bold">Edit Car</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">Make</label>
+              <input
+                defaultValue={car?.make}
+                {...register("make")}
+                placeholder="Make"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.make && (
+                <span className="text-sm text-red-500">
+                  {errors.make.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Model</label>
+              <input
+                defaultValue={car?.model}
+                {...register("model")}
+                placeholder="Model"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.model && (
+                <span className="text-sm text-red-500">
+                  {errors.model.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Year</label>
+              <input
+                defaultValue={car?.year}
+                {...register("year")}
+                placeholder="Year"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.year && (
+                <span className="text-sm text-red-500">
+                  {errors.year.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Color</label>
+              <input
+                defaultValue={car?.color}
+                {...register("color")}
+                placeholder="Color"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.color && (
+                <span className="text-sm text-red-500">
+                  {errors.color.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Miles</label>
+              <input
+                defaultValue={String(car?.miles)}
+                {...register("miles")}
+                placeholder="Miles"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.miles && (
+                <span className="text-sm text-red-500">
+                  {errors.miles.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">
+                Liscense Plate
+              </label>
+              <input
+                defaultValue={car?.licensePlate}
+                {...register("licensePlate")}
+                placeholder="Liscense Plate"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.licensePlate && (
+                <span className="text-sm text-red-500">
+                  {errors.licensePlate.message}
+                </span>
+              )}
+            </div>
+            <Button
+              type="submit"
+              className="my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800"
+            >
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
