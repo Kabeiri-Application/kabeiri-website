@@ -4,15 +4,12 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { PlusIcon, MoreHorizontal, ArrowUpDown } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  ArrowUpDownIcon,
+  MoreHorizontalIcon,
+  MoreVerticalIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -48,8 +45,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { Car, Job, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
+
+const statusOptions = [
+  { value: "in progress", label: "In Progress" },
+  { value: "pending", label: "Pending" },
+  { value: "complete", label: "Complete" },
+];
 
 const columnHelper = createColumnHelper<Job>();
 
@@ -129,7 +137,50 @@ const columns = [
   }),
 
   columnHelper.accessor("status", {
-    header: "Status",
+    header: ({ column }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Status</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <MoreVerticalIcon className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            {}
+            <PopoverContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="font-medium">Filter Status</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear all
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {statusOptions.map(({ value, label }) => (
+                  <div key={value} className="flex items-center space-x-1">
+                    <Checkbox
+                      checked={selected.includes(value)}
+                      onCheckedChange={(checked) => {
+                        const newValues = checked
+                          ? [...selected, value]
+                          : selected.filter((v) => v !== value);
+                        column.setFilterValue(newValues);
+                      }}
+                    />
+                    <span className="capitalize">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      );
+    },
     cell: (info) => (
       <span
         className={cn(
@@ -145,7 +196,6 @@ const columns = [
     ),
     filterFn: (row, columnId, filterValues: string[]) => {
       const status = row.getValue<string>(columnId);
-
       return filterValues?.length ? filterValues.includes(status) : true;
     },
   }),

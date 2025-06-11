@@ -20,7 +20,6 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -28,11 +27,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Table as DataTable,
   TableBody,
@@ -51,12 +45,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const statusOptions = [
-  { value: "in progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
-  { value: "complete", label: "Complete" },
-];
 
 interface TableProps<TData> {
   data: TData[];
@@ -133,35 +121,6 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
           }
           className="max-w-sm"
         />
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="ml-2">
-              Status
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <div className="space-y-2 p-2">
-              {statusOptions.map(({ value, label }) => {
-                const column = table.getColumn("status");
-                const selected = (column?.getFilterValue() as string[]) || [];
-                return (
-                  <div key={value} className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={selected.includes(value)}
-                      onCheckedChange={(checked) => {
-                        const newValues = checked
-                          ? [...selected, value]
-                          : selected.filter((v) => v !== value);
-                        column?.setFilterValue(newValues);
-                      }}
-                    />
-                    <span className="capitalize">{label}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </PopoverContent>
-        </Popover>
       </div>
       <div className="overflow-x-auto">
         <DataTable className="w-full">
