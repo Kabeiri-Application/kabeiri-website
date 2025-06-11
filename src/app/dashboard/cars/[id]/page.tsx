@@ -1,5 +1,7 @@
 "use client";
 
+import { get } from "http";
+
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -7,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { editCar, getCar } from "@/app/dashboard/cars/actions";
+import { editCar, getCar, getCarsModels } from "@/app/dashboard/cars/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Car } from "@/db/app.schema";
 
-import { carFormSchema } from "../schema";
+import { carFormSchema, carMakerList } from "../schema";
 
 // import { Button } from "@/components/ui/button";
 
@@ -29,6 +31,8 @@ export default function CarDetailPage() {
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
   const [modalStatus, setModalStatus] = useState(false);
+  const [selectedMake, setSelectedMake] = useState(car?.make || "");
+  const [carModels, setCarModels] = useState<string[]>([]);
 
   const fetchData = async () => {
     try {
@@ -52,6 +56,34 @@ export default function CarDetailPage() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  interface CarModelResult {
+    fields: {
+      model: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  }
+
+  const getModels = async (make: string) => {
+    try {
+      const response = await getCarsModels(make);
+      console.log("Fetched car models:", response);
+      const filteredModels = [];
+      (response.results as CarModelResult[]).map((item) => {
+        if (item.model) {
+          filteredModels.push(item.model);
+        }
+      });
+      setCarModels(filteredModels);
+    } catch (error) {
+      console.error("Failed to fetch car models:", error);
+    }
+  };
+
+  useEffect(() => {
+    getModels(selectedMake);
+  }, [selectedMake]);
 
   const {
     register,
@@ -145,32 +177,54 @@ export default function CarDetailPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium">Make</label>
-              <input
+              <select
                 defaultValue={car?.make}
-                {...register("make")}
-                placeholder="Make"
+                {...register("make", {
+                  onChange: (e) => setSelectedMake(e?.target?.value),
+                })}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
-              />
+              >
+                {carMakerList.map((make) => (
+                  <option key={make} value={make}>
+                    {make}
+                  </option>
+                ))}
+              </select>
               {errors.make && (
                 <span className="text-sm text-red-500">
                   {errors.make.message}
                 </span>
               )}
             </div>
-            <div>
-              <label className="block text-sm font-medium">Model</label>
-              <input
-                defaultValue={car?.model}
-                {...register("model")}
-                placeholder="Model"
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
-              />
-              {errors.model && (
-                <span className="text-sm text-red-500">
-                  {errors.model.message}
-                </span>
-              )}
-            </div>
+            {
+              <div>
+                <label className="block text-sm font-medium">Model</label>
+                <select
+                  disabled={!selectedMake}
+                  defaultValue={car?.model}
+                  {...register("model")}
+                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+                >
+                  {carModels.length > 0 ? (
+                    carModels.map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      Select a model
+                    </option>
+                  )}
+                </select>
+
+                {errors.model && (
+                  <span className="text-sm text-red-500">
+                    {errors.model.message}
+                  </span>
+                )}
+              </div>
+            }
             <div>
               <label className="block text-sm font-medium">Year</label>
               <input

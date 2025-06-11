@@ -45,3 +45,18 @@ export async function editCar(carId: string, formData: carFormSchema) {
     console.error("Error in editCar:", error);
   }
 }
+
+export async function getCarsModels(Make: string) {
+  try {
+    const response = await fetch(
+      `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/all-vehicles-model/records?limit=20&refine=make%3A%22${encodeURIComponent(Make)}%22`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch car models: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in getCarsModels:", error);
+  }
+}
