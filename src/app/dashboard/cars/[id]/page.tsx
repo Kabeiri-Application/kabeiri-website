@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { set } from "zod";
 
 import { editCar, getCar, getCarsModels } from "@/app/dashboard/cars/actions";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,7 @@ export default function CarDetailPage() {
 
   const getModels = async (make: string) => {
     try {
+      setCarModels([]);
       const response = await getCarsModels(make);
       console.log("Fetched car models:", response);
       const filteredModels = [];
