@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Car, Customer } from "@/db/app.schema";
 
+import CarListItem from "../components/car-list-item";
 import { customerFormSchema } from "../schema";
 
 export default function CustomerDetailPage() {
@@ -103,18 +104,18 @@ export default function CustomerDetailPage() {
       <div className="mx-auto mb-8 flex max-w-5xl items-center justify-between">
         <button
           onClick={() => router.back()}
-          className="hover:text-primary flex items-center"
+          className="hover:text-primary flex cursor-pointer items-center"
         >
           <ArrowLeftIcon className="size-4" />
           Back to Customers
         </button>
-        <button
+        <Button
           onClick={() => setModalStatus(true)}
-          className="hover:text-primary flex items-center"
+          className="flex items-center"
         >
           <PencilIcon className="size-4" />
           Edit
-        </button>
+        </Button>
       </div>
 
       <div className="mx-auto max-w-5xl space-y-8">
@@ -150,22 +151,7 @@ export default function CustomerDetailPage() {
             <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
             <div className="space-y-2">
               {cars.length > 0 ? (
-                cars.map((car) => (
-                  <div key={car.id} className="border-b border-gray-200 pb-2">
-                    <p>
-                      <span className="font-medium">Make: </span>
-                      {car.make}
-                    </p>
-                    <p>
-                      <span className="font-medium">Model: </span>
-                      {car.model}
-                    </p>
-                    <p>
-                      <span className="font-medium">Year: </span>
-                      {car.year}
-                    </p>
-                  </div>
-                ))
+                cars.map((car) => <CarListItem key={car.id} {...car} />)
               ) : (
                 <p className="text-gray-500">
                   No vehicles found for this customer.
