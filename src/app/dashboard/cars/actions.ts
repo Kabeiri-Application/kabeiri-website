@@ -46,10 +46,11 @@ export async function editCar(carId: string, formData: carFormSchema) {
   }
 }
 
-export async function getCarsModels(Make: string) {
+export async function getCarsModels(make: string, year: string) {
+  console.log("Fetching car models for make:", make, "and year:", year);
   try {
     const response = await fetch(
-      `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/all-vehicles-model/records?limit=20&refine=make%3A%22${encodeURIComponent(Make)}%22`,
+      `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/all-vehicles-model/records?limit=100&refine=make%3A%22${encodeURIComponent(make)}%22&refine=year%3A%22${encodeURIComponent(year)}%22`,
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch car models: ${response.statusText}`);

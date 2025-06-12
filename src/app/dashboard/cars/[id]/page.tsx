@@ -1,14 +1,11 @@
 "use client";
 
-import { get } from "http";
-
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { set } from "zod";
 
 import { editCar, getCar, getCarsModels } from "@/app/dashboard/cars/actions";
 import { Button } from "@/components/ui/button";
@@ -33,6 +30,7 @@ export default function CarDetailPage() {
   const [loading, setLoading] = useState(true);
   const [modalStatus, setModalStatus] = useState(false);
   const [selectedMake, setSelectedMake] = useState(car?.make || "");
+  const [selectedYear, setSelectedYear] = useState(car?.year || "");
   const [carModels, setCarModels] = useState<string[]>([]);
 
   const fetchData = async () => {
@@ -66,14 +64,14 @@ export default function CarDetailPage() {
     [key: string]: unknown;
   }
 
-  const getModels = async (make: string) => {
+  const getModels = async (make: string, year: string) => {
     try {
       setCarModels([]);
-      const response = await getCarsModels(make);
+      const response = await getCarsModels(make, year);
       console.log("Fetched car models:", response);
-      const filteredModels = [];
+      const filteredModels: string[] = [];
       (response.results as CarModelResult[]).map((item) => {
-        if (item.model) {
+        if (typeof item.model === "string" && item.model) {
           filteredModels.push(item.model);
         }
       });
@@ -84,8 +82,10 @@ export default function CarDetailPage() {
   };
 
   useEffect(() => {
-    getModels(selectedMake);
-  }, [selectedMake]);
+    console.log("Selected make:", selectedMake);
+    console.log("Selected year:", selectedYear);
+    getModels(selectedMake, selectedYear);
+  }, [selectedMake, selectedYear]);
 
   const {
     register,
@@ -101,6 +101,9 @@ export default function CarDetailPage() {
     setModalStatus(false);
     fetchData();
   };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 80 }, (_, index) => currentYear - index);
 
   return (
     <main className="p-8">
@@ -198,6 +201,28 @@ export default function CarDetailPage() {
                 </span>
               )}
             </div>
+            <div>
+              <label className="block text-sm font-medium">Year</label>
+              <select
+                defaultValue={car?.year}
+                {...register("year", {
+                  onChange: (e) => setSelectedYear(e?.target?.value),
+                })}
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+
+              {errors.year && (
+                <span className="text-sm text-red-500">
+                  {errors.year.message}
+                </span>
+              )}
+            </div>
             {
               <div>
                 <label className="block text-sm font-medium">Model</label>
@@ -227,20 +252,7 @@ export default function CarDetailPage() {
                 )}
               </div>
             }
-            <div>
-              <label className="block text-sm font-medium">Year</label>
-              <input
-                defaultValue={car?.year}
-                {...register("year")}
-                placeholder="Year"
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
-              />
-              {errors.year && (
-                <span className="text-sm text-red-500">
-                  {errors.year.message}
-                </span>
-              )}
-            </div>
+
             <div>
               <label className="block text-sm font-medium">Color</label>
               <input
