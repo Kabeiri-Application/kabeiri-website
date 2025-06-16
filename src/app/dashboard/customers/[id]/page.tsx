@@ -86,7 +86,6 @@ export default function CustomerDetailPage() {
   });
 
   const onSubmit: SubmitHandler<customerFormSchema> = (data) => {
-    console.log("Form data:", data);
     editCustomer({ ...data, id: customerId });
     setModalStatus(false);
     fetchData();
