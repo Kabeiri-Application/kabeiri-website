@@ -139,6 +139,10 @@ export default function CustomerDetailPage() {
                 {customer?.phoneNumber}
               </p>
               <p>
+                <span className="font-medium">Email: </span>
+                {customer?.email ?? "N/A"}
+              </p>
+              <p>
                 <span className="font-medium">Address: </span>
                 {customer?.streetAddress} {customer?.city},{" "}
                 {customer?.state.toUpperCase()} {customer?.zipCode}
@@ -209,6 +213,20 @@ export default function CustomerDetailPage() {
               {errors.phoneNumber && (
                 <span className="text-sm text-red-500">
                   {errors.phoneNumber.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Email</label>
+              <input
+                defaultValue={customer?.email ?? ""}
+                {...register("email")}
+                placeholder="Email"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.email && (
+                <span className="text-sm text-red-500">
+                  {errors.email.message}
                 </span>
               )}
             </div>

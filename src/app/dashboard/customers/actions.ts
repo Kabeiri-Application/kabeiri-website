@@ -53,6 +53,24 @@ export async function editCustomer(formData: NewCustomer) {
   }
 }
 
+export async function createCustomer(
+  formData: NewCustomer,
+  organizationId: string,
+) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    console.error("Not authenticated");
+  }
+  try {
+    const newCustomer = await db
+      .insert(customersTable)
+      .values({ ...formData, organization: organizationId });
+    return newCustomer;
+  } catch (error) {
+    console.error("Error in createCustomer:", error);
+  }
+}
+
 export async function getCars(customerId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
