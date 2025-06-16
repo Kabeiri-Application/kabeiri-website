@@ -40,6 +40,9 @@ export async function editCustomer(formData: NewCustomer) {
     console.error("Not authenticated");
   }
   try {
+    if (!formData.id) {
+      throw new Error("Customer ID is required to edit a customer.");
+    }
     console.log("Editing service with ID:", formData.id);
     await db
       .update(customersTable)
