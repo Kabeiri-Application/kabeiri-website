@@ -11,7 +11,7 @@ import {
 
 import { user } from "@/db/auth.schema";
 
-export const rolesEnum = pgEnum("role", ["admin", "owner", "customer", "user"]);
+export const rolesEnum = pgEnum("role", ["admin", "owner", "user"]);
 export const jobStatusEnum = pgEnum("status", [
   "complete",
   "in progress",
@@ -41,7 +41,7 @@ export const profilesTable = pgTable("profiles", {
 });
 
 export const customersTable = pgTable("customers", {
-  id: text().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   updatedAt: timestamp({ withTimezone: true })
     .notNull()
     .$onUpdate(() => new Date()),
@@ -49,6 +49,7 @@ export const customersTable = pgTable("customers", {
   deletedAt: timestamp({ withTimezone: true }),
   organization: uuid().references(() => organizationsTable.id),
   phoneNumber: text().notNull(),
+  email: text(),
   streetAddress: varchar().notNull(),
   city: text().notNull(),
   state: text().notNull(),
@@ -79,7 +80,7 @@ export const carsTable = pgTable("cars", {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 
   deletedAt: timestamp({ withTimezone: true }),
-  owner: text().references(() => customersTable.id),
+  owner: uuid().references(() => customersTable.id),
   make: text().notNull(),
   model: text().notNull(),
   year: text().notNull(),
@@ -96,7 +97,7 @@ export const jobsTable = pgTable("jobs", {
     .notNull()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
-  customer: text().references(() => customersTable.id),
+  customer: uuid().references(() => customersTable.id),
   vehicle: uuid().references(() => carsTable.id),
   organization: uuid().references(() => organizationsTable.id),
   title: text().notNull(),
