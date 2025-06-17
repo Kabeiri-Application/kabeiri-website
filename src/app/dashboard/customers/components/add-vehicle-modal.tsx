@@ -118,6 +118,19 @@ export default function AddVehicleModal({
               </span>
             )}
           </div>
+          <div>
+            <label className="block text-sm font-medium">Vehicle Miles</label>
+            <input
+              {...register("miles")}
+              placeholder="Vehicle Miles"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+            />
+            {errors.miles && (
+              <span className="text-sm text-red-500">
+                {errors.miles.message}
+              </span>
+            )}
+          </div>
           <Button
             type="submit"
             className="my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800"

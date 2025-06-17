@@ -1,3 +1,4 @@
+import { Milestone } from "lucide-react";
 import { z } from "zod";
 
 export const customerFormSchema = z.object({
@@ -20,6 +21,7 @@ export const addVehicleFormSchema = z.object({
   vin: z.string(),
   licensePlate: z.string().min(1, "Vehicle license plate is required"),
   color: z.string().min(1, "Vehicle color is required"),
+  miles: z.string().min(1, "Vehicle miles is required"),
 });
 
 export type addVehicleFormSchema = z.infer<typeof addVehicleFormSchema>;
