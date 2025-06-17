@@ -296,6 +296,7 @@ export default function JobsPage() {
 
   // GETTING CUSTOMER VEHICLES
   useEffect(() => {
+    if (!selectedCustomer) return;
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
         setVehicles(data as Car[]),

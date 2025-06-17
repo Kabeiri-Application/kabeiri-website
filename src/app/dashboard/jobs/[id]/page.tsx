@@ -115,6 +115,7 @@ export default function Page() {
   };
 
   useEffect(() => {
+    if (!selectedCustomer) return;
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
         setVehicles(data as Car[]),
