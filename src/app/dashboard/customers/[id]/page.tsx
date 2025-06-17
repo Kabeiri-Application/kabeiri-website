@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon, PlusIcon } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Car, Customer } from "@/db/app.schema";
 
+import AddVehicleModal from "../components/add-vehicle-modal";
 import CarListItem from "../components/car-list-item";
 import { customerFormSchema } from "../schema";
 
@@ -30,6 +31,7 @@ export default function CustomerDetailPage() {
   const [customer, setCustomer] = useState<Customer>();
   const [cars, setCars] = useState<Car[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
+  const [addVehicleModal, setAddVehicleModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const customerId = typeof params.id === "string" ? params.id : "";
@@ -73,9 +75,11 @@ export default function CustomerDetailPage() {
   }, []);
 
   useEffect(() => {
-    fetchCars();
+    if (customer) {
+      fetchCars();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer]);
+  }, [customer, addVehicleModal]);
 
   const {
     register,
@@ -86,6 +90,7 @@ export default function CustomerDetailPage() {
   });
 
   const onSubmit: SubmitHandler<customerFormSchema> = (data) => {
+    console.log("Form data:", data);
     editCustomer({ ...data, id: customerId });
     setModalStatus(false);
     fetchData();
@@ -116,7 +121,6 @@ export default function CustomerDetailPage() {
           Edit
         </Button>
       </div>
-
       <div className="mx-auto max-w-5xl space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">
@@ -151,7 +155,17 @@ export default function CustomerDetailPage() {
 
           {/* Vehicle Information */}
           <div className="rounded-lg border border-gray-200 p-6">
-            <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="mb-4 text-xl font-semibold">Customer Vehicles</h2>
+              <Button
+                onClick={() => setAddVehicleModal(true)}
+                className="flex items-center"
+              >
+                <PlusIcon className="size-4" />
+                <span className="text-sm">Add Vehicle</span>
+              </Button>
+            </div>
+
             <div className="space-y-2">
               {cars.length > 0 ? (
                 cars.map((car) => <CarListItem key={car.id} {...car} />)
@@ -164,7 +178,6 @@ export default function CustomerDetailPage() {
           </div>
         </div>
       </div>
-
       <Dialog open={modalStatus} onOpenChange={setModalStatus}>
         <DialogContent className="max-h-full overflow-y-scroll">
           <DialogHeader>
@@ -245,6 +258,48 @@ export default function CustomerDetailPage() {
                 </span>
               )}
             </div>
+            <div>
+              <label className="block text-sm font-medium">City</label>
+              <input
+                defaultValue={customer?.city}
+                {...register("city")}
+                placeholder="City"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.city && (
+                <span className="text-sm text-red-500">
+                  {errors.city.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">State</label>
+              <input
+                defaultValue={customer?.state}
+                {...register("state")}
+                placeholder="State"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.state && (
+                <span className="text-sm text-red-500">
+                  {errors.state.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Zip Code</label>
+              <input
+                defaultValue={customer?.zipCode}
+                {...register("zipCode")}
+                placeholder="Zip Code"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-none"
+              />
+              {errors.zipCode && (
+                <span className="text-sm text-red-500">
+                  {errors.zipCode.message}
+                </span>
+              )}
+            </div>
             <Button
               type="submit"
               className="my-3 flex w-full flex-row items-center justify-center rounded-full bg-black py-3 text-white transition hover:bg-gray-800"
@@ -254,6 +309,11 @@ export default function CustomerDetailPage() {
           </form>
         </DialogContent>
       </Dialog>
+      <AddVehicleModal
+        addVehicleModal={addVehicleModal}
+        setAddVehicleModal={setAddVehicleModal}
+        customerId={customerId}
+      />
     </main>
   );
 }

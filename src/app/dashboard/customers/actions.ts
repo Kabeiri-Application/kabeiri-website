@@ -5,7 +5,12 @@ import { headers } from "next/headers";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { carsTable, customersTable, NewCustomer } from "@/db/app.schema";
+import {
+  carsTable,
+  customersTable,
+  NewCar,
+  NewCustomer,
+} from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 
 export async function getCustomers(organizationId: string) {
@@ -85,5 +90,20 @@ export async function getCars(customerId: string) {
     });
   } catch (error) {
     console.error("Error in getCustomers:", error);
+  }
+}
+
+export async function addVehicle(formData: NewCar) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    console.error("Not authenticated");
+  }
+  try {
+    const newVehicle = await db.insert(carsTable).values({
+      ...formData,
+    });
+    return newVehicle;
+  } catch (error) {
+    console.error("Error in addVehicle:", error);
   }
 }

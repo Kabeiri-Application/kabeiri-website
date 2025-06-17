@@ -12,3 +12,14 @@ export const customerFormSchema = z.object({
 });
 
 export type customerFormSchema = z.infer<typeof customerFormSchema>;
+
+export const addVehicleFormSchema = z.object({
+  make: z.string().min(1, "Vehicle make is required"),
+  model: z.string().min(1, "Vehicle model is required"),
+  year: z.string().min(1, "Vehicle year is required"),
+  vin: z.string(),
+  licensePlate: z.string().min(1, "Vehicle license plate is required"),
+  color: z.string().min(1, "Vehicle color is required"),
+});
+
+export type addVehicleFormSchema = z.infer<typeof addVehicleFormSchema>;
