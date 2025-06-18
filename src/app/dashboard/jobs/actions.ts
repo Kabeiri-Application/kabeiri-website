@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import {
   carsTable,
+  customersTable,
   jobsTable,
   profilesTable,
   servicesTable,
@@ -114,11 +115,8 @@ export async function getServices(organizationId: string) {
 
 export async function getCustomers(organizationId: string) {
   try {
-    return await db.query.profilesTable.findMany({
-      where: and(
-        eq(profilesTable.organization, organizationId),
-        eq(profilesTable.role, "customer"),
-      ),
+    return await db.query.customersTable.findMany({
+      where: and(eq(customersTable.organization, organizationId)),
     });
   } catch (error) {
     console.error("Error in getCustomers:", error);
@@ -127,8 +125,8 @@ export async function getCustomers(organizationId: string) {
 
 export async function getCustomer(customerId: string) {
   try {
-    return await db.query.profilesTable.findFirst({
-      where: eq(profilesTable.id, customerId),
+    return await db.query.customersTable.findFirst({
+      where: eq(customersTable.id, customerId),
     });
   } catch (error) {
     return {
@@ -139,6 +137,8 @@ export async function getCustomer(customerId: string) {
 }
 
 export async function getVehicles(customerId: string) {
+  console.log("Fetching vehicles for customer ID:", customerId);
+
   try {
     return await db.query.carsTable.findMany({
       where: eq(carsTable.owner, customerId),

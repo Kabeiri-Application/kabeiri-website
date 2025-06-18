@@ -115,6 +115,7 @@ export default function Page() {
   };
 
   useEffect(() => {
+    if (!selectedCustomer) return;
     const fetchCars = async () => {
       await getVehicles(selectedCustomer).then((data) =>
         setVehicles(data as Car[]),
@@ -143,7 +144,11 @@ export default function Page() {
       </div>
 
       {!job ? (
-        <div>Loading...</div>
+        <div className="flex flex-row justify-center gap-2">
+          <div className="bg-primary h-4 w-4 animate-bounce rounded-full [animation-delay:.7s]"></div>
+          <div className="bg-primary h-4 w-4 animate-bounce rounded-full [animation-delay:.3s]"></div>
+          <div className="bg-primary h-4 w-4 animate-bounce rounded-full [animation-delay:.7s]"></div>
+        </div>
       ) : (
         <div className="mx-auto max-w-5xl space-y-8">
           <div className="flex items-center justify-between">

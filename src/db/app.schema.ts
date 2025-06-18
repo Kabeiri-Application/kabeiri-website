@@ -11,7 +11,7 @@ import {
 
 import { user } from "@/db/auth.schema";
 
-export const rolesEnum = pgEnum("role", ["admin", "owner", "customer", "user"]);
+export const rolesEnum = pgEnum("role", ["admin", "owner", "user"]);
 export const jobStatusEnum = pgEnum("status", [
   "complete",
   "in progress",
@@ -40,6 +40,24 @@ export const profilesTable = pgTable("profiles", {
   zipCode: text().notNull(),
 });
 
+export const customersTable = pgTable("customers", {
+  id: uuid().primaryKey().defaultRandom(),
+  updatedAt: timestamp({ withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp({ withTimezone: true }),
+  organization: uuid().references(() => organizationsTable.id),
+  phoneNumber: text().notNull(),
+  email: text(),
+  streetAddress: varchar().notNull(),
+  city: text().notNull(),
+  state: text().notNull(),
+  zipCode: text().notNull(),
+  firstName: text().notNull(),
+  lastName: text().notNull(),
+});
+
 export const organizationsTable = pgTable("organizations", {
   id: uuid().primaryKey().defaultRandom(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -59,13 +77,17 @@ export const organizationsTable = pgTable("organizations", {
 
 export const carsTable = pgTable("cars", {
   id: uuid().primaryKey().defaultRandom(),
-  owner: text().references(() => profilesTable.id),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+
+  deletedAt: timestamp({ withTimezone: true }),
+  owner: uuid().references(() => customersTable.id),
   make: text().notNull(),
   model: text().notNull(),
   year: text().notNull(),
   vin: text().notNull(),
   licensePlate: text().notNull(),
   color: text().notNull(),
+  miles: numeric(),
 });
 
 export const jobsTable = pgTable("jobs", {
@@ -75,7 +97,7 @@ export const jobsTable = pgTable("jobs", {
     .notNull()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
-  customer: text().references(() => profilesTable.id),
+  customer: uuid().references(() => customersTable.id),
   vehicle: uuid().references(() => carsTable.id),
   organization: uuid().references(() => organizationsTable.id),
   title: text().notNull(),
@@ -88,9 +110,9 @@ export const jobsTable = pgTable("jobs", {
 });
 
 export const jobRelations = relations(jobsTable, ({ one }) => ({
-  customer: one(profilesTable, {
+  customer: one(customersTable, {
     fields: [jobsTable.customer],
-    references: [profilesTable.id],
+    references: [customersTable.id],
   }),
   vehicle: one(carsTable, {
     fields: [jobsTable.vehicle],
@@ -141,3 +163,6 @@ export type NewCar = typeof carsTable.$inferInsert;
 
 export type Profile = typeof profilesTable.$inferSelect;
 export type NewProfile = typeof profilesTable.$inferInsert;
+
+export type Customer = typeof customersTable.$inferSelect;
+export type NewCustomer = typeof customersTable.$inferInsert;
