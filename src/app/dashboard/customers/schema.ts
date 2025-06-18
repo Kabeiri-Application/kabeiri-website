@@ -1,4 +1,3 @@
-import { Milestone } from "lucide-react";
 import { z } from "zod";
 
 export const customerFormSchema = z.object({
