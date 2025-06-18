@@ -85,6 +85,7 @@ export default function CarDetailPage() {
     console.log("Selected make:", selectedMake);
     console.log("Selected year:", selectedYear);
     getModels(selectedMake, selectedYear);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMake, selectedYear]);
 
   const {
