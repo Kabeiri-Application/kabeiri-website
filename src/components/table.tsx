@@ -37,7 +37,6 @@ import { DataTablePagination } from "./DataTablePagination";
 
 interface TableProps<TData> {
   data: TData[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   clickable?: boolean;
 }
@@ -103,7 +102,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
       </div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter jobs..."
+          placeholder="Search"
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
@@ -138,7 +137,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 key={row.id}
                 onClick={() =>
                   clickable
-                    ? router.push(`/dashboard/jobs/${row.renderValue("id")}`)
+                    ? router.push(`/dashboard/jobs/${(row.original as { id: string | number }).id}`)
                     : null
                 }
                 className={clickable ? "hover:cursor-pointer" : ""}

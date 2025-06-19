@@ -6,8 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
   ArrowUpDownIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
   MoreHorizontalIcon,
-  MoreVerticalIcon,
+  FilterIcon,
   PlusIcon,
 } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -28,6 +30,7 @@ import {
   type Employee,
 } from "@/app/dashboard/jobs/schema";
 import { Table } from "@/components/table";
+import { DatePickerDropdown as DatePicker } from "@/components/ui/date-picker-dropdown";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -66,42 +69,26 @@ const statusOptions = [
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-  columnHelper.display({
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  }),
-  columnHelper.accessor("id", {
-    header: undefined,
-    cell: undefined,
-  }),
-  columnHelper.accessor("title", {
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Job
-        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+
+    columnHelper.accessor("title", {
+    header: ({ column }) => {
+      const sortState = column.getIsSorted(); // 'asc' | 'desc' | false
+      const Icon =
+        sortState === 'asc'
+          ? ArrowUpIcon
+          : sortState === 'desc'
+            ? ArrowDownIcon
+            : ArrowUpDownIcon;
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Job
+          <Icon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("customer", {
@@ -123,7 +110,7 @@ const columns = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
-                <MoreVerticalIcon className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
@@ -190,7 +177,7 @@ const columns = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
-                <MoreVerticalIcon className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
@@ -258,7 +245,7 @@ const columns = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
-                <MoreVerticalIcon className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
@@ -301,53 +288,67 @@ const columns = [
     filterFn: (row, _columnId, filterValues: string[]) => {
       const svc = row.original.service;
       const val = isService(svc)
-        ? (svc.title ?? "Unknown service")
-        : "Unknown service";
+        ? (svc.title ?? "Unknown service") : "Unknown service";
       return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
   columnHelper.accessor("due_date", {
-    /*************  ✨ Windsurf Command ⭐  *************/
-    /**
-     * @description
-     * Header cell for the Due Date column.
-     *
-     * The header cell renders a dropdown menu with all the unique due dates found
-     * in the table's data. The user can select one or more due dates to filter the
-     * table data.
-     *
-     * @param column The column object
-     * @param table The table object
-     *
-     * @returns A JSX element representing the header cell
-     */
-    /*******  d8f18b9f-1d89-4927-b052-fffb7921d923  *******/ header: ({
-      column,
-      table,
-    }) => {
+    enableSorting: false,
+    header: ({ column }) => {
+      const selectedDate = column.getFilterValue() as string | undefined;
+      const dateObj = selectedDate ? new Date(selectedDate) : undefined;
+      return (
+        <DatePicker
+          label="Due Date"
+          selected={dateObj}
+          onSelect={(day: Date | undefined) =>
+            column.setFilterValue(
+              day ? day.toISOString().split("T")[0] : undefined
+            )
+          }
+        />
+      );
+    },
+    cell: (info) => {
+      const raw = info.getValue() as string | null;
+      if (!raw) return "None";
+      const d = new Date(raw);
+      return isNaN(d.getTime()) ? "Invalid date" : d.toLocaleDateString();
+    },
+    filterFn: (row, columnId, filterValue?: string) => {
+      if (!filterValue) return true;
+      const raw = row.getValue<string | Date>(columnId);
+      const rowDate = (
+        raw instanceof Date ? raw : new Date(raw)
+      ).toISOString().split("T")[0];
+      return rowDate === filterValue;
+    },
+  }),
+
+
+  columnHelper.accessor("assigned_to", {
+    header: ({ column, table }) => {
       const selected = (column.getFilterValue() as string[]) || [];
       const options = Array.from(
         new Set(
           table.getPreFilteredRowModel().rows.map((row) => {
-            const raw = row.original.due_date as string | null;
-            if (!raw) return "None";
-            const d = new Date(raw);
-            return isNaN(d.getTime()) ? "Invalid date" : d.toLocaleDateString();
+            const emp = row.original.assigned_to as unknown as Employee | null;
+            return emp ? `${emp.firstName} ${emp.lastName}` : "Unassigned";
           }),
         ),
       );
       return (
         <div className="flex items-center">
-          <span className="font-medium">Due Date</span>
+          <span className="font-medium">Assigned To</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
-                <MoreVerticalIcon className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
               <div className="mb-2 flex justify-between">
-                <span>Filter Due Date</span>
+                <span>Filter Assignee</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -375,23 +376,14 @@ const columns = [
         </div>
       );
     },
-    cell: (info) => {
-      const raw = info.getValue() as string | null;
-      if (!raw) return "None";
-      const d = new Date(raw);
-      return isNaN(d.getTime()) ? "Invalid date" : d.toLocaleDateString();
-    },
-    filterFn: (row, _columnId, filterValues: string[]) => {
-      const raw = row.original.due_date as string | null;
-      const display = raw ? new Date(raw).toLocaleDateString() : "None";
-      return filterValues.length ? filterValues.includes(display) : true;
-    },
-  }),
-  columnHelper.accessor("assigned_to", {
-    header: "Assigned To",
     cell: ({ row }) => {
       const employee = row?.original?.assigned_to as unknown as Employee;
       return `${employee?.firstName ?? ""} ${employee?.lastName ?? ""}`;
+    },
+    filterFn: (row, _columnId, filterValues: string[]) => {
+      const emp = row.original.assigned_to as unknown as Employee | null;
+      const val = emp ? `${emp.firstName} ${emp.lastName}` : "Unassigned";
+      return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
 
@@ -404,7 +396,7 @@ const columns = [
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" size="icon" className="ml-1">
-                <MoreVerticalIcon className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
             {}
