@@ -19,7 +19,7 @@ export default async function Page() {
             your account preferences.
           </p>
           <form>
-            <div className="mt-6 space-y-4">
+            <div className="mt-6">
               <label className="block text-sm font-medium">Email</label>
               <input
                 defaultValue={session?.user?.email || ""}
@@ -33,7 +33,7 @@ export default async function Page() {
               </span>
             )} */}
             </div>
-            <div className="mt-6 space-y-4">
+            <div className="mt-6">
               <label className="block text-sm font-medium">Name</label>
               <input
                 defaultValue={session?.user?.name || ""}
