@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import {
   BellIcon,
+  CogIcon,
   // CarIcon,
   // DollarSignIcon,
   LayoutDashboardIcon,
@@ -37,6 +38,7 @@ export function Sidebar() {
     // },
     { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
     // { name: "Pricing", href: "/dashboard/pricing", icon: DollarSignIcon },
+    { name: "Settings", href: "/dashboard/settings", icon: CogIcon },
   ];
 
   return (
