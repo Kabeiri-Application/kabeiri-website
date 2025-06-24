@@ -1,18 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
   type ColumnDef,
 } from "@tanstack/react-table";
 
@@ -34,6 +30,7 @@ import {
 } from "@/components/ui/table";
 
 import { DataTablePagination } from "./DataTablePagination";
+import { usePersistedTableState } from "@/hooks/use-persisted-table-state";
 
 interface TableProps<TData> {
   data: TData[];
@@ -42,14 +39,18 @@ interface TableProps<TData> {
 }
 
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const {
+    sorting,
+    setSorting,
+    columnFilters,
+    setColumnFilters,
+    columnVisibility,
+    setColumnVisibility,
+    rowSelection,
+    setRowSelection,
+    pagination,
+    setPagination,
+  } = usePersistedTableState();
 
   const table = useReactTable({
     data,
