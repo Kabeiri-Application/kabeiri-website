@@ -50,6 +50,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
     setRowSelection,
     pagination,
     setPagination,
+    resetState,
   } = usePersistedTableState();
 
   const table = useReactTable({
@@ -110,6 +111,13 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
           }
           className="max-w-sm"
         />
+        <Button
+          variant="outline"
+          className="ml-2"
+          onClick={() => resetState()}
+        >
+          Clear All
+        </Button>
       </div>
       <div className="overflow-x-auto">
         <DataTable className="w-full">

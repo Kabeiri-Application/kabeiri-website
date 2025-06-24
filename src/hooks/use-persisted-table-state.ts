@@ -137,6 +137,33 @@ export function usePersistedTableState(options: UsePersistedTableStateOptions = 
     [tableState.rowSelection, updateState]
   );
 
+  // Reset all filters to default state
+  const resetState = useCallback(() => {
+    const defaultState = {
+      sorting: [],
+      columnFilters: [],
+      columnVisibility: {},
+      pagination: {
+        pageIndex: 0,
+        pageSize: defaultPageSize,
+      },
+      rowSelection: {},
+    };
+    
+    setTableState(defaultState);
+
+    router.replace(pathname, { scroll: false });
+
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(storageKey);
+      } catch (error) {
+        console.warn('Failed to clear table state from localStorage:', error);
+      }
+    }
+  }, [defaultPageSize, router, pathname, storageKey]);
+
   return {
     ...tableState,
     setSorting,
@@ -144,6 +171,7 @@ export function usePersistedTableState(options: UsePersistedTableStateOptions = 
     setColumnVisibility,
     setPagination,
     setRowSelection,
+    resetState,
   };
 }
 
