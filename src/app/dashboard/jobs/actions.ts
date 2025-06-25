@@ -137,6 +137,8 @@ export async function getCustomer(customerId: string) {
 }
 
 export async function getVehicles(customerId: string) {
+  console.log("Fetching vehicles for customer ID:", customerId);
+
   try {
     return await db.query.carsTable.findMany({
       where: eq(carsTable.owner, customerId),
