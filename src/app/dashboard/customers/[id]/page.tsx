@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-
 import { ArrowLeftIcon, PencilIcon, PlusIcon } from "lucide-react";
 
 import { getCars, getCustomer } from "@/app/dashboard/customers/actions";
@@ -64,7 +63,6 @@ export default function CustomerDetailPage() {
   }, []);
 
   useEffect(() => {
-
     if (customer) {
       fetchCars();
     }
