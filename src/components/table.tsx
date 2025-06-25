@@ -5,9 +5,32 @@ import { useRouter } from "next/navigation";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table as DataTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { usePersistedTableState } from "@/hooks/use-persisted-table-state";
+
+import { DataTablePagination } from "./DataTablePagination";
 
 interface TableProps<TData> {
   data: TData[];
@@ -17,25 +40,91 @@ interface TableProps<TData> {
 }
 
 export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
+  const {
+    sorting,
+    setSorting,
+    columnFilters,
+    setColumnFilters,
+    columnVisibility,
+    setColumnVisibility,
+    rowSelection,
+    setRowSelection,
+    pagination,
+    setPagination,
+    resetState,
+  } = usePersistedTableState();
+
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
   });
 
   const router = useRouter();
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-xs">
+    <div className="rounded-2xl p-6 shadow-xs">
+      <div className="flex items-center justify-between py-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Search"
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <Button variant="outline" className="ml-2" onClick={() => resetState()}>
+          Clear All
+        </Button>
+      </div>
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
+        <DataTable className="w-full">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th
+                  <TableHead
                     key={header.id}
-                    className="border-b border-gray-200 pb-4 text-left text-sm font-medium text-gray-500"
+                    className="border-b pb-4 text-left text-sm font-medium"
                   >
                     {header.isPlaceholder
                       ? null
@@ -43,35 +132,35 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                  </th>
+                  </TableHead>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <tr
+              <TableRow
                 key={row.id}
                 onClick={() =>
                   clickable
-                    ? router.push(`/dashboard/jobs/${row.renderValue("id")}`)
+                    ? router.push(
+                        `/dashboard/jobs/${(row.original as { id: string | number }).id}`,
+                      )
                     : null
                 }
-                className={clickable ? "cursor-pointer hover:bg-gray-50" : ""}
+                className={clickable ? "hover:cursor-pointer" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="border-b border-gray-100 py-4 text-sm"
-                  >
+                  <TableCell key={cell.id} className="border-b py-4 text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  </TableCell>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </DataTable>
       </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

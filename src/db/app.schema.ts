@@ -17,6 +17,7 @@ export const jobStatusEnum = pgEnum("status", [
   "in progress",
   "pending",
 ]);
+export const jobPriorityEnum = pgEnum("priority", ["low", "medium", "high"]);
 
 export const profilesTable = pgTable("profiles", {
   id: text()

@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { PlusIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
+  FilterIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import {
@@ -24,6 +31,8 @@ import {
 } from "@/app/dashboard/jobs/schema";
 import { Table } from "@/components/table";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DatePickerDropdown as DatePicker } from "@/components/ui/date-picker-dropdown";
 import {
   Dialog,
   DialogContent,
@@ -31,58 +40,397 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { Car, Job, Service } from "@/db/app.schema";
 import { cn } from "@/lib/utils";
+
+function isService(obj: unknown): obj is Service {
+  return obj !== null && typeof obj === "object" && "title" in obj;
+}
+
+const statusOptions = [
+  { value: "in progress", label: "In Progress" },
+  { value: "pending", label: "Pending" },
+  { value: "complete", label: "Complete" },
+];
 
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-  columnHelper.accessor("id", {
-    header: undefined,
-    cell: undefined,
-  }),
   columnHelper.accessor("title", {
-    header: "Job",
+    header: ({ column }) => {
+      const sortState = column.getIsSorted(); // 'asc' | 'desc' | false
+      const Icon =
+        sortState === "asc"
+          ? ArrowUpIcon
+          : sortState === "desc"
+            ? ArrowDownIcon
+            : ArrowUpDownIcon;
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Job
+          <Icon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor("due_date", {
-    header: "Due Date",
-    cell: (info) =>
-      info.getValue()
-        ? new Date(info.getValue() ?? "").toLocaleDateString()
-        : "",
-  }),
   columnHelper.accessor("customer", {
-    header: "Customer",
+    header: ({ column, table }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      const options = Array.from(
+        new Set(
+          table.getPreFilteredRowModel().rows.map((row) => {
+            const c = row.original.customer as Partial<Customer> | null;
+            return c?.firstName && c?.lastName
+              ? `${c.firstName} ${c.lastName}`
+              : "Unknown customer";
+          }),
+        ),
+      );
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Customer</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <FilterIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex justify-between">
+                <span>Filter Customer</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear
+                </Button>
+              </div>
+              {options.map((opt) => (
+                <div key={opt} className="flex items-center space-x-1 py-1">
+                  <Checkbox
+                    checked={selected.includes(opt)}
+                    onCheckedChange={(checked) => {
+                      const next = checked
+                        ? [...selected, opt]
+                        : selected.filter((v) => v !== opt);
+                      column.setFilterValue(next);
+                    }}
+                  />
+                  <span className="capitalize">{opt}</span>
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
     cell: ({ row }) => {
-      const customer = row?.original?.customer as unknown as Customer;
-      return `${customer?.firstName ?? ""} ${customer?.lastName ?? ""}`;
+      const c = row.original.customer as Partial<Customer> | null;
+      return c?.firstName && c?.lastName
+        ? `${c.firstName} ${c.lastName}`
+        : "Unknown customer";
+    },
+    filterFn: (row, _columnId, filterValues: string[]) => {
+      const c = row.original.customer as Partial<Customer> | null;
+      const val =
+        c?.firstName && c?.lastName
+          ? `${c.firstName} ${c.lastName}`
+          : "Unknown customer";
+      return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
   columnHelper.accessor("vehicle", {
-    header: "Vehicle",
+    header: ({ column, table }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      const options = Array.from(
+        new Set(
+          table.getPreFilteredRowModel().rows.map((row) => {
+            const v = row.original.vehicle as Partial<Car> | null;
+            return v?.year && v?.make && v?.model
+              ? `${v.year} ${v.make} ${v.model}`
+              : "Unknown vehicle";
+          }),
+        ),
+      );
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Vehicle</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <FilterIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex justify-between">
+                <span>Filter Vehicle</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear
+                </Button>
+              </div>
+              {options.map((opt) => (
+                <div key={opt} className="flex items-center space-x-1 py-1">
+                  <Checkbox
+                    checked={selected.includes(opt)}
+                    onCheckedChange={(checked) => {
+                      const next = checked
+                        ? [...selected, opt]
+                        : selected.filter((v) => v !== opt);
+                      column.setFilterValue(next);
+                    }}
+                  />
+                  <span className="capitalize">{opt}</span>
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
     cell: ({ row }) => {
-      const vehicle = row?.original?.vehicle as unknown as Car;
-      return `${vehicle?.year ?? ""} ${vehicle?.make ?? ""} ${vehicle?.model ?? ""}`;
+      const v = row.original.vehicle as Partial<Car> | null;
+      return v?.year && v?.make && v?.model
+        ? `${v.year} ${v.make} ${v.model}`
+        : "Unknown vehicle";
+    },
+    filterFn: (row, _columnId, filterValues: string[]) => {
+      const v = row.original.vehicle as Partial<Car> | null;
+      const val =
+        v?.year && v?.make && v?.model
+          ? `${v.year} ${v.make} ${v.model}`
+          : "Unknown vehicle";
+      return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
   columnHelper.accessor("service", {
-    header: "Service",
+    header: ({ column, table }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      const options = Array.from(
+        new Set(
+          table.getPreFilteredRowModel().rows.map((row) => {
+            const svc = row.original.service;
+            if (isService(svc)) {
+              return svc.title ?? "Unknown service";
+            }
+            return "Unknown service";
+          }),
+        ),
+      );
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Service</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <FilterIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex justify-between">
+                <span>Filter Service</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear
+                </Button>
+              </div>
+              {options.map((opt) => (
+                <div key={opt} className="flex items-center space-x-1 py-1">
+                  <Checkbox
+                    checked={selected.includes(opt)}
+                    onCheckedChange={(checked) => {
+                      const next = checked
+                        ? [...selected, opt]
+                        : selected.filter((v) => v !== opt);
+                      column.setFilterValue(next);
+                    }}
+                  />
+                  <span className="capitalize">{opt}</span>
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
     cell: ({ row }) => {
-      const service = row?.original?.service as unknown as Service;
-      return service?.title ?? "";
+      const svc = row.original.service;
+      if (isService(svc)) {
+        return svc.title ?? "Unknown service";
+      }
+      return "Unknown service";
+    },
+    filterFn: (row, _columnId, filterValues: string[]) => {
+      const svc = row.original.service;
+      const val = isService(svc)
+        ? (svc.title ?? "Unknown service")
+        : "Unknown service";
+      return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
+  columnHelper.accessor("due_date", {
+    enableSorting: false,
+    header: ({ column }) => {
+      const selectedDate = column.getFilterValue() as string | undefined;
+      const dateObj = selectedDate ? new Date(selectedDate) : undefined;
+      return (
+        <DatePicker
+          label="Due Date"
+          selected={dateObj}
+          onSelect={(day: Date | undefined) =>
+            column.setFilterValue(
+              day ? day.toISOString().split("T")[0] : undefined,
+            )
+          }
+        />
+      );
+    },
+    cell: (info) => {
+      const raw = info.getValue() as string | null;
+      if (!raw) return "None";
+      const d = new Date(raw);
+      return isNaN(d.getTime()) ? "Invalid date" : d.toLocaleDateString();
+    },
+    filterFn: (row, columnId, filterValue?: string) => {
+      if (!filterValue) return true;
+      const raw = row.getValue<string | Date>(columnId);
+      const rowDate = (raw instanceof Date ? raw : new Date(raw))
+        .toISOString()
+        .split("T")[0];
+      return rowDate === filterValue;
+    },
+  }),
+
   columnHelper.accessor("assigned_to", {
-    header: "Assigned To",
+    header: ({ column, table }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      const options = Array.from(
+        new Set(
+          table.getPreFilteredRowModel().rows.map((row) => {
+            const emp = row.original.assigned_to as unknown as Employee | null;
+            return emp ? `${emp.firstName} ${emp.lastName}` : "Unassigned";
+          }),
+        ),
+      );
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Assigned To</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <FilterIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex justify-between">
+                <span>Filter Assignee</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear
+                </Button>
+              </div>
+              {options.map((opt) => (
+                <div key={opt} className="flex items-center space-x-1 py-1">
+                  <Checkbox
+                    checked={selected.includes(opt)}
+                    onCheckedChange={(checked) => {
+                      const next = checked
+                        ? [...selected, opt]
+                        : selected.filter((v) => v !== opt);
+                      column.setFilterValue(next);
+                    }}
+                  />
+                  <span className="capitalize">{opt}</span>
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const employee = row?.original?.assigned_to as unknown as Employee;
       return `${employee?.firstName ?? ""} ${employee?.lastName ?? ""}`;
     },
+    filterFn: (row, _columnId, filterValues: string[]) => {
+      const emp = row.original.assigned_to as unknown as Employee | null;
+      const val = emp ? `${emp.firstName} ${emp.lastName}` : "Unassigned";
+      return filterValues.length ? filterValues.includes(val) : true;
+    },
   }),
 
   columnHelper.accessor("status", {
-    header: "Status",
+    header: ({ column }) => {
+      const selected = (column.getFilterValue() as string[]) || [];
+      return (
+        <div className="flex items-center">
+          <span className="font-medium">Status</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-1">
+                <FilterIcon className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            {}
+            <PopoverContent align="start" side="bottom" sideOffset={4}>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="font-medium">Filter Status</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => column.setFilterValue([])}
+                >
+                  Clear all
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {statusOptions.map(({ value, label }) => (
+                  <div key={value} className="flex items-center space-x-1">
+                    <Checkbox
+                      checked={selected.includes(value)}
+                      onCheckedChange={(checked) => {
+                        const newValues = checked
+                          ? [...selected, value]
+                          : selected.filter((v) => v !== value);
+                        column.setFilterValue(newValues);
+                      }}
+                    />
+                    <span className="capitalize">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      );
+    },
     cell: (info) => (
       <span
         className={cn(
@@ -96,6 +444,43 @@ const columns = [
         {info.getValue()}
       </span>
     ),
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const status = row.getValue<string>(columnId);
+      return filterValues?.length ? filterValues.includes(status) : true;
+    },
+  }),
+  columnHelper.display({
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const job = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(job.id)}
+            >
+              Copy Job ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => console.log("View Job", job)}>
+              View Job
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => console.log("Edit Job", job)}>
+              Edit Job
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   }),
 ];
 
