@@ -546,14 +546,20 @@ export default function JobsPage() {
 
   // GETTING CUSTOMER VEHICLES
   useEffect(() => {
-    if (!selectedCustomer) return;
+    if (!selectedCustomer) {
+      setVehicles([]);
+      return;
+    }
     const fetchCars = async () => {
-      await getVehicles(selectedCustomer).then((data) =>
-        setVehicles(data as Car[]),
-      );
+      await getVehicles(selectedCustomer).then((data) => {
+        console.log("Vehicles data:", data);
+        setVehicles(data as Car[]);
+      });
     };
     fetchCars();
   }, [selectedCustomer]);
+
+  console.log("Vehicles:", vehicles);
 
   return (
     <main className="p-8">
