@@ -25,6 +25,7 @@ import { Customer } from "@/db/app.schema";
 export default function Page() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const [organization, setOrganization] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
 
