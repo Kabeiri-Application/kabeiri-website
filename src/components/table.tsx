@@ -28,12 +28,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { usePersistedTableState } from "@/hooks/use-persisted-table-state";
 
 import { DataTablePagination } from "./DataTablePagination";
-import { usePersistedTableState } from "@/hooks/use-persisted-table-state";
 
 interface TableProps<TData> {
   data: TData[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   clickable?: boolean;
 }
@@ -111,11 +112,7 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
           }
           className="max-w-sm"
         />
-        <Button
-          variant="outline"
-          className="ml-2"
-          onClick={() => resetState()}
-        >
+        <Button variant="outline" className="ml-2" onClick={() => resetState()}>
           Clear All
         </Button>
       </div>
@@ -146,7 +143,9 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
                 key={row.id}
                 onClick={() =>
                   clickable
-                    ? router.push(`/dashboard/jobs/${(row.original as { id: string | number }).id}`)
+                    ? router.push(
+                        `/dashboard/jobs/${(row.original as { id: string | number }).id}`,
+                      )
                     : null
                 }
                 className={clickable ? "hover:cursor-pointer" : ""}

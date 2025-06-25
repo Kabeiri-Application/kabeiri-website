@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
+  ArrowDownIcon,
   ArrowUpDownIcon,
   ArrowUpIcon,
-  ArrowDownIcon,
-  MoreHorizontalIcon,
   FilterIcon,
+  MoreHorizontalIcon,
   PlusIcon,
 } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -30,9 +30,9 @@ import {
   type Employee,
 } from "@/app/dashboard/jobs/schema";
 import { Table } from "@/components/table";
-import { DatePickerDropdown as DatePicker } from "@/components/ui/date-picker-dropdown";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePickerDropdown as DatePicker } from "@/components/ui/date-picker-dropdown";
 import {
   Dialog,
   DialogContent,
@@ -69,20 +69,19 @@ const statusOptions = [
 const columnHelper = createColumnHelper<Job>();
 
 const columns = [
-
-    columnHelper.accessor("title", {
+  columnHelper.accessor("title", {
     header: ({ column }) => {
       const sortState = column.getIsSorted(); // 'asc' | 'desc' | false
       const Icon =
-        sortState === 'asc'
+        sortState === "asc"
           ? ArrowUpIcon
-          : sortState === 'desc'
+          : sortState === "desc"
             ? ArrowDownIcon
             : ArrowUpDownIcon;
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Job
           <Icon className="ml-2 h-4 w-4" />
@@ -288,7 +287,8 @@ const columns = [
     filterFn: (row, _columnId, filterValues: string[]) => {
       const svc = row.original.service;
       const val = isService(svc)
-        ? (svc.title ?? "Unknown service") : "Unknown service";
+        ? (svc.title ?? "Unknown service")
+        : "Unknown service";
       return filterValues.length ? filterValues.includes(val) : true;
     },
   }),
@@ -303,7 +303,7 @@ const columns = [
           selected={dateObj}
           onSelect={(day: Date | undefined) =>
             column.setFilterValue(
-              day ? day.toISOString().split("T")[0] : undefined
+              day ? day.toISOString().split("T")[0] : undefined,
             )
           }
         />
@@ -318,13 +318,12 @@ const columns = [
     filterFn: (row, columnId, filterValue?: string) => {
       if (!filterValue) return true;
       const raw = row.getValue<string | Date>(columnId);
-      const rowDate = (
-        raw instanceof Date ? raw : new Date(raw)
-      ).toISOString().split("T")[0];
+      const rowDate = (raw instanceof Date ? raw : new Date(raw))
+        .toISOString()
+        .split("T")[0];
       return rowDate === filterValue;
     },
   }),
-
 
   columnHelper.accessor("assigned_to", {
     header: ({ column, table }) => {

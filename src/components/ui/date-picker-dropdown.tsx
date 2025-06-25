@@ -3,7 +3,11 @@ import * as React from "react";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 export interface DatePickerDropdownProps {
@@ -26,37 +30,54 @@ interface SimpleCalendarProps {
   clearable?: boolean;
 }
 
-function SimpleCalendar({ selected, onSelect, onClear, clearable }: SimpleCalendarProps) {
-  const [currentDate, setCurrentDate] = React.useState(() => selected || new Date());
-  
+function SimpleCalendar({
+  selected,
+  onSelect,
+  onClear,
+  clearable,
+}: SimpleCalendarProps) {
+  const [currentDate, setCurrentDate] = React.useState(
+    () => selected || new Date(),
+  );
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  
+
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const firstDayWeekday = firstDayOfMonth.getDay();
   const daysInMonth = lastDayOfMonth.getDate();
-  
+
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
-  
+
   const weekDays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-  
+
   const previousMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
   };
-  
+
   const nextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
   };
-  
+
   const selectDate = (day: number) => {
     const newDate = new Date(year, month, day);
     onSelect(newDate);
   };
-  
+
   const isSelected = (day: number) => {
     if (!selected) return false;
     const dayDate = new Date(year, month, day);
@@ -66,7 +87,7 @@ function SimpleCalendar({ selected, onSelect, onClear, clearable }: SimpleCalend
       selected.getDate() === dayDate.getDate()
     );
   };
-  
+
   const isToday = (day: number) => {
     const today = new Date();
     const dayDate = new Date(year, month, day);
@@ -76,15 +97,15 @@ function SimpleCalendar({ selected, onSelect, onClear, clearable }: SimpleCalend
       today.getDate() === dayDate.getDate()
     );
   };
-  
+
   // Generate calendar days
   const calendarDays = [];
-  
+
   // Empty cells for days before the first day of the month
   for (let i = 0; i < firstDayWeekday; i++) {
     calendarDays.push(<div key={`empty-${i}`} className="h-8 w-8" />);
   }
-  
+
   // Days of the month
   for (let day = 1; day <= daysInMonth; day++) {
     calendarDays.push(
@@ -92,21 +113,24 @@ function SimpleCalendar({ selected, onSelect, onClear, clearable }: SimpleCalend
         key={day}
         onClick={() => selectDate(day)}
         className={cn(
-          "h-8 w-8 text-sm rounded-md hover:bg-accent hover:text-accent-foreground",
+          "hover:bg-accent hover:text-accent-foreground h-8 w-8 rounded-md text-sm",
           "focus:bg-accent focus:text-accent-foreground focus:outline-none",
-          isSelected(day) && "bg-primary text-primary-foreground hover:bg-primary/90",
-          isToday(day) && !isSelected(day) && "bg-accent text-accent-foreground font-medium"
+          isSelected(day) &&
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+          isToday(day) &&
+            !isSelected(day) &&
+            "bg-accent text-accent-foreground font-medium",
         )}
       >
         {day}
-      </button>
+      </button>,
     );
   }
-  
+
   return (
-    <div className="p-4 w-72">
+    <div className="w-72 p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <Button variant="ghost" size="icon" onClick={previousMonth}>
           <ChevronLeftIcon className="h-4 w-4" />
         </Button>
@@ -117,25 +141,31 @@ function SimpleCalendar({ selected, onSelect, onClear, clearable }: SimpleCalend
           <ChevronRightIcon className="h-4 w-4" />
         </Button>
       </div>
-      
+
       {/* Week days header */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
+      <div className="mb-2 grid grid-cols-7 gap-1">
         {weekDays.map((day) => (
-          <div key={day} className="h-8 w-8 text-xs text-muted-foreground flex items-center justify-center font-medium">
+          <div
+            key={day}
+            className="text-muted-foreground flex h-8 w-8 items-center justify-center text-xs font-medium"
+          >
             {day}
           </div>
         ))}
       </div>
-      
+
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1 mb-4">
-        {calendarDays}
-      </div>
-      
+      <div className="mb-4 grid grid-cols-7 gap-1">{calendarDays}</div>
+
       {/* Clear button */}
       {clearable && selected && (
         <div className="border-t pt-3">
-          <Button variant="ghost" size="sm" className="w-full" onClick={onClear}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full"
+            onClick={onClear}
+          >
             Clear
           </Button>
         </div>
@@ -180,7 +210,7 @@ export function DatePickerDropdown({
           >
             <CalendarIcon className="h-4 w-4" />
             {selected && (
-              <div className="absolute -top-1 -right-1 h-2 w-2 bg-primary rounded-full" />
+              <div className="bg-primary absolute -top-1 -right-1 h-2 w-2 rounded-full" />
             )}
           </Button>
         </PopoverTrigger>
