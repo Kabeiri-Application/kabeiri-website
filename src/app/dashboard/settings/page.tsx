@@ -1,41 +1,51 @@
 import { headers } from "next/headers";
 
-import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
+
+import SettingsCard from "./components/settings-card";
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   console.log("Session:", session);
+
   return (
     <main className="p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Settings</h1>
         </div>
-        <div className="mt-2 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold">Account Settings</h2>
-          <p className="text-muted-foreground mb-2">
-            Update your profile information, change your password, and manage
-            your account preferences.
-          </p>
-          <Button>Update Account</Button>
-        </div>
 
-        <div className="mt-2 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold">Privacy and Security</h2>
-          <p className="text-muted-foreground mb-2">
-            Update your accounts security and privacy preferences.
-          </p>
-          <Button>Update Security</Button>
-        </div>
+        <SettingsCard
+          title="Account"
+          description="Update your profile information, change your password, and manage your account preferences."
+          href="/dashboard/settings/accountSettings"
+        />
 
-        <div className="mt-2 rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold">Accessability</h2>
-          <p className="text-muted-foreground mb-2">
-            Update your accessability preferences.
-          </p>
-          <Button>Update Accessability</Button>
-        </div>
+        {session?.user?.role === "admin" && (
+          <SettingsCard
+            title="Admin"
+            description="Manage users, view logs, and configure application settings."
+            href="/dashboard/settings/adminSettings"
+          />
+        )}
+
+        <SettingsCard
+          title="Privacy and Security"
+          description="Update your accounts security and privacy preferences."
+          href="/dashboard/settings/privacySettings"
+        />
+
+        <SettingsCard
+          title="Accessibility"
+          description="Update your accessibility preferences."
+          href="/dashboard/settings/accessibilitySettings"
+        />
+
+        <SettingsCard
+          title="About"
+          description="Learn more about this application, its features, and Kabeiri."
+          href="/dashboard/settings/about"
+        />
       </div>
     </main>
   );
