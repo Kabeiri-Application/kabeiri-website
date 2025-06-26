@@ -7,5 +7,9 @@ import SettingPage from "../components/settingPage";
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   console.log("Session:", session?.user?.role);
-  return <SettingPage title="About" />;
+  return (
+    <SettingPage title="About">
+      <p>Hello World</p>
+    </SettingPage>
+  );
 }
