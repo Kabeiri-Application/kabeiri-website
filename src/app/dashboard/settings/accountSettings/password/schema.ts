@@ -28,6 +28,7 @@ export const changePasswordFormSchema = z
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "New password and confirmation do not match",
+    path: ["confirmNewPassword"],
   });
 
 export type changePasswordFormSchema = z.infer<typeof changePasswordFormSchema>;
