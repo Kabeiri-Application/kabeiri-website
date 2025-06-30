@@ -31,4 +31,28 @@ export const changePasswordFormSchema = z
     path: ["confirmNewPassword"],
   });
 
+export const changeEmailFormSchema = z
+  .object({
+    currentEmail: z
+      .string()
+      .email("Invalid email address")
+      .min(5, "Email must be at least 5 characters long")
+      .max(254, "Email must be at most 254 characters long"),
+    newEmail: z
+      .string()
+      .email("Invalid email address")
+      .min(5, "Email must be at least 5 characters long")
+      .max(254, "Email must be at most 254 characters long"),
+    confirmNewEmail: z
+      .string()
+      .email("Invalid email address")
+      .min(5, "Email must be at least 5 characters long")
+      .max(254, "Email must be at most 254 characters long"),
+  })
+  .refine((data) => data.newEmail === data.confirmNewEmail, {
+    message: "New email and confirmation do not match",
+    path: ["confirmNewEmail"],
+  });
+
 export type changePasswordFormSchema = z.infer<typeof changePasswordFormSchema>;
+export type changeEmailFormSchema = z.infer<typeof changeEmailFormSchema>;
