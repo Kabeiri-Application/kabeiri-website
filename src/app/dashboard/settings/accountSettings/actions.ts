@@ -2,11 +2,14 @@
 
 import { headers } from "next/headers";
 
-import { changePasswordFormSchema } from "@/app/dashboard/settings/accountSettings/schema";
+import {
+  changeEmailFormSchema,
+  changePasswordFormSchema,
+} from "@/app/dashboard/settings/accountSettings/schema";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 
-export async function changeEmail(formData: changePasswordFormSchema) {
+export async function changeEmail(formData: changeEmailFormSchema) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     console.error("Not authenticated");
