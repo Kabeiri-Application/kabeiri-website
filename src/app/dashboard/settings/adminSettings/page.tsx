@@ -7,7 +7,6 @@ import SettingPage from "../components/settingPage";
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
-  console.log("Session:", session?.user?.role);
 
   if (!session?.user?.role || session.user.role !== "admin") {
     redirect("/error");
