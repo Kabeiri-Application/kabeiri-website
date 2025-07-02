@@ -9,62 +9,62 @@ import {
   PackageIcon,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { NewJobModal } from "@/components/NewJobModal";
 import { cn } from "@/lib/utils";
 
 /**
- * QuickActions component for dashboard - provides instant access to common workflows
- * Features responsive grid layout and keyboard accessibility
+ * Modern QuickActions component with clean, animated buttons
  */
 export function QuickActions() {
   const router = useRouter();
   const [isNewJobModalOpen, setIsNewJobModalOpen] = useState(false);
 
-  // Action configuration with routes and styling
   const actions = [
     {
       id: "new-job",
       label: "New Job",
-      description: "Create a new repair job",
+      description: "Create repair job",
       icon: PlusIcon,
-      action: "modal", // Use modal instead of route
-      color: "bg-blue-500 hover:bg-blue-600 text-white",
+      gradient: "from-blue-500 to-blue-600",
+      hoverGradient: "hover:from-blue-600 hover:to-blue-700",
+      ringColor: "focus:ring-blue-500/50",
       ariaLabel: "Create a new repair job",
     },
     {
       id: "add-customer",
       label: "Add Customer",
-      description: "Register new customer",
+      description: "Register customer",
       icon: UserPlusIcon,
       route: "/dashboard/customers/new",
-      color: "bg-green-500 hover:bg-green-600 text-white",
+      gradient: "from-emerald-500 to-emerald-600",
+      hoverGradient: "hover:from-emerald-600 hover:to-emerald-700",
+      ringColor: "focus:ring-emerald-500/50",
       ariaLabel: "Add new customer to system",
     },
-
     {
       id: "todays-jobs",
       label: "Today's Jobs",
-      description: "View today's schedule",
+      description: "View schedule",
       icon: CalendarIcon,
       route: "/dashboard/jobs?schedule=today",
-      color: "bg-orange-500 hover:bg-orange-600 text-white",
+      gradient: "from-amber-500 to-orange-500",
+      hoverGradient: "hover:from-amber-600 hover:to-orange-600",
+      ringColor: "focus:ring-amber-500/50",
       ariaLabel: "View jobs scheduled for today",
     },
     {
       id: "low-stock-parts",
-      label: "Low-Stock Parts",
-      description: "Review inventory alerts",
+      label: "Low Stock",
+      description: "Inventory alerts",
       icon: PackageIcon,
       route: "/dashboard/inventory?filter=low-stock",
-      color: "bg-red-500 hover:bg-red-600 text-white",
+      gradient: "from-red-500 to-rose-500",
+      hoverGradient: "hover:from-red-600 hover:to-rose-600",
+      ringColor: "focus:ring-red-500/50",
       ariaLabel: "View parts with low inventory",
     },
   ];
 
-  /**
-   * Handle action click - either open modal or navigate to route
-   */
   const handleActionClick = (action: typeof actions[0]) => {
     if (action.id === "new-job") {
       setIsNewJobModalOpen(true);
@@ -75,67 +75,69 @@ export function QuickActions() {
 
   return (
     <div className="w-full">
-      {/* Section Header */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      {/* Clean Header */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
           Quick Actions
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Streamline your workflow with one-click access to common tasks
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          One-click access to essential workflows
         </p>
       </div>
 
-      {/* Responsive Action Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Modern Button Grid */}
+      <div className="flex flex-col sm:flex-row gap-4">
         {actions.map((action) => {
           const IconComponent = action.icon;
           
           return (
-            <Button
+            <button
               key={action.id}
               onClick={() => handleActionClick(action)}
               aria-label={action.ariaLabel}
               className={cn(
-                // Base styling
-                "group relative h-auto p-6 flex flex-col items-center text-center",
-                "border border-gray-200 dark:border-gray-700 rounded-xl",
-                "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750",
-                "shadow-sm hover:shadow-md transition-all duration-200",
-                // Focus states for keyboard navigation
-                "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-                "dark:focus:ring-offset-gray-900",
-                // Hover animations
-                "hover:scale-[1.02] active:scale-[0.98]",
-                "overflow-hidden"
+                // Base styles - modern clean look
+                "group relative flex-1 p-6 rounded-2xl",
+                "bg-gradient-to-br text-white font-medium",
+                "transform transition-all duration-300 ease-out",
+                "focus:outline-none focus:ring-4 focus:scale-[0.98]",
+                // Individual gradients
+                action.gradient,
+                action.hoverGradient,
+                action.ringColor,
+                // Hover effects
+                "hover:scale-[1.02] hover:shadow-xl hover:shadow-black/25",
+                "active:scale-[0.98]",
+                // Modern shadow
+                "shadow-lg shadow-black/10"
               )}
-              variant="ghost"
             >
-              {/* Subtle shimmer effect on hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
+              {/* Shiny overlay effect */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12 group-hover:animate-pulse" />
+              
+              {/* Content */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-3">
+                {/* Icon with subtle animation */}
+                <div className="p-3 rounded-full bg-white/20 backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                  <IconComponent className="h-6 w-6" />
+                </div>
+                
+                {/* Text content */}
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">
+                    {action.label}
+                  </h3>
+                  <p className="text-xs text-white/80">
+                    {action.description}
+                  </p>
+                </div>
               </div>
-
-              {/* Icon container with color background */}
-              <div
-                className={cn(
-                  "relative z-10 p-3 rounded-full mb-3 transition-transform duration-200",
-                  "group-hover:scale-110",
-                  action.color
-                )}
-              >
-                <IconComponent className="h-6 w-6" />
+              
+              {/* Ripple effect on click */}
+              <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-white/10 rounded-2xl transform scale-0 group-active:scale-100 transition-transform duration-150 ease-out" />
               </div>
-
-              {/* Action label and description */}
-              <div className="relative z-10">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-1">
-                  {action.label}
-                </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {action.description}
-                </p>
-              </div>
-            </Button>
+            </button>
           );
         })}
       </div>
@@ -145,7 +147,6 @@ export function QuickActions() {
         isOpen={isNewJobModalOpen}
         onOpenChange={setIsNewJobModalOpen}
         onJobCreated={() => {
-          // Optionally refresh data or show success message
           console.log("Job created successfully!");
         }}
       />
@@ -153,9 +154,6 @@ export function QuickActions() {
   );
 }
 
-// Add shimmer animation to Tailwind (if not already present)
-// This would typically go in tailwind.config.js, but since we can't edit it,
-// we use CSS-in-JS approach with the existing animation utilities
 const shimmerKeyframes = `
   @keyframes shimmer {
     0% { transform: translateX(-100%) skewX(-12deg); }
