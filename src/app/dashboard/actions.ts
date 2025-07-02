@@ -111,3 +111,101 @@ export async function getDashboardStats() {
     throw error;
   }
 }
+
+export async function getTechnicianProductivity() {
+  try {
+    const organizationId = await getOrganizationId();
+    if (!organizationId) {
+      throw new Error("Organization not found");
+    }
+
+    // Fetch all jobs with related data
+    const jobs = await db.query.jobsTable.findMany({
+      where: eq(jobsTable.organization, organizationId),
+      with: {
+        assigned_to: true,
+        service: true,
+      },
+    });
+
+    // Calculate productivity metrics per technician
+    const technicianStats = new Map();
+    
+    // Get current month for filtering
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    jobs.forEach(job => {
+      if (!job.assigned_to) return;
+      
+      const technicianId = job.assigned_to.id;
+      const technicianName = `${job.assigned_to.firstName} ${job.assigned_to.lastName}`;
+      
+      // Initialize technician stats if not exists
+      if (!technicianStats.has(technicianId)) {
+        technicianStats.set(technicianId, {
+          id: technicianId,
+          name: technicianName,
+          role: job.assigned_to.role,
+          totalJobs: 0,
+          completedJobs: 0,
+          inProgressJobs: 0,
+          pendingJobs: 0,
+          totalRevenue: 0,
+          monthlyJobs: 0,
+          averageJobValue: 0,
+          completionRate: 0,
+        });
+      }
+
+      const stats = technicianStats.get(technicianId);
+      stats.totalJobs++;
+
+      // Count by status
+      switch (job.status?.toLowerCase()) {
+        case 'complete':
+        case 'completed':
+          stats.completedJobs++;
+          break;
+        case 'in progress':
+        case 'in-progress':
+          stats.inProgressJobs++;
+          break;
+        case 'pending':
+        case 'scheduled':
+          stats.pendingJobs++;
+          break;
+      }
+
+      // Calculate revenue
+      if (job.service?.price) {
+        stats.totalRevenue += Number(job.service.price) || 0;
+      }
+
+      // Count current month jobs
+      if (job.createdAt) {
+        const jobDate = new Date(job.createdAt);
+        if (jobDate.getMonth() === currentMonth && jobDate.getFullYear() === currentYear) {
+          stats.monthlyJobs++;
+        }
+      }
+    });
+
+    // Calculate derived metrics and convert to array
+    const productivityData = Array.from(technicianStats.values()).map(stats => {
+      stats.averageJobValue = stats.totalJobs > 0 ? stats.totalRevenue / stats.totalJobs : 0;
+      stats.completionRate = stats.totalJobs > 0 ? Math.round((stats.completedJobs / stats.totalJobs) * 100) : 0;
+      return stats;
+    });
+
+    // Sort by total revenue (highest performers first)
+    productivityData.sort((a, b) => b.totalRevenue - a.totalRevenue);
+
+    return productivityData;
+
+  } catch (error) {
+    console.error("Error in getTechnicianProductivity:", error);
+    throw error;
+  }
+}
