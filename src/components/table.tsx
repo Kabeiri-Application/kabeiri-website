@@ -34,7 +34,8 @@ import { DataTablePagination } from "./DataTablePagination";
 
 interface TableProps<TData> {
   data: TData[];
-  columns: ColumnDef<TData>[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<TData, any>[];
   clickable?: boolean;
 }
 

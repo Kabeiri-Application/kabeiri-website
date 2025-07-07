@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { NewJobModal } from "@/components/NewJobModal";
+import { NewCustomerModal } from "@/components/NewCustomerModal";
 import { cn } from "@/lib/utils";
 
 /**
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
 export function QuickActions() {
   const router = useRouter();
   const [isNewJobModalOpen, setIsNewJobModalOpen] = useState(false);
+  const [isNewCustomerModalOpen, setIsNewCustomerModalOpen] = useState(false);
 
   const actions = [
     {
@@ -36,7 +38,6 @@ export function QuickActions() {
       label: "Add Customer",
       description: "Register customer",
       icon: UserPlusIcon,
-      route: "/dashboard/customers/new",
       gradient: "from-emerald-500 to-emerald-600",
       hoverGradient: "hover:from-emerald-600 hover:to-emerald-700",
       ringColor: "focus:ring-emerald-500/50",
@@ -69,6 +70,8 @@ export function QuickActions() {
   const handleActionClick = (action: (typeof actions)[0]) => {
     if (action.id === "new-job") {
       setIsNewJobModalOpen(true);
+    } else if (action.id === "add-customer") {
+      setIsNewCustomerModalOpen(true);
     } else if (action.route) {
       router.push(action.route);
     }
@@ -145,6 +148,15 @@ export function QuickActions() {
         onOpenChange={setIsNewJobModalOpen}
         onJobCreated={() => {
           console.log("Job created successfully!");
+        }}
+      />
+
+      {/* New Customer Modal */}
+      <NewCustomerModal
+        isOpen={isNewCustomerModalOpen}
+        onOpenChange={setIsNewCustomerModalOpen}
+        onCustomerCreated={() => {
+          console.log("Customer created successfully!");
         }}
       />
     </div>
