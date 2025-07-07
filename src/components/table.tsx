@@ -34,7 +34,7 @@ import { DataTablePagination } from "./DataTablePagination";
 
 interface TableProps<TData> {
   data: TData[];
-  columns: ColumnDef<TData, any>[];
+  columns: ColumnDef<TData>[];
   clickable?: boolean;
 }
 
