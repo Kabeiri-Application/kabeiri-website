@@ -10,8 +10,8 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 
-import { NewJobModal } from "@/components/NewJobModal";
 import { NewCustomerModal } from "@/components/NewCustomerModal";
+import { NewJobModal } from "@/components/NewJobModal";
 import { cn } from "@/lib/utils";
 
 /**

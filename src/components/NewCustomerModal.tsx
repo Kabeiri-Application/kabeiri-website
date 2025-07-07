@@ -5,9 +5,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  createCustomer,
-} from "@/app/dashboard/customers/actions";
+import { createCustomer } from "@/app/dashboard/customers/actions";
 import { customerFormSchema } from "@/app/dashboard/customers/schema";
 import { getOrganizationId } from "@/app/dashboard/jobs/actions";
 import { Button } from "@/components/ui/button";
@@ -43,21 +41,20 @@ export function NewCustomerModal({
   const onSubmit: SubmitHandler<customerFormSchema> = async (data) => {
     try {
       setIsSubmitting(true);
-      
+
       const organizationId = await getOrganizationId();
       if (!organizationId) {
         throw new Error("Organization ID not found");
       }
 
       await createCustomer(data, organizationId);
-      
+
       // Reset form and close modal
       reset();
       onOpenChange(false);
-      
+
       // Notify parent component
       onCustomerCreated?.();
-      
     } catch (error) {
       console.error("Error creating customer:", error);
     } finally {
@@ -89,7 +86,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Last Name
@@ -105,7 +102,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Phone Number
@@ -122,7 +119,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Email
@@ -139,7 +136,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Street Address
@@ -155,7 +152,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               City
@@ -171,7 +168,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               State
@@ -187,7 +184,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Zip Code
@@ -203,7 +200,7 @@ export function NewCustomerModal({
               </span>
             )}
           </div>
-          
+
           <Button
             type="submit"
             disabled={isSubmitting}
