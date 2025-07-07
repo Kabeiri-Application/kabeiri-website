@@ -42,7 +42,7 @@ export const profilesTable = pgTable("profiles", {
 });
 
 export const customersTable = pgTable("customers", {
-  id: text().primaryKey(),
+  id: uuid().primaryKey().defaultRandom(),
   updatedAt: timestamp({ withTimezone: true })
     .notNull()
     .$onUpdate(() => new Date()),
