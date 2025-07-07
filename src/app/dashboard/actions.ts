@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
@@ -46,16 +47,21 @@ export async function getDashboardStats() {
 
     // Calculate metrics
     const totalJobs = jobs.length;
-    const inProgressJobs = jobs.filter(job => job.status === "in progress").length;
-    
+    const inProgressJobs = jobs.filter(
+      (job) => job.status === "in progress",
+    ).length;
+
     // Calculate current month revenue
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
-    
-    const currentMonthJobs = jobs.filter(job => {
+
+    const currentMonthJobs = jobs.filter((job) => {
       if (!job.createdAt) return false;
       const jobDate = new Date(job.createdAt);
-      return jobDate.getMonth() === currentMonth && jobDate.getFullYear() === currentYear;
+      return (
+        jobDate.getMonth() === currentMonth &&
+        jobDate.getFullYear() === currentYear
+      );
     });
 
     const monthlyRevenue = currentMonthJobs.reduce((total, job) => {
@@ -66,10 +72,8 @@ export async function getDashboardStats() {
     }, 0);
 
     // Calculate average completion time for completed jobs
-    const completedJobs = jobs.filter(job => 
-      job.status === "complete" && 
-      job.createdAt && 
-      job.updatedAt
+    const completedJobs = jobs.filter(
+      (job) => job.status === "complete" && job.createdAt && job.updatedAt,
     );
 
     let averageCompletionTime = 0;
@@ -77,18 +81,23 @@ export async function getDashboardStats() {
       const totalCompletionTime = completedJobs.reduce((total, job) => {
         const createdAt = new Date(job.createdAt!);
         const completedAt = new Date(job.updatedAt!);
-        const diffInHours = (completedAt.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+        const diffInHours =
+          (completedAt.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
         return total + diffInHours;
       }, 0);
-      
+
       averageCompletionTime = totalCompletionTime / completedJobs.length;
     }
 
     // Get recent jobs (last 5)
     const recentJobs = jobs
-      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt || 0).getTime() -
+          new Date(a.createdAt || 0).getTime(),
+      )
       .slice(0, 5)
-      .map(job => ({
+      .map((job) => ({
         id: job.id,
         title: job.title,
         customer: job.customer,
@@ -105,7 +114,6 @@ export async function getDashboardStats() {
       averageCompletionTime,
       recentJobs,
     };
-
   } catch (error) {
     console.error("Error in getDashboardStats:", error);
     throw error;
@@ -130,18 +138,18 @@ export async function getTechnicianProductivity() {
 
     // Calculate productivity metrics per technician
     const technicianStats = new Map();
-    
+
     // Get current month for filtering
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
-    jobs.forEach(job => {
+    jobs.forEach((job) => {
       if (!job.assigned_to) return;
-      
+
       const technicianId = job.assigned_to.id;
       const technicianName = `${job.assigned_to.firstName} ${job.assigned_to.lastName}`;
-      
+
       // Initialize technician stats if not exists
       if (!technicianStats.has(technicianId)) {
         technicianStats.set(technicianId, {
@@ -164,16 +172,16 @@ export async function getTechnicianProductivity() {
 
       // Count by status
       switch (job.status?.toLowerCase()) {
-        case 'complete':
-        case 'completed':
+        case "complete":
+        case "completed":
           stats.completedJobs++;
           break;
-        case 'in progress':
-        case 'in-progress':
+        case "in progress":
+        case "in-progress":
           stats.inProgressJobs++;
           break;
-        case 'pending':
-        case 'scheduled':
+        case "pending":
+        case "scheduled":
           stats.pendingJobs++;
           break;
       }
@@ -186,24 +194,32 @@ export async function getTechnicianProductivity() {
       // Count current month jobs
       if (job.createdAt) {
         const jobDate = new Date(job.createdAt);
-        if (jobDate.getMonth() === currentMonth && jobDate.getFullYear() === currentYear) {
+        if (
+          jobDate.getMonth() === currentMonth &&
+          jobDate.getFullYear() === currentYear
+        ) {
           stats.monthlyJobs++;
         }
       }
     });
 
     // Calculate derived metrics and convert to array
-    const productivityData = Array.from(technicianStats.values()).map(stats => {
-      stats.averageJobValue = stats.totalJobs > 0 ? stats.totalRevenue / stats.totalJobs : 0;
-      stats.completionRate = stats.totalJobs > 0 ? Math.round((stats.completedJobs / stats.totalJobs) * 100) : 0;
-      return stats;
-    });
+    const productivityData = Array.from(technicianStats.values()).map(
+      (stats) => {
+        stats.averageJobValue =
+          stats.totalJobs > 0 ? stats.totalRevenue / stats.totalJobs : 0;
+        stats.completionRate =
+          stats.totalJobs > 0
+            ? Math.round((stats.completedJobs / stats.totalJobs) * 100)
+            : 0;
+        return stats;
+      },
+    );
 
     // Sort by total revenue (highest performers first)
     productivityData.sort((a, b) => b.totalRevenue - a.totalRevenue);
 
     return productivityData;
-
   } catch (error) {
     console.error("Error in getTechnicianProductivity:", error);
     throw error;

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import {
-  PlusIcon,
-  UserPlusIcon,
   CalendarIcon,
   PackageIcon,
+  PlusIcon,
+  UserPlusIcon,
 } from "lucide-react";
 
 import { NewJobModal } from "@/components/NewJobModal";
@@ -65,7 +66,7 @@ export function QuickActions() {
     },
   ];
 
-  const handleActionClick = (action: typeof actions[0]) => {
+  const handleActionClick = (action: (typeof actions)[0]) => {
     if (action.id === "new-job") {
       setIsNewJobModalOpen(true);
     } else if (action.route) {
@@ -77,7 +78,7 @@ export function QuickActions() {
     <div className="w-full">
       {/* Clean Header */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
           Quick Actions
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -86,10 +87,10 @@ export function QuickActions() {
       </div>
 
       {/* Modern Button Grid */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row">
         {actions.map((action) => {
           const IconComponent = action.icon;
-          
+
           return (
             <button
               key={action.id}
@@ -97,10 +98,10 @@ export function QuickActions() {
               aria-label={action.ariaLabel}
               className={cn(
                 // Base styles - modern clean look
-                "group relative flex-1 p-6 rounded-2xl",
-                "bg-gradient-to-br text-white font-medium",
+                "group relative flex-1 rounded-2xl p-6",
+                "bg-gradient-to-br font-medium text-white",
                 "transform transition-all duration-300 ease-out",
-                "focus:outline-none focus:ring-4 focus:scale-[0.98]",
+                "focus:scale-[0.98] focus:ring-4 focus:outline-none",
                 // Individual gradients
                 action.gradient,
                 action.hoverGradient,
@@ -109,33 +110,29 @@ export function QuickActions() {
                 "hover:scale-[1.02] hover:shadow-xl hover:shadow-black/25",
                 "active:scale-[0.98]",
                 // Modern shadow
-                "shadow-lg shadow-black/10"
+                "shadow-lg shadow-black/10",
               )}
             >
               {/* Shiny overlay effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12 group-hover:animate-pulse" />
-              
+              <div className="absolute inset-0 -skew-x-12 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:animate-pulse group-hover:opacity-100" />
+
               {/* Content */}
-              <div className="relative z-10 flex flex-col items-center text-center space-y-3">
+              <div className="relative z-10 flex flex-col items-center space-y-3 text-center">
                 {/* Icon with subtle animation */}
-                <div className="p-3 rounded-full bg-white/20 backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                <div className="rounded-full bg-white/20 p-3 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30">
                   <IconComponent className="h-6 w-6" />
                 </div>
-                
+
                 {/* Text content */}
                 <div>
-                  <h3 className="font-semibold text-sm mb-1">
-                    {action.label}
-                  </h3>
-                  <p className="text-xs text-white/80">
-                    {action.description}
-                  </p>
+                  <h3 className="mb-1 text-sm font-semibold">{action.label}</h3>
+                  <p className="text-xs text-white/80">{action.description}</p>
                 </div>
               </div>
-              
+
               {/* Ripple effect on click */}
-              <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-white/10 rounded-2xl transform scale-0 group-active:scale-100 transition-transform duration-150 ease-out" />
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                <div className="absolute inset-0 scale-0 transform rounded-2xl bg-white/10 transition-transform duration-150 ease-out group-active:scale-100" />
               </div>
             </button>
           );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
@@ -8,9 +9,9 @@ import {
   createJob,
   getCustomers,
   getEmployees,
+  getOrganizationId,
   getServices,
   getVehicles,
-  getOrganizationId,
 } from "@/app/dashboard/jobs/actions";
 import {
   jobFormSchema,
@@ -36,7 +37,11 @@ interface NewJobModalProps {
  * Reusable modal component for creating new jobs
  * Can be used across different parts of the application
  */
-export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalProps) {
+export function NewJobModal({
+  isOpen,
+  onOpenChange,
+  onJobCreated,
+}: NewJobModalProps) {
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [organization, setOrganization] = useState("");
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -62,16 +67,16 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
           console.error("No organization found");
           return;
         }
-        
+
         setOrganization(orgId);
-        
+
         // Fetch other data with organizationId
         const [employeesData, servicesData, customersData] = await Promise.all([
           getEmployees(orgId),
           getServices(orgId),
           getCustomers(orgId),
         ]);
-        
+
         setEmployees(employeesData as Employee[]);
         setServices(servicesData as Service[]);
         setCustomers(customersData as Customer[]);
@@ -112,12 +117,12 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
         organization,
         status: JobStatus.PENDING,
       });
-      
+
       // Reset form and close modal
       reset();
       setSelectedCustomer("");
       onOpenChange(false);
-      
+
       // Notify parent component that job was created
       if (onJobCreated) {
         onJobCreated();
@@ -144,7 +149,7 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             Create a Job
           </DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Title Field */}
           <div>
@@ -154,10 +159,12 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             <input
               type="text"
               {...register("title")}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             />
             {errors.title && (
-              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.title.message}
+              </p>
             )}
           </div>
 
@@ -169,10 +176,12 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             <textarea
               {...register("description")}
               rows={3}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             />
             {errors.description && (
-              <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.description.message}
+              </p>
             )}
           </div>
 
@@ -185,7 +194,7 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
               {...register("customer", {
                 onChange: (e) => setSelectedCustomer(e.target.value),
               })}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             >
               <option value="">Select a Customer</option>
               {customers.map((customer) => (
@@ -195,7 +204,9 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
               ))}
             </select>
             {errors.customer && (
-              <p className="mt-1 text-sm text-red-600">{errors.customer.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.customer.message}
+              </p>
             )}
           </div>
 
@@ -207,7 +218,7 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             <select
               {...register("vehicle")}
               disabled={!selectedCustomer}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden disabled:bg-gray-100 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-700"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-700"
             >
               <option value="">Select a Vehicle</option>
               {vehicles.map((vehicle) => (
@@ -217,7 +228,9 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
               ))}
             </select>
             {errors.vehicle && (
-              <p className="mt-1 text-sm text-red-600">{errors.vehicle.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.vehicle.message}
+              </p>
             )}
           </div>
 
@@ -228,7 +241,7 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             </label>
             <select
               {...register("service")}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             >
               <option value="">Select a Service</option>
               {services.map((service) => (
@@ -238,7 +251,9 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
               ))}
             </select>
             {errors.service && (
-              <p className="mt-1 text-sm text-red-600">{errors.service.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.service.message}
+              </p>
             )}
           </div>
 
@@ -249,7 +264,7 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             </label>
             <select
               {...register("assigned_to")}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             >
               <option value="">Select an Employee</option>
               {employees.map((employee) => (
@@ -259,7 +274,9 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
               ))}
             </select>
             {errors.assigned_to && (
-              <p className="mt-1 text-sm text-red-600">{errors.assigned_to.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.assigned_to.message}
+              </p>
             )}
           </div>
 
@@ -271,10 +288,12 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             <input
               type="date"
               {...register("due_date")}
-              className="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:bg-gray-800 dark:text-white"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-xs focus:border-green-700 focus:ring-2 focus:ring-green-700 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             />
             {errors.due_date && (
-              <p className="mt-1 text-sm text-red-600">{errors.due_date.message}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.due_date.message}
+              </p>
             )}
           </div>
 
@@ -283,13 +302,13 @@ export function NewJobModal({ isOpen, onOpenChange, onJobCreated }: NewJobModalP
             <button
               type="button"
               onClick={() => handleOpenChange(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
             >
               Create Job
             </button>
