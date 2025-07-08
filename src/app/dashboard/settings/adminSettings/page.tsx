@@ -1,6 +1,8 @@
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { Card, CardTitle } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 
 import SettingPage from "../components/settingPage";
@@ -14,7 +16,11 @@ export default async function Page() {
 
   return (
     <SettingPage title="Admin Settings">
-      <p>Admin settings will be implemented here.</p>
+      <Link href="/dashboard/settings/adminSettings/addUser" passHref>
+        <Card className="hover:bg-accent mt-2 w-lg cursor-pointer rounded-lg p-6 shadow transition">
+          <CardTitle>Add User</CardTitle>
+        </Card>
+      </Link>
     </SettingPage>
   );
 }
