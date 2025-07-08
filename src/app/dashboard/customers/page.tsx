@@ -6,10 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  createCustomer,
-  getCustomers,
-} from "@/app/dashboard/customers/actions";
+import { addCustomer, getCustomers } from "@/app/dashboard/customers/actions";
 import { CustomerCard } from "@/app/dashboard/customers/components/customer-card";
 import { customerFormSchema } from "@/app/dashboard/customers/schema";
 import { getOrganizationId } from "@/app/dashboard/jobs/actions";
@@ -66,7 +63,7 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<customerFormSchema> = (data) => {
     console.log("Form data:", data);
-    createCustomer(data, organization);
+    addCustomer(data, organization);
     setModalStatus(false);
     fetchData();
   };

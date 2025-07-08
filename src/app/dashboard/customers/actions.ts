@@ -61,7 +61,7 @@ export async function editCustomer(formData: NewCustomer) {
   }
 }
 
-export async function createCustomer(
+export async function addCustomer(
   formData: NewCustomer,
   organizationId: string,
 ) {
