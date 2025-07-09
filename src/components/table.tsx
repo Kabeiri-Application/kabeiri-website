@@ -37,9 +37,15 @@ interface TableProps<TData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   clickable?: boolean;
+  hideFilters?: boolean;
 }
 
-export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
+export function Table<TData>({
+  data,
+  columns,
+  clickable,
+  hideFilters = false,
+}: TableProps<TData>) {
   const {
     sorting,
     setSorting,
@@ -79,86 +85,107 @@ export function Table<TData>({ data, columns, clickable }: TableProps<TData>) {
 
   return (
     <div className="rounded-2xl p-6 shadow-xs">
-      <div className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <Input
-          placeholder="Search jobs..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="w-full sm:max-w-sm"
-        />
-        <div className="flex items-center justify-end gap-2">
-          <Button variant="outline" onClick={() => resetState()} size="sm">
-            Clear Filters
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+      {!hideFilters && (
+        <div className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <Input
+            placeholder="Search jobs..."
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="w-full sm:max-w-sm"
+          />
+          <div className="flex items-center justify-end gap-2">
+            <Button variant="outline" onClick={() => resetState()} size="sm">
+              Clear Filters
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  .map((column: any) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
       <div className="overflow-x-auto">
         <DataTable className="w-full">
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="border-b pb-4 text-left text-sm font-medium"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
+            {table.getHeaderGroups().map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (headerGroup: any) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (header: any) => (
+                      <TableHead
+                        key={header.id}
+                        className="border-b pb-4 text-left text-sm font-medium"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    ),
+                  )}
+                </TableRow>
+              ),
+            )}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                onClick={() =>
-                  clickable
-                    ? router.push(
-                        `/dashboard/jobs/${(row.original as { id: string | number }).id}`,
-                      )
-                    : null
-                }
-                className={clickable ? "hover:cursor-pointer" : ""}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="border-b py-4 text-sm">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {table.getRowModel().rows.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (row: any) => (
+                <TableRow
+                  key={row.id}
+                  onClick={() =>
+                    clickable
+                      ? router.push(
+                          `/dashboard/jobs/${(row.original as { id: string | number }).id}`,
+                        )
+                      : null
+                  }
+                  className={clickable ? "hover:cursor-pointer" : ""}
+                >
+                  {row.getVisibleCells().map(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (cell: any) => (
+                      <TableCell
+                        key={cell.id}
+                        className="border-b py-4 text-sm"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ),
+                  )}
+                </TableRow>
+              ),
+            )}
           </TableBody>
         </DataTable>
       </div>

@@ -3,13 +3,17 @@
 import React from "react";
 
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import { DialogTrigger } from "@/components/ui/dialog";
 
-import { JobFormDialog, JobTable } from "./_components";
+import { JobFilters, JobFormDialog, JobTable } from "./_components";
+import { useJobFilters } from "./_hooks/use-job-filters";
 import { useJobForm } from "./_hooks/use-job-form";
 import { useJobsData } from "./_hooks/use-jobs-data";
 
 export default function JobsPage() {
   const { data, isLoading, error, refetch } = useJobsData();
+  const { filters, updateFilter, clearFilters, hasActiveFilters } =
+    useJobFilters();
   const {
     modalStatus,
     vehicles,
@@ -52,20 +56,29 @@ export default function JobsPage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Jobs
         </h1>
-        <InteractiveHoverButton onClick={openModal}>
-          New Job
-        </InteractiveHoverButton>
+        <DialogTrigger asChild>
+          <InteractiveHoverButton onClick={openModal}>
+            New Job
+          </InteractiveHoverButton>
+        </DialogTrigger>
       </div>
 
-      <JobTable jobs={data?.jobs || []} />
+      <JobFilters
+        filters={filters}
+        onFilterChange={updateFilter}
+        onClearFilters={clearFilters}
+        hasActiveFilters={hasActiveFilters()}
+      />
+
+      <JobTable jobs={data.jobs} />
 
       <JobFormDialog
         isOpen={modalStatus}
         onClose={closeModal}
-        customers={data?.customers || []}
-        employees={data?.employees || []}
-        services={data?.services || []}
-        vehicles={vehicles || []}
+        customers={data.customers}
+        employees={data.employees}
+        services={data.services}
+        vehicles={vehicles}
         selectedCustomer={selectedCustomer}
         watchedCustomer={watchedCustomer}
         onSubmit={(e) => {

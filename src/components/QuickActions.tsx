@@ -10,6 +10,8 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 
+import { RainbowButton } from "@/components/magicui/rainbow-button";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { NewCustomerModal } from "@/components/NewCustomerModal";
 import { NewJobModal } from "@/components/NewJobModal";
 import { cn } from "@/lib/utils";
@@ -89,9 +91,43 @@ export function QuickActions() {
         </p>
       </div>
 
+      {/* Featured Premium Buttons */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+        <div className="flex-1">
+          <ShimmerButton
+            onClick={() => handleActionClick(actions[0])} // New Job action
+            className="w-full"
+            background="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            shimmerColor="#ffffff"
+            borderRadius="16px"
+          >
+            <div className="flex items-center gap-3 px-4 py-2">
+              <PlusIcon className="h-5 w-5" />
+              <div className="text-left">
+                <div className="font-semibold">Create New Job</div>
+                <div className="text-xs opacity-90">Premium workflow</div>
+              </div>
+            </div>
+          </ShimmerButton>
+        </div>
+        <div className="flex-1">
+          <RainbowButton
+            onClick={() => router.push("/dashboard/analytics")}
+            className="flex h-full w-full items-center justify-center gap-3 px-4 py-3"
+            size="lg"
+          >
+            <CalendarIcon className="h-5 w-5" />
+            <div className="text-left">
+              <div className="font-semibold">View Analytics</div>
+              <div className="text-xs opacity-90">Business insights</div>
+            </div>
+          </RainbowButton>
+        </div>
+      </div>
+
       {/* Modern Button Grid */}
       <div className="flex flex-col gap-4 sm:flex-row">
-        {actions.map((action) => {
+        {actions.slice(1).map((action) => {
           const IconComponent = action.icon;
 
           return (
