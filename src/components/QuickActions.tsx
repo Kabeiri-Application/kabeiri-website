@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
+  BarChart3Icon,
   CalendarIcon,
   PackageIcon,
   PlusIcon,
@@ -101,7 +102,7 @@ export function QuickActions() {
             shimmerColor="#ffffff"
             borderRadius="16px"
           >
-            <div className="flex items-center gap-3 px-4 py-2">
+            <div className="flex items-center gap-3 px-4 py-3">
               <PlusIcon className="h-5 w-5" />
               <div className="text-left">
                 <div className="font-semibold">Create New Job</div>
@@ -113,10 +114,9 @@ export function QuickActions() {
         <div className="flex-1">
           <RainbowButton
             onClick={() => router.push("/dashboard/analytics")}
-            className="flex h-full w-full items-center justify-center gap-3 px-4 py-3"
-            size="lg"
+            className="flex h-full w-full items-center gap-3 px-4 py-3"
           >
-            <CalendarIcon className="h-5 w-5" />
+            <BarChart3Icon className="h-5 w-5" />
             <div className="text-left">
               <div className="font-semibold">View Analytics</div>
               <div className="text-xs opacity-90">Business insights</div>
