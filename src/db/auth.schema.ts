@@ -1,4 +1,10 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgTable,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -73,6 +79,12 @@ export const organization = pgTable("organization", {
   logo: text("logo"),
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),
+  streetAddress: varchar().notNull(),
+  city: text().notNull(),
+  state: text().notNull(),
+  zipCode: text().notNull(),
+  phone: text().notNull(),
+  website: text(),
 });
 
 export const member = pgTable("member", {
