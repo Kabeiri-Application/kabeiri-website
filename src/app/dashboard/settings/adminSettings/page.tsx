@@ -16,9 +16,9 @@ export default async function Page() {
 
   return (
     <SettingPage title="Admin Settings">
-      <Link href="/dashboard/settings/adminSettings/addUser" passHref>
+      <Link href="/dashboard/settings/adminSettings/manageUsers" passHref>
         <Card className="hover:bg-accent mt-2 w-lg cursor-pointer rounded-lg p-6 shadow transition">
-          <CardTitle>Add User</CardTitle>
+          <CardTitle>Manage Users</CardTitle>
         </Card>
       </Link>
     </SettingPage>
