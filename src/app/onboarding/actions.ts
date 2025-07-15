@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 import { eq } from "drizzle-orm";
 
@@ -11,6 +12,7 @@ import type {
 } from "@/app/onboarding/schema";
 import { db } from "@/db";
 import { profilesTable } from "@/db/app.schema";
+import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 
@@ -97,20 +99,16 @@ export async function createOrganization(
 
     console.log("Creating organization with data:", data);
 
-    // Create organization using better-auth with business fields
+    // Generate slug from shop name
+    const slug = data.shopName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    // Create organization using better-auth with ONLY allowed fields
     const orgResponse = await auth.api.createOrganization({
       headers: await headers(),
       body: {
         name: data.shopName,
-        // Map business fields to the new organization schema
-        businessName: data.shopName,
-        businessPhotoUrl: data.businessPhotoUrl || null,
-        streetAddress: data.streetAddress,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode,
-        phone: data.phone,
-        website: data.website || null,
+        slug: slug,
+        logo: data.businessPhotoUrl || undefined,
       },
     });
 
@@ -125,6 +123,23 @@ export async function createOrganization(
     }
 
     console.log("Organization ID:", orgId);
+
+    // Update organization with business fields using direct DB query
+    await db
+      .update(organization)
+      .set({
+        businessName: data.shopName,
+        businessPhotoUrl: data.businessPhotoUrl || null,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        phone: data.phone,
+        website: data.website || null,
+      })
+      .where(eq(organization.id, orgId));
+
+    console.log("Organization updated with business fields");
 
     // Update the user's profile with the organization ID and change role to owner
     await db
