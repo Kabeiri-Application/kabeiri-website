@@ -32,7 +32,7 @@ export const addressSchema = z.object({
 
 export const shopSchema = z.object({
   shopName: z.string().min(1, "Shop name is required"),
-  address: z.string().min(1, "Address is required"),
+  streetAddress: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   zipCode: z.string().min(1, "Zip code is required"),

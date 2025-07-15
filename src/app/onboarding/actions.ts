@@ -10,8 +10,9 @@ import type {
   ShopSchema,
 } from "@/app/onboarding/schema";
 import { db } from "@/db";
-import { organizationsTable, profilesTable } from "@/db/app.schema";
+import { profilesTable } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
+import { authClient } from "@/lib/auth-client";
 
 type ActionResponse<T = undefined> = {
   success: boolean;
@@ -86,20 +87,23 @@ export async function createOrganization(
   userId: string,
   formData: ShopSchema,
 ): Promise<ActionResponse<{ organizationId: string }>> {
+  console.log("Creating organization with data:", formData);
   try {
-    // Create the organization
-    const [org] = await db
-      .insert(organizationsTable)
-      .values({
-        businessName: formData.shopName,
-        streetAddress: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zipCode: formData.zipCode,
-        phone: "", // TODO: Add phone to shop schema
-        website: formData.website || "",
-      })
-      .returning({ id: organizationsTable.id });
+    const orgResponse = await authClient.organization.create({
+      userId: userId,
+      name: formData.shopName,
+      slug: formData.shopName.toLowerCase().replace(/\s+/g, "-"),
+
+      // logo: formData.logoUrl || "",
+      // phoneNumber: formData.phoneNumber,
+      // streetAddress: formData.streetAddress,
+      // city: formData.city,
+      // state: formData.state,
+      // zipCode: formData.zipCode,
+      // website: formData.website || "",
+    });
+    console.log("Organization created:", orgResponse);
+    const org = orgResponse?.data;
 
     if (!org?.id) {
       throw new Error("Failed to create organization");

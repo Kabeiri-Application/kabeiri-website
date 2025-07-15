@@ -112,3 +112,6 @@ export const invitation = pgTable("invitation", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
+
+export type OrganizationType = typeof organization.$inferSelect;
+export type NewOrganizationType = typeof organization.$inferInsert;
