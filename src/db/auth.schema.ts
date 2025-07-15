@@ -73,6 +73,15 @@ export const organization = pgTable("organization", {
   logo: text("logo"),
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),
+  // Business details fields
+  businessName: text("business_name"),
+  businessPhotoUrl: text("business_photo_url"),
+  streetAddress: text("street_address"),
+  city: text("city"),
+  state: text("state"),
+  zipCode: text("zip_code"),
+  phone: text("phone"),
+  website: text("website"),
 });
 
 export const member = pgTable("member", {

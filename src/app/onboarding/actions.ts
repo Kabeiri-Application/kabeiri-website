@@ -84,54 +84,64 @@ export async function createUserProfile(
 }
 
 export async function createOrganization(
-  userId: string,
-  formData: ShopSchema,
+  data: ShopSchema,
 ): Promise<ActionResponse<{ organizationId: string }>> {
-  console.log("Creating organization with data:", formData);
   try {
-    const orgResponse = await authClient.organization.create({
-      userId: userId,
-      name: formData.shopName,
-      slug: formData.shopName.toLowerCase().replace(/\s+/g, "-"),
-
-      // logo: formData.logoUrl || "",
-      // phoneNumber: formData.phoneNumber,
-      // streetAddress: formData.streetAddress,
-      // city: formData.city,
-      // state: formData.state,
-      // zipCode: formData.zipCode,
-      // website: formData.website || "",
+    const session = await auth.api.getSession({
+      headers: await headers(),
     });
-    console.log("Organization created:", orgResponse);
-    const org = orgResponse?.data;
 
-    if (!org?.id) {
-      throw new Error("Failed to create organization");
+    if (!session?.user) {
+      throw new Error("User not authenticated");
     }
+
+    console.log("Creating organization with data:", data);
+
+    // Create organization using better-auth with business fields
+    const orgResponse = await auth.api.createOrganization({
+      headers: await headers(),
+      body: {
+        name: data.shopName,
+        // Map business fields to the new organization schema
+        businessName: data.shopName,
+        businessPhotoUrl: data.businessPhotoUrl || null,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        phone: data.phone,
+        website: data.website || null,
+      },
+    });
+
+    console.log("Organization created:", orgResponse);
+
+    // Extract organization ID - handle different response structures
+    const orgId = orgResponse?.data?.id || orgResponse?.id;
+
+    if (!orgId) {
+      console.error("No organization ID returned:", orgResponse);
+      throw new Error("Failed to create organization - no ID returned");
+    }
+
+    console.log("Organization ID:", orgId);
 
     // Update the user's profile with the organization ID and change role to owner
     await db
       .update(profilesTable)
       .set({
-        organization: org.id,
+        organization: orgId, // Now this will be a text ID that matches better-auth
         role: "owner",
         updatedAt: new Date(),
       })
-      .where(eq(profilesTable.id, userId));
+      .where(eq(profilesTable.id, session.user.id));
 
-    revalidatePath("/onboarding");
-    return {
-      success: true,
-      data: { organizationId: org.id },
-    };
-  } catch (error: unknown) {
+    console.log("Profile updated successfully");
+
+    revalidatePath("/dashboard");
+    return { success: true, organizationId: orgId };
+  } catch (error) {
     console.error("Error creating organization:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to create organization",
-    };
+    throw error;
   }
 }

@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { user } from "@/db/auth.schema";
+import { organization, user } from "@/db/auth.schema";
 
 export const rolesEnum = pgEnum("role", ["admin", "owner", "user"]);
 export const jobStatusEnum = pgEnum("status", [
@@ -33,7 +33,7 @@ export const profilesTable = pgTable("profiles", {
   lastName: text().notNull(),
   avatarUrl: text(),
   role: rolesEnum().notNull(),
-  organization: uuid().references(() => organizationsTable.id),
+  organization: text().references(() => organization.id),
   phone: text().notNull(),
   streetAddress: varchar().notNull(),
   city: text().notNull(),
@@ -48,7 +48,7 @@ export const customersTable = pgTable("customers", {
     .$onUpdate(() => new Date()),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp({ withTimezone: true }),
-  organization: uuid().references(() => organizationsTable.id),
+  organization: text().references(() => organization.id),
   phoneNumber: text().notNull(),
   email: text(),
   streetAddress: varchar().notNull(),
@@ -57,23 +57,6 @@ export const customersTable = pgTable("customers", {
   zipCode: text().notNull(),
   firstName: text().notNull(),
   lastName: text().notNull(),
-});
-
-export const organizationsTable = pgTable("organizations", {
-  id: uuid().primaryKey().defaultRandom(),
-  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true })
-    .notNull()
-    .$onUpdate(() => new Date()),
-  deletedAt: timestamp({ withTimezone: true }),
-  businessName: text().notNull(),
-  businessPhotoUrl: text(),
-  streetAddress: varchar().notNull(),
-  city: text().notNull(),
-  state: text().notNull(),
-  zipCode: text().notNull(),
-  phone: text().notNull(),
-  website: text(),
 });
 
 export const carsTable = pgTable("cars", {
@@ -100,7 +83,7 @@ export const jobsTable = pgTable("jobs", {
   deletedAt: timestamp({ withTimezone: true }),
   customer: uuid().references(() => customersTable.id),
   vehicle: uuid().references(() => carsTable.id),
-  organization: uuid().references(() => organizationsTable.id),
+  organization: text().references(() => organization.id),
   title: text().notNull(),
   service: uuid().references(() => servicesTable.id),
   description: text().notNull(),
@@ -119,9 +102,9 @@ export const jobRelations = relations(jobsTable, ({ one }) => ({
     fields: [jobsTable.vehicle],
     references: [carsTable.id],
   }),
-  organization: one(organizationsTable, {
+  organization: one(organization, {
     fields: [jobsTable.organization],
-    references: [organizationsTable.id],
+    references: [organization.id],
   }),
   service: one(servicesTable, {
     fields: [jobsTable.service],
@@ -144,7 +127,7 @@ export const servicesTable = pgTable("services", {
     .notNull()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp({ withTimezone: true }),
-  organization: uuid().references(() => organizationsTable.id),
+  organization: text().references(() => organization.id),
   title: text().notNull(),
   description: text().notNull(),
   price: numeric().notNull(),
@@ -156,8 +139,8 @@ export type NewJob = typeof jobsTable.$inferInsert;
 export type Service = typeof servicesTable.$inferSelect;
 export type NewService = typeof servicesTable.$inferInsert;
 
-export type Organization = typeof organizationsTable.$inferSelect;
-export type NewOrganization = typeof organizationsTable.$inferInsert;
+export type Organization = typeof organization.$inferSelect;
+export type NewOrganization = typeof organization.$inferInsert;
 
 export type Car = typeof carsTable.$inferSelect;
 export type NewCar = typeof carsTable.$inferInsert;
