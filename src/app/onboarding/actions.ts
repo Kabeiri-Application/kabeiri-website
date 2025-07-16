@@ -14,7 +14,6 @@ import { db } from "@/db";
 import { profilesTable } from "@/db/app.schema";
 import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
-import { authClient } from "@/lib/auth-client";
 
 type ActionResponse<T = undefined> = {
   success: boolean;

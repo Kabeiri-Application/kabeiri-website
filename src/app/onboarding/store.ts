@@ -36,7 +36,7 @@ const initialState = {
   },
   shopInfo: {
     shopName: "",
-    address: "",
+    streetAddress: "",
     city: "",
     state: "",
     zipCode: "",
