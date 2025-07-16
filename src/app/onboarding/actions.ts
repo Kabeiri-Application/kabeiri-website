@@ -100,7 +100,10 @@ export async function createOrganization(
     console.log("Creating organization with data:", data);
 
     // Generate slug from shop name
-    const slug = data.shopName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const slug = data.shopName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
 
     // Create organization using better-auth with ONLY allowed fields
     const orgResponse = await auth.api.createOrganization({
@@ -115,7 +118,7 @@ export async function createOrganization(
     console.log("Organization created:", orgResponse);
 
     // Extract organization ID - handle different response structures
-    const orgId = orgResponse?.data?.id || orgResponse?.id;
+    const orgId = orgResponse?.id;
 
     if (!orgId) {
       console.error("No organization ID returned:", orgResponse);
@@ -154,7 +157,7 @@ export async function createOrganization(
     console.log("Profile updated successfully");
 
     revalidatePath("/dashboard");
-    return { success: true, organizationId: orgId };
+    return { success: true };
   } catch (error) {
     console.error("Error creating organization:", error);
     throw error;
