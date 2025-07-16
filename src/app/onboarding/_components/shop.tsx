@@ -88,13 +88,13 @@ export function ShopForm() {
             Address
           </label>
           <input
-            {...register("address")}
+            {...register("streetAddress")}
             id="address"
             className="border-border focus:ring-primary w-full rounded-lg border px-4 py-2 transition focus:border-transparent focus:ring-2"
           />
-          {errors.address && (
+          {errors.streetAddress && (
             <p className="text-destructive mt-1 text-sm">
-              {errors.address.message}
+              {errors.streetAddress.message}
             </p>
           )}
         </div>

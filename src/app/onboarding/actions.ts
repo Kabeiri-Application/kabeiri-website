@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 import { eq } from "drizzle-orm";
 
@@ -10,7 +11,8 @@ import type {
   ShopSchema,
 } from "@/app/onboarding/schema";
 import { db } from "@/db";
-import { organizationsTable, profilesTable } from "@/db/app.schema";
+import { profilesTable } from "@/db/app.schema";
+import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
 
 type ActionResponse<T = undefined> = {
@@ -83,51 +85,80 @@ export async function createUserProfile(
 }
 
 export async function createOrganization(
-  userId: string,
-  formData: ShopSchema,
+  data: ShopSchema,
 ): Promise<ActionResponse<{ organizationId: string }>> {
   try {
-    // Create the organization
-    const [org] = await db
-      .insert(organizationsTable)
-      .values({
-        businessName: formData.shopName,
-        streetAddress: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zipCode: formData.zipCode,
-        phone: "", // TODO: Add phone to shop schema
-        website: formData.website || "",
-      })
-      .returning({ id: organizationsTable.id });
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-    if (!org?.id) {
-      throw new Error("Failed to create organization");
+    if (!session?.user) {
+      throw new Error("User not authenticated");
     }
+
+    console.log("Creating organization with data:", data);
+
+    // Generate slug from shop name
+    const slug = data.shopName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    // Create organization using better-auth with ONLY allowed fields
+    const orgResponse = await auth.api.createOrganization({
+      headers: await headers(),
+      body: {
+        name: data.shopName,
+        slug: slug,
+        logo: data.businessPhotoUrl || undefined,
+      },
+    });
+
+    console.log("Organization created:", orgResponse);
+
+    // Extract organization ID - handle different response structures
+    const orgId = orgResponse?.id;
+
+    if (!orgId) {
+      console.error("No organization ID returned:", orgResponse);
+      throw new Error("Failed to create organization - no ID returned");
+    }
+
+    console.log("Organization ID:", orgId);
+
+    // Update organization with business fields using direct DB query
+    await db
+      .update(organization)
+      .set({
+        businessName: data.shopName,
+        businessPhotoUrl: data.businessPhotoUrl || null,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        phone: data.phone,
+        website: data.website || null,
+      })
+      .where(eq(organization.id, orgId));
+
+    console.log("Organization updated with business fields");
 
     // Update the user's profile with the organization ID and change role to owner
     await db
       .update(profilesTable)
       .set({
-        organization: org.id,
+        organization: orgId, // Now this will be a text ID that matches better-auth
         role: "owner",
         updatedAt: new Date(),
       })
-      .where(eq(profilesTable.id, userId));
+      .where(eq(profilesTable.id, session.user.id));
 
-    revalidatePath("/onboarding");
-    return {
-      success: true,
-      data: { organizationId: org.id },
-    };
-  } catch (error: unknown) {
+    console.log("Profile updated successfully");
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
     console.error("Error creating organization:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to create organization",
-    };
+    throw error;
   }
 }

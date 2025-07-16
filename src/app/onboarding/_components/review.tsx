@@ -55,10 +55,7 @@ export function ReviewForm() {
 
       // Step 3: Create organization if shop info exists
       if (shopInfo.shopName) {
-        const orgResult = await createOrganization(
-          accountResult.data.userId,
-          shopInfo,
-        );
+        const orgResult = await createOrganization(shopInfo);
 
         if (!orgResult.success) {
           throw new Error(orgResult.error || "Failed to create organization");
@@ -152,7 +149,7 @@ export function ReviewForm() {
             </div>
             <div className="col-span-2">
               <dt className="text-muted-foreground text-sm">Street Address</dt>
-              <dd>{shopInfo.address}</dd>
+              <dd>{shopInfo.streetAddress}</dd>
             </div>
             <div>
               <dt className="text-muted-foreground text-sm">City</dt>
