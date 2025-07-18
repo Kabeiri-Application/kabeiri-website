@@ -1,14 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import { Button } from "@/components/ui/button";
+import type { Job } from "@/db/app.schema";
 
 import { JobFormDialog, JobTable } from "./_components";
 import { useJobForm } from "./_hooks/use-job-form";
 import { useJobsData } from "./_hooks/use-jobs-data";
 
 export default function JobsPage() {
+  const searchParams = useSearchParams();
+  const schedule = searchParams.get("schedule");
+
   const { data, isLoading, error, refetch } = useJobsData();
   const {
     modalStatus,
@@ -23,6 +28,25 @@ export default function JobsPage() {
     closeModal,
     setSelectedCustomer,
   } = useJobForm(refetch);
+
+  // Filter jobs based on schedule query parameter
+  const filteredJobs = useMemo(() => {
+    if (!data?.jobs) return [];
+
+    if (schedule === "today") {
+      const today = new Date();
+      const todayString = today.toISOString().split("T")[0]; // Get YYYY-MM-DD format
+
+      return data.jobs.filter((job: Job) => {
+        if (!job.due_date) return false;
+        const jobDate = new Date(job.due_date);
+        const jobDateString = jobDate.toISOString().split("T")[0];
+        return jobDateString === todayString;
+      });
+    }
+
+    return data.jobs;
+  }, [data?.jobs, schedule]);
 
   if (isLoading) {
     return (
@@ -49,15 +73,20 @@ export default function JobsPage() {
   return (
     <main className="p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Jobs
-        </h1>
-        <InteractiveHoverButton onClick={openModal}>
-          New Job
-        </InteractiveHoverButton>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            {schedule === "today" ? "Today's Jobs" : "Jobs"}
+          </h1>
+          {schedule === "today" && (
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Showing jobs due today ({new Date().toLocaleDateString()})
+            </p>
+          )}
+        </div>
+        <Button onClick={openModal}>New Job</Button>
       </div>
 
-      <JobTable jobs={data?.jobs || []} />
+      <JobTable jobs={filteredJobs} />
 
       <JobFormDialog
         isOpen={modalStatus}

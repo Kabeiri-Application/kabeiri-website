@@ -5,8 +5,7 @@ import React, { useEffect } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import type { Customer, Employee } from "@/app/dashboard/jobs/schema";
-import { RippleButton } from "@/components/magicui/ripple-button";
-import { ShinyButton } from "@/components/magicui/shiny-button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -186,19 +185,17 @@ export function JobFormDialog({
           </div>
 
           <div className="my-3 flex gap-3">
-            <RippleButton
+            <Button
               type="button"
               onClick={onClose}
-              className="flex-1 border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              variant="outline"
+              className="flex-1"
             >
               Cancel
-            </RippleButton>
-            <ShinyButton
-              type="submit"
-              className="flex-1 border-none bg-gradient-to-r from-green-600 to-blue-600 text-white"
-            >
+            </Button>
+            <Button type="submit" className="flex-1">
               Create Job
-            </ShinyButton>
+            </Button>
           </div>
         </form>
       </DialogContent>

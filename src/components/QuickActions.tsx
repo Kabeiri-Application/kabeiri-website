@@ -11,11 +11,9 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 
-import { RainbowButton } from "@/components/magicui/rainbow-button";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { NewCustomerModal } from "@/components/NewCustomerModal";
 import { NewJobModal } from "@/components/NewJobModal";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 /**
  * Modern QuickActions component with clean, animated buttons
@@ -92,88 +90,67 @@ export function QuickActions() {
         </p>
       </div>
 
-      {/* Featured Premium Buttons */}
+      {/* Featured Action Buttons */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row">
         <div className="flex-1">
-          <ShimmerButton
+          <Button
             onClick={() => handleActionClick(actions[0])} // New Job action
-            className="w-full"
-            background="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-            shimmerColor="#ffffff"
-            borderRadius="16px"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground h-auto w-full p-4"
+            size="lg"
           >
-            <div className="flex items-center gap-3 px-4 py-3">
+            <div className="flex items-center gap-3">
               <PlusIcon className="h-5 w-5" />
               <div className="text-left">
                 <div className="font-semibold">Create New Job</div>
-                <div className="text-xs opacity-90">Premium workflow</div>
+                <div className="text-xs opacity-90">Start repair workflow</div>
               </div>
             </div>
-          </ShimmerButton>
+          </Button>
         </div>
         <div className="flex-1">
-          <RainbowButton
+          <Button
             onClick={() => router.push("/dashboard/analytics")}
-            className="flex h-full w-full items-center gap-3 px-4 py-3"
+            className="bg-secondary hover:bg-secondary/80 text-secondary-foreground h-auto w-full p-4"
+            size="lg"
+            variant="secondary"
           >
-            <BarChart3Icon className="h-5 w-5" />
-            <div className="text-left">
-              <div className="font-semibold">View Analytics</div>
-              <div className="text-xs opacity-90">Business insights</div>
+            <div className="flex items-center gap-3">
+              <BarChart3Icon className="h-5 w-5" />
+              <div className="text-left">
+                <div className="font-semibold">View Analytics</div>
+                <div className="text-xs opacity-90">Business insights</div>
+              </div>
             </div>
-          </RainbowButton>
+          </Button>
         </div>
       </div>
 
-      {/* Modern Button Grid */}
+      {/* Action Button Grid */}
       <div className="flex flex-col gap-4 sm:flex-row">
         {actions.slice(1).map((action) => {
           const IconComponent = action.icon;
 
           return (
-            <button
+            <Button
               key={action.id}
               onClick={() => handleActionClick(action)}
               aria-label={action.ariaLabel}
-              className={cn(
-                // Base styles - modern clean look
-                "group relative flex-1 rounded-2xl p-6",
-                "bg-gradient-to-br font-medium text-white",
-                "transform transition-all duration-300 ease-out",
-                "focus:scale-[0.98] focus:ring-4 focus:outline-none",
-                // Individual gradients
-                action.gradient,
-                action.hoverGradient,
-                action.ringColor,
-                // Hover effects
-                "hover:scale-[1.02] hover:shadow-xl hover:shadow-black/25",
-                "active:scale-[0.98]",
-                // Modern shadow
-                "shadow-lg shadow-black/10",
-              )}
+              variant="outline"
+              className="h-auto flex-1 flex-col gap-3 p-6 text-center"
             >
-              {/* Shiny overlay effect */}
-              <div className="absolute inset-0 -skew-x-12 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:animate-pulse group-hover:opacity-100" />
-
-              {/* Content */}
-              <div className="relative z-10 flex flex-col items-center space-y-3 text-center">
-                {/* Icon with subtle animation */}
-                <div className="rounded-full bg-white/20 p-3 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30">
-                  <IconComponent className="h-6 w-6" />
-                </div>
-
-                {/* Text content */}
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">{action.label}</h3>
-                  <p className="text-xs text-white/80">{action.description}</p>
-                </div>
+              {/* Icon */}
+              <div className="bg-muted rounded-full p-3">
+                <IconComponent className="h-6 w-6" />
               </div>
 
-              {/* Ripple effect on click */}
-              <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                <div className="absolute inset-0 scale-0 transform rounded-2xl bg-white/10 transition-transform duration-150 ease-out group-active:scale-100" />
+              {/* Text content */}
+              <div>
+                <h3 className="mb-1 text-sm font-semibold">{action.label}</h3>
+                <p className="text-muted-foreground text-xs">
+                  {action.description}
+                </p>
               </div>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -197,23 +174,4 @@ export function QuickActions() {
       />
     </div>
   );
-}
-
-const shimmerKeyframes = `
-  @keyframes shimmer {
-    0% { transform: translateX(-100%) skewX(-12deg); }
-    100% { transform: translateX(200%) skewX(-12deg); }
-  }
-`;
-
-// Inject shimmer animation if not present
-if (typeof document !== "undefined") {
-  const styleSheet = document.createElement("style");
-  styleSheet.textContent = `
-    .animate-shimmer {
-      animation: shimmer 1.5s ease-in-out;
-    }
-    ${shimmerKeyframes}
-  `;
-  document.head.appendChild(styleSheet);
 }
