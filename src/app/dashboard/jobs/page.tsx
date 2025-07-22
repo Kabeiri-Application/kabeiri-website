@@ -83,7 +83,7 @@ export default function JobsPage() {
             </p>
           )}
         </div>
-        <Button onClick={openModal}>New Job</Button>
+        <Button onClick={openModal}>+ New Job</Button>
       </div>
 
       <JobTable jobs={filteredJobs} />
