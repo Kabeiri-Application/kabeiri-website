@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { PlusIcon } from "lucide-react";
+import { ArrowLeftIcon, PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Profile } from "@/db/app.schema";
@@ -22,6 +22,13 @@ export default async function Page() {
   return (
     <main className="p-8">
       <div className="mx-auto max-w-7xl">
+        <Link
+          href="/dashboard/settings/adminSettings"
+          className="hover:text-primary mb-8 flex cursor-pointer items-center"
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back to Admin Settings
+        </Link>
         <div className="mb-8 flex items-center justify-between">
           <h1 className="mb-8 text-3xl font-bold">Manage Users</h1>
           <Link href="/dashboard/settings/adminSettings/addUser" passHref>
