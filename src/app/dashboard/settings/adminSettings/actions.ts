@@ -45,20 +45,3 @@ export async function getOrganizationUsers() {
   });
   return users;
 }
-
-// export async function getUsers() {
-//   const session = await auth.api.getSession({ headers: await headers() });
-//   if (!session?.user?.id) {
-//     console.error("Not authenticated");
-//     return [];
-//   }
-
-//   const users = await authClient.admin.listUsers();
-
-//   if (!users) {
-//     console.error("Failed to fetch users");
-//     return [];
-//   }
-
-//   return users;
-// }
