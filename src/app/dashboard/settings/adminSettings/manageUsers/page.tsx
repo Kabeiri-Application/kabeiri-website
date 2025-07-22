@@ -5,7 +5,10 @@ import { redirect } from "next/navigation";
 import { PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Profile } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
+
+import { getOrganizationUsers } from "../actions";
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -13,6 +16,8 @@ export default async function Page() {
   if (!session?.user?.role || session.user.role !== "admin") {
     redirect("/error");
   }
+
+  const users: Profile[] = await getOrganizationUsers();
 
   return (
     <main className="p-8">
@@ -28,10 +33,48 @@ export default async function Page() {
         </div>
 
         <p className="mb-4">Here you can manage all users in the system.</p>
-        {/* Add user management components here */}
-        <p className="text-gray-500">
-          User management functionality will be implemented here.
-        </p>
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  Role
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {users.map((user) => (
+                <Link
+                  key={user.id}
+                  href={`/dashboard/settings/adminSettings/manageUsers/${user.id}`}
+                  passHref
+                  legacyBehavior
+                >
+                  <tr
+                    className="cursor-pointer transition hover:bg-gray-100"
+                    tabIndex={0}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {user.firstName} {user.lastName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {user.username}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                      {user.role}
+                    </td>
+                  </tr>
+                </Link>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );
