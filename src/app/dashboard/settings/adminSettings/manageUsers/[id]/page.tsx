@@ -1,8 +1,10 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { eq } from "drizzle-orm";
+import { ArrowLeftIcon } from "lucide-react";
 
 import { db } from "@/db";
 import { Profile, profilesTable } from "@/db/app.schema";
@@ -55,6 +57,13 @@ export default async function UserPage({ params }: UserPageProps) {
   return (
     <main className="p-8">
       <div className="mx-auto max-w-2xl">
+        <Link
+          href="/dashboard/settings/adminSettings/manageUsers"
+          className="hover:text-primary mb-8 flex cursor-pointer items-center"
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back to Manage Users
+        </Link>
         <h1 className="mb-8 text-3xl font-bold">User Details</h1>
         <div className="mb-6 rounded-lg border bg-white p-6 shadow">
           <div className="mb-4">
