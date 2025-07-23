@@ -24,7 +24,8 @@ export function ReviewForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<SubmissionStatus>({});
-  const { personalInfo, addressInfo, shopInfo, reset } = useOnboardingStore();
+  const { personalInfo, addressInfo, shopInfo, subscriptionInfo, reset } =
+    useOnboardingStore();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -190,6 +191,16 @@ export function ReviewForm() {
           </dl>
         </div>
       )}
+
+      <div className="rounded-lg border p-6 shadow-xs">
+        <h2 className="mb-4 text-lg font-medium">Subscription</h2>
+        <dl className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <dt className="text-muted-foreground text-sm">Tier</dt>
+            <dd>{subscriptionInfo.tier}</dd>
+          </div>
+        </dl>
+      </div>
 
       {status.error && (
         <div className="bg-destructive/10 text-destructive rounded-lg p-4">
