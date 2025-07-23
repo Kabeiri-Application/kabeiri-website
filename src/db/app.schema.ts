@@ -150,3 +150,19 @@ export type NewProfile = typeof profilesTable.$inferInsert;
 
 export type Customer = typeof customersTable.$inferSelect;
 export type NewCustomer = typeof customersTable.$inferInsert;
+
+// Audit log table for tracking admin actions
+export const auditLogTable = pgTable("audit_log", {
+  id: uuid().primaryKey().defaultRandom(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  actorId: text().references(() => profilesTable.id).notNull(),
+  action: text().notNull(), // e.g., 'USER_UPDATE', 'ORG_UPDATE', 'USER_ROLE_CHANGE'
+  targetTable: text().notNull(), // e.g., 'profiles', 'organization'
+  targetId: text().notNull(),
+  before: text(), // JSON string of before state
+  after: text(), // JSON string of after state
+  organization: text().references(() => organization.id),
+});
+
+export type AuditLog = typeof auditLogTable.$inferSelect;
+export type NewAuditLog = typeof auditLogTable.$inferInsert;

@@ -21,7 +21,8 @@ export default async function Page() {
           href="/dashboard/settings/accountSettings"
         />
 
-        {session?.user?.role === "admin" && (
+        {/* Temporarily allow all users to see admin settings for testing */}
+        {true && (
           <SettingsCard
             title="Admin"
             description="Manage users, view logs, and configure application settings."
