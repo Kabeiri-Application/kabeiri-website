@@ -25,7 +25,7 @@ export default async function OrganizationPage() {
   // Check authorization
   try {
     await requirePermission("ORG_READ");
-  } catch (error) {
+  } catch {
     redirect("/dashboard?error=unauthorized");
   }
 
@@ -93,7 +93,7 @@ export default async function OrganizationPage() {
         <CardHeader>
           <CardTitle>Organization Information</CardTitle>
           <CardDescription>
-            Update your organization's basic information
+            Update your organization&apos;s basic information
           </CardDescription>
         </CardHeader>
         <CardContent>

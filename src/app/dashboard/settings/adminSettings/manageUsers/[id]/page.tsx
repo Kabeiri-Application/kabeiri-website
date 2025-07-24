@@ -48,21 +48,19 @@ export default async function UserDetailPage({ params }: UserPageProps) {
   }
 
   const canEditUser = can(authContext, "USER_UPDATE");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canChangeRole = can(
     {
       ...authContext,
       targetUserId: params.id,
-      targetUserRole: user.role as any,
+      targetUserRole: user.role as "user" | "admin" | "owner",
     },
     "USER_ROLE_CHANGE",
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canDeleteUser = can(
     {
       ...authContext,
       targetUserId: params.id,
-      targetUserRole: user.role as any,
+      targetUserRole: user.role as "user" | "admin" | "owner",
     },
     "USER_DELETE",
   );
