@@ -9,6 +9,7 @@ import type {
   AddressSchema,
   PersonalSchema,
   ShopSchema,
+  SubscriptionSchema,
 } from "@/app/onboarding/schema";
 import { db } from "@/db";
 import { profilesTable } from "@/db/app.schema";
@@ -44,7 +45,7 @@ export async function createUserAccount(formData: {
       success: true,
       data: { userId: authResponse.user.id },
     };
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Error creating account:", error);
     return {
       success: false,
@@ -85,7 +86,7 @@ export async function createUserProfile(
 }
 
 export async function createOrganization(
-  data: ShopSchema,
+  data: ShopSchema & SubscriptionSchema,
 ): Promise<ActionResponse<{ organizationId: string }>> {
   try {
     const session = await auth.api.getSession({
@@ -97,6 +98,7 @@ export async function createOrganization(
     }
 
     console.log("Creating organization with data:", data);
+    console.log("Subscription tier:", data.tier);
 
     // Generate slug from shop name
     const slug = data.shopName
@@ -155,7 +157,7 @@ export async function createOrganization(
 
     console.log("Profile updated successfully");
 
-    revalidatePath("/dashboard");
+    revalidatePath(`/dashboard?tier=${data.tier}`);
     return { success: true };
   } catch (error) {
     console.error("Error creating organization:", error);

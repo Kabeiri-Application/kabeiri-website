@@ -68,7 +68,7 @@ export function ReviewForm() {
       reset();
 
       // Success! Redirect to dashboard
-      router.push("/dashboard");
+      router.push(`/dashboard?tier=${subscriptionInfo.tier}`);
     } catch (error) {
       setStatus((prev) => ({
         ...prev,
