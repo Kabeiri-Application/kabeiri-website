@@ -1,20 +1,32 @@
-import { redirect, notFound } from "next/navigation";
-import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
-import { ArrowLeftIcon, UserIcon, ShieldIcon } from "lucide-react";
+import { ArrowLeftIcon, ShieldIcon, UserIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { requirePermission, can, getAuthContext } from "@/lib/authz";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { can, getAuthContext, requirePermission } from "@/lib/authz";
 
-import { getUserById, updateUser, changeUserRole } from "../../actions";
-import { updateUserFormSchema } from "../../schema";
 import { DeleteUserButton } from "../../_components/DeleteUserButton";
+import { changeUserRole, getUserById, updateUser } from "../../actions";
+import { updateUserFormSchema } from "../../schema";
 
 interface UserPageProps {
   params: { id: string };
@@ -37,13 +49,27 @@ export default async function UserDetailPage({ params }: UserPageProps) {
 
   const canEditUser = can(authContext, "USER_UPDATE");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const canChangeRole = can({ ...authContext, targetUserId: params.id, targetUserRole: user.role as any }, "USER_ROLE_CHANGE");
+  const canChangeRole = can(
+    {
+      ...authContext,
+      targetUserId: params.id,
+      targetUserRole: user.role as any,
+    },
+    "USER_ROLE_CHANGE",
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const canDeleteUser = can({ ...authContext, targetUserId: params.id, targetUserRole: user.role as any }, "USER_DELETE");
+  const canDeleteUser = can(
+    {
+      ...authContext,
+      targetUserId: params.id,
+      targetUserRole: user.role as any,
+    },
+    "USER_DELETE",
+  );
 
   async function handleUpdateUser(formData: FormData) {
     "use server";
-    
+
     const data = {
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
@@ -63,18 +89,22 @@ export default async function UserDetailPage({ params }: UserPageProps) {
 
     const response = await updateUser(params.id, result.data);
     if (response.success) {
-      revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${params.id}`);
+      revalidatePath(
+        `/dashboard/settings/adminSettings/manageUsers/${params.id}`,
+      );
     }
   }
 
   async function handleRoleChange(formData: FormData) {
     "use server";
-    
+
     const newRole = formData.get("role") as "user" | "admin" | "owner";
     const response = await changeUserRole(params.id, newRole);
-    
+
     if (response.success) {
-      revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${params.id}`);
+      revalidatePath(
+        `/dashboard/settings/adminSettings/manageUsers/${params.id}`,
+      );
     }
   }
 
@@ -90,7 +120,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
   };
 
   return (
-    <div className="container mx-auto p-8 max-w-4xl">
+    <div className="container mx-auto max-w-4xl p-8">
       <div className="mb-6">
         <Link
           href="/dashboard/settings/adminSettings/manageUsers"
@@ -104,7 +134,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
               <UserIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
             </div>
             <div>
@@ -117,9 +147,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge variant={getRoleBadgeVariant(user.role)}>
-              {user.role}
-            </Badge>
+            <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
             {canDeleteUser && user.id !== authContext.userId && (
               <DeleteUserButton userId={user.id} />
             )}
@@ -127,7 +155,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* User Information */}
         <Card>
           <CardHeader>
@@ -216,9 +244,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                   </div>
                 </div>
                 <div className="flex justify-end">
-                  <Button type="submit">
-                    Save Changes
-                  </Button>
+                  <Button type="submit">Save Changes</Button>
                 </div>
               </form>
             ) : (
@@ -290,9 +316,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                   </Select>
                 </div>
                 <div className="flex justify-end">
-                  <Button type="submit">
-                    Update Role
-                  </Button>
+                  <Button type="submit">Update Role</Button>
                 </div>
               </form>
             ) : (
@@ -305,9 +329,9 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                 </div>
               </div>
             )}
-            
-            <div className="mt-6 pt-6 border-t">
-              <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-2">
+
+            <div className="mt-6 border-t pt-6">
+              <h4 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Role Permissions
               </h4>
               <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">

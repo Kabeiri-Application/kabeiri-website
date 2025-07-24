@@ -56,8 +56,8 @@ export function DeleteUserButton({ userId }: DeleteUserButtonProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete User</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this user? This action cannot be undone.
-            The user will be permanently removed from your organization.
+            Are you sure you want to delete this user? This action cannot be
+            undone. The user will be permanently removed from your organization.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

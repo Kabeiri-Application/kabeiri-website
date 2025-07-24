@@ -1,13 +1,24 @@
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { requirePermission } from "@/lib/authz";
 
-import { getOrganization, updateOrganization, getOrganizationUsers, transferOwnership } from "../actions";
+import {
+  getOrganization,
+  getOrganizationUsers,
+  transferOwnership,
+  updateOrganization,
+} from "../actions";
 import { updateOrganizationFormSchema } from "../schema";
 
 export default async function OrganizationPage() {
@@ -20,11 +31,11 @@ export default async function OrganizationPage() {
 
   const organization = await getOrganization();
   const users = await getOrganizationUsers();
-  const owners = users.filter(user => user.role === "owner");
+  const owners = users.filter((user) => user.role === "owner");
 
   async function handleUpdateOrganization(formData: FormData) {
     "use server";
-    
+
     const data = {
       name: formData.get("name") as string,
       businessName: formData.get("businessName") as string,
@@ -50,10 +61,10 @@ export default async function OrganizationPage() {
 
   async function handleTransferOwnership(formData: FormData) {
     "use server";
-    
+
     const targetUserId = formData.get("targetUserId") as string;
     const response = await transferOwnership(targetUserId);
-    
+
     if (response.success) {
       revalidatePath("/dashboard/settings/adminSettings/organization");
     }
@@ -61,7 +72,7 @@ export default async function OrganizationPage() {
 
   if (!organization) {
     return (
-      <div className="text-center py-8">
+      <div className="py-8 text-center">
         <p className="text-red-600 dark:text-red-400">Organization not found</p>
       </div>
     );
@@ -87,7 +98,7 @@ export default async function OrganizationPage() {
         </CardHeader>
         <CardContent>
           <form action={handleUpdateOrganization} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor="name">Organization Name *</Label>
                 <Input
@@ -119,7 +130,7 @@ export default async function OrganizationPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
                 <Label htmlFor="city">City</Label>
                 <Input
@@ -149,7 +160,7 @@ export default async function OrganizationPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor="phone">Phone</Label>
                 <Input
@@ -174,9 +185,7 @@ export default async function OrganizationPage() {
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit">
-                Save Changes
-              </Button>
+              <Button type="submit">Save Changes</Button>
             </div>
           </form>
         </CardContent>
@@ -193,7 +202,8 @@ export default async function OrganizationPage() {
           {owners.length > 1 ? (
             <div className="rounded-md bg-amber-50 p-4 dark:bg-amber-900/20">
               <p className="text-amber-700 dark:text-amber-300">
-                Multiple owners detected. Please contact support for ownership management.
+                Multiple owners detected. Please contact support for ownership
+                management.
               </p>
             </div>
           ) : (
@@ -204,22 +214,24 @@ export default async function OrganizationPage() {
                   id="targetUserId"
                   name="targetUserId"
                   required
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                 >
                   <option value="">Choose a user...</option>
                   {users
-                    .filter(user => user.role !== "owner")
-                    .map(user => (
+                    .filter((user) => user.role !== "owner")
+                    .map((user) => (
                       <option key={user.id} value={user.id}>
-                        {user.firstName} {user.lastName} ({user.username}) - {user.role}
+                        {user.firstName} {user.lastName} ({user.username}) -{" "}
+                        {user.role}
                       </option>
                     ))}
                 </select>
               </div>
-              
+
               <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                <p className="text-red-700 dark:text-red-300 text-sm">
-                  <strong>Warning:</strong> This action cannot be undone. You will lose owner privileges and become an admin.
+                <p className="text-sm text-red-700 dark:text-red-300">
+                  <strong>Warning:</strong> This action cannot be undone. You
+                  will lose owner privileges and become an admin.
                 </p>
               </div>
 

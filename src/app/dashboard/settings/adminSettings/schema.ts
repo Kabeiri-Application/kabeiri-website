@@ -45,4 +45,6 @@ export const updateOrganizationFormSchema = z.object({
 
 export type addUserFormSchema = z.infer<typeof addUserFormSchema>;
 export type updateUserFormSchema = z.infer<typeof updateUserFormSchema>;
-export type updateOrganizationFormSchema = z.infer<typeof updateOrganizationFormSchema>;
+export type updateOrganizationFormSchema = z.infer<
+  typeof updateOrganizationFormSchema
+>;

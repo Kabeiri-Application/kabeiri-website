@@ -150,5 +150,3 @@ export type NewProfile = typeof profilesTable.$inferInsert;
 
 export type Customer = typeof customersTable.$inferSelect;
 export type NewCustomer = typeof customersTable.$inferInsert;
-
-

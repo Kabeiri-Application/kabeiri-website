@@ -9,59 +9,58 @@ import { db } from "@/db";
 import { profilesTable, type Profile } from "@/db/app.schema";
 import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
+import { isLastOwner, requirePermission, type Role } from "@/lib/authz";
 
 import {
-  isLastOwner,
-  requirePermission,
-  type Role,
-} from "@/lib/authz";
-
-import { addUserFormSchema, updateUserFormSchema, updateOrganizationFormSchema } from "./schema";
+  addUserFormSchema,
+  updateOrganizationFormSchema,
+  updateUserFormSchema,
+} from "./schema";
 
 // User Management Actions
 
 export async function getOrganizationUsers(): Promise<Profile[]> {
   const context = await requirePermission("USER_READ");
-  
+
   const users = await db.query.profilesTable.findMany({
     where: and(
       eq(profilesTable.organization, context.organizationId),
-      isNull(profilesTable.deletedAt)
+      isNull(profilesTable.deletedAt),
     ),
   });
-  
+
   return users;
 }
 
 export async function getUserById(userId: string): Promise<Profile | null> {
   const context = await requirePermission("USER_READ", userId);
-  
+
   const user = await db.query.profilesTable.findFirst({
     where: and(
       eq(profilesTable.id, userId),
       eq(profilesTable.organization, context.organizationId),
-      isNull(profilesTable.deletedAt)
+      isNull(profilesTable.deletedAt),
     ),
   });
-  
+
   return user || null;
 }
 
 export async function updateUser(
   userId: string,
-  data: z.infer<typeof updateUserFormSchema>
+  data: z.infer<typeof updateUserFormSchema>,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Context is used by requirePermission for authorization
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const context = await requirePermission("USER_UPDATE", userId);
-    
+
     // Verify user exists
     const currentUser = await getUserById(userId);
     if (!currentUser) {
       return { success: false, error: "User not found" };
     }
-    
+
     // Update user
     await db
       .update(profilesTable)
@@ -76,10 +75,10 @@ export async function updateUser(
         zipCode: data.zipCode,
       })
       .where(eq(profilesTable.id, userId));
-    
+
     revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${userId}`);
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error updating user:", error);
@@ -92,17 +91,17 @@ export async function updateUser(
 
 export async function changeUserRole(
   userId: string,
-  newRole: Role
+  newRole: Role,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const context = await requirePermission("USER_ROLE_CHANGE", userId);
-    
+
     // Get current user data
     const currentUser = await getUserById(userId);
     if (!currentUser) {
       return { success: false, error: "User not found" };
     }
-    
+
     // Prevent demoting the last owner
     if (currentUser.role === "owner" && newRole !== "owner") {
       const isLast = await isLastOwner(userId, context.organizationId);
@@ -113,16 +112,16 @@ export async function changeUserRole(
         };
       }
     }
-    
+
     // Update role
     await db
       .update(profilesTable)
       .set({ role: newRole })
       .where(eq(profilesTable.id, userId));
-    
+
     revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${userId}`);
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error changing user role:", error);
@@ -134,22 +133,22 @@ export async function changeUserRole(
 }
 
 export async function deleteUser(
-  userId: string
+  userId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const context = await requirePermission("USER_DELETE", userId);
-    
+
     // Prevent self-deletion
     if (userId === context.userId) {
       return { success: false, error: "Cannot delete your own account" };
     }
-    
+
     // Verify user exists
     const currentUser = await getUserById(userId);
     if (!currentUser) {
       return { success: false, error: "User not found" };
     }
-    
+
     // Prevent deleting the last owner
     if (currentUser.role === "owner") {
       const isLast = await isLastOwner(userId, context.organizationId);
@@ -160,15 +159,15 @@ export async function deleteUser(
         };
       }
     }
-    
+
     // Soft delete user
     await db
       .update(profilesTable)
       .set({ deletedAt: new Date() })
       .where(eq(profilesTable.id, userId));
-    
+
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -179,10 +178,12 @@ export async function deleteUser(
   }
 }
 
-export async function addUser(data: z.infer<typeof addUserFormSchema>): Promise<{ success: boolean; error?: string }> {
+export async function addUser(
+  data: z.infer<typeof addUserFormSchema>,
+): Promise<{ success: boolean; error?: string }> {
   try {
     const context = await requirePermission("USER_INVITE");
-    
+
     // Create user through auth system
     const newUserResult = await auth.api.signUpEmail({
       body: {
@@ -191,12 +192,12 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>): Promise<
         password: data.password,
       },
     });
-    
+
     // Check if user creation was successful
     if (!newUserResult?.user?.id) {
       return { success: false, error: "Failed to create user account" };
     }
-    
+
     // Create profile
     await db.insert(profilesTable).values({
       id: newUserResult.user.id,
@@ -211,9 +212,9 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>): Promise<
       state: data.state || "",
       zipCode: data.zipCode || "",
     });
-    
+
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error adding user:", error);
@@ -228,26 +229,26 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>): Promise<
 
 export async function getOrganization() {
   const context = await requirePermission("ORG_READ");
-  
+
   const org = await db.query.organization.findFirst({
     where: eq(organization.id, context.organizationId),
   });
-  
+
   return org;
 }
 
 export async function updateOrganization(
-  data: z.infer<typeof updateOrganizationFormSchema>
+  data: z.infer<typeof updateOrganizationFormSchema>,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const context = await requirePermission("ORG_UPDATE");
-    
+
     // Verify organization exists
     const currentOrg = await getOrganization();
     if (!currentOrg) {
       return { success: false, error: "Organization not found" };
     }
-    
+
     // Update organization
     await db
       .update(organization)
@@ -262,31 +263,34 @@ export async function updateOrganization(
         website: data.website,
       })
       .where(eq(organization.id, context.organizationId));
-    
+
     revalidatePath("/dashboard/settings/adminSettings/organization");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error updating organization:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to update organization",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to update organization",
     };
   }
 }
 
 export async function transferOwnership(
-  targetUserId: string
+  targetUserId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const context = await requirePermission("OWNER_TRANSFER", targetUserId);
-    
+
     // Get target user
     const targetUser = await getUserById(targetUserId);
     if (!targetUser) {
       return { success: false, error: "Target user not found" };
     }
-    
+
     // Update both users' roles
     await db.transaction(async (tx) => {
       // Demote current owner to admin
@@ -294,23 +298,24 @@ export async function transferOwnership(
         .update(profilesTable)
         .set({ role: "admin" })
         .where(eq(profilesTable.id, context.userId));
-      
+
       // Promote target user to owner
       await tx
         .update(profilesTable)
         .set({ role: "owner" })
         .where(eq(profilesTable.id, targetUserId));
     });
-    
+
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
     revalidatePath("/dashboard/settings/adminSettings/organization");
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error transferring ownership:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to transfer ownership",
+      error:
+        error instanceof Error ? error.message : "Failed to transfer ownership",
     };
   }
 }

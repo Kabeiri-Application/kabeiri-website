@@ -1,16 +1,22 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { PlusIcon, UserIcon, EditIcon } from "lucide-react";
+import { EditIcon, PlusIcon, UserIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { requirePermission } from "@/lib/authz";
 
-import { getOrganizationUsers } from "../actions";
-import { UserManagementDialog } from "../_components/UserManagementDialog";
 import { DeleteUserButton } from "../_components/DeleteUserButton";
+import { UserManagementDialog } from "../_components/UserManagementDialog";
+import { getOrganizationUsers } from "../actions";
 
 export default async function ManageUsersPage() {
   // Check authorization
@@ -61,7 +67,7 @@ export default async function ManageUsersPage() {
         </CardHeader>
         <CardContent>
           {users.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="py-8 text-center">
               <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
                 No users found
@@ -75,27 +81,30 @@ export default async function ManageUsersPage() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
                       Contact
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
+                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                   {users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <tr
+                      key={user.id}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
-                            <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
                               <UserIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                             </div>
                           </div>
@@ -122,7 +131,7 @@ export default async function ManageUsersPage() {
                           {user.role}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                         <div className="flex space-x-2">
                           <Link
                             href={`/dashboard/settings/adminSettings/manageUsers/${user.id}`}

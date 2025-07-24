@@ -1,9 +1,15 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { UsersIcon, BuildingIcon, SettingsIcon } from "lucide-react";
+import { BuildingIcon, SettingsIcon, UsersIcon } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { requirePermission } from "@/lib/authz";
 
 export default async function AdminSettingsPage() {
@@ -25,12 +31,12 @@ export default async function AdminSettingsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Link href="/dashboard/settings/adminSettings/manageUsers">
-          <Card className="cursor-pointer transition-all hover:shadow-lg hover:scale-105 border-blue-200 dark:border-blue-800">
+          <Card className="cursor-pointer border-blue-200 transition-all hover:scale-105 hover:shadow-lg dark:border-blue-800">
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900">
                   <UsersIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
@@ -45,17 +51,18 @@ export default async function AdminSettingsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Add, edit, remove users and manage their access levels within your organization.
+                Add, edit, remove users and manage their access levels within
+                your organization.
               </p>
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/dashboard/settings/adminSettings/organization">
-          <Card className="cursor-pointer transition-all hover:shadow-lg hover:scale-105 border-green-200 dark:border-green-800">
+          <Card className="cursor-pointer border-green-200 transition-all hover:scale-105 hover:shadow-lg dark:border-green-800">
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                <div className="rounded-lg bg-green-100 p-2 dark:bg-green-900">
                   <BuildingIcon className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
@@ -70,7 +77,8 @@ export default async function AdminSettingsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Update organization information, transfer ownership, and manage business settings.
+                Update organization information, transfer ownership, and manage
+                business settings.
               </p>
             </CardContent>
           </Card>
@@ -81,7 +89,7 @@ export default async function AdminSettingsPage() {
         <Card className="border-amber-200 dark:border-amber-800">
           <CardHeader>
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-amber-100 dark:bg-amber-900 rounded-lg">
+              <div className="rounded-lg bg-amber-100 p-2 dark:bg-amber-900">
                 <SettingsIcon className="h-6 w-6 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
@@ -89,7 +97,8 @@ export default async function AdminSettingsPage() {
                   Administrator Privileges
                 </CardTitle>
                 <CardDescription>
-                  You have administrator access to manage users and organization settings
+                  You have administrator access to manage users and organization
+                  settings
                 </CardDescription>
               </div>
             </div>
@@ -97,7 +106,9 @@ export default async function AdminSettingsPage() {
           <CardContent>
             <div className="rounded-md bg-amber-50 p-4 dark:bg-amber-900/20">
               <p className="text-sm text-amber-700 dark:text-amber-300">
-                <strong>Important:</strong> Use these tools responsibly. Changes to user roles and organization settings can affect your entire team.
+                <strong>Important:</strong> Use these tools responsibly. Changes
+                to user roles and organization settings can affect your entire
+                team.
               </p>
             </div>
           </CardContent>

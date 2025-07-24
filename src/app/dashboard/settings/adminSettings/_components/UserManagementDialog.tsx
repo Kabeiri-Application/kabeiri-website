@@ -97,7 +97,7 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
                 </p>
               </div>
             )}
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName">First Name *</Label>
@@ -108,7 +108,9 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
                   className="mt-1"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.firstName}
+                  </p>
                 )}
               </div>
               <div>
@@ -127,12 +129,7 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
 
             <div>
               <Label htmlFor="name">Display Name *</Label>
-              <Input
-                id="name"
-                name="name"
-                required
-                className="mt-1"
-              />
+              <Input id="name" name="name" required className="mt-1" />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-600">{errors.name}</p>
               )}
@@ -185,47 +182,26 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
 
             <div>
               <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                className="mt-1"
-              />
+              <Input id="phone" name="phone" type="tel" className="mt-1" />
             </div>
 
             <div>
               <Label htmlFor="streetAddress">Street Address</Label>
-              <Input
-                id="streetAddress"
-                name="streetAddress"
-                className="mt-1"
-              />
+              <Input id="streetAddress" name="streetAddress" className="mt-1" />
             </div>
 
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <Label htmlFor="city">City</Label>
-                <Input
-                  id="city"
-                  name="city"
-                  className="mt-1"
-                />
+                <Input id="city" name="city" className="mt-1" />
               </div>
               <div>
                 <Label htmlFor="state">State</Label>
-                <Input
-                  id="state"
-                  name="state"
-                  className="mt-1"
-                />
+                <Input id="state" name="state" className="mt-1" />
               </div>
               <div>
                 <Label htmlFor="zipCode">ZIP</Label>
-                <Input
-                  id="zipCode"
-                  name="zipCode"
-                  className="mt-1"
-                />
+                <Input id="zipCode" name="zipCode" className="mt-1" />
               </div>
             </div>
           </div>

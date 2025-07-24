@@ -53,19 +53,19 @@ export function can(context: AuthContext, action: Action): boolean {
       case "ORG_UPDATE":
       case "ADMIN_SETTINGS_ACCESS":
         return true;
-      
+
       case "USER_ROLE_CHANGE":
         // Admins can't promote to owner or edit owners
         return targetUserRole !== "owner" && targetUserRole !== "admin";
-      
+
       case "USER_DELETE":
         // Admins can't delete owners or other admins
         return targetUserRole === "user";
-      
+
       case "OWNER_TRANSFER":
         // Only owners can transfer ownership
         return false;
-      
+
       default:
         return false;
     }
@@ -108,7 +108,7 @@ export async function getAuthContext(): Promise<AuthContext | null> {
  * Get auth context with target user information
  */
 export async function getAuthContextWithTarget(
-  targetUserId: string
+  targetUserId: string,
 ): Promise<AuthContext | null> {
   const context = await getAuthContext();
   if (!context) return null;
@@ -134,7 +134,7 @@ export async function getAuthContextWithTarget(
  */
 export async function isLastOwner(
   userId: string,
-  organizationId: string
+  organizationId: string,
 ): Promise<boolean> {
   const owners = await db.query.profilesTable.findMany({
     where: eq(profilesTable.organization, organizationId),
@@ -142,7 +142,7 @@ export async function isLastOwner(
 
   const ownerCount = owners.filter((user) => user.role === "owner").length;
   const isCurrentUserOwner = owners.some(
-    (user) => user.id === userId && user.role === "owner"
+    (user) => user.id === userId && user.role === "owner",
   );
 
   return isCurrentUserOwner && ownerCount === 1;
