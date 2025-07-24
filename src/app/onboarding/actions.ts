@@ -98,7 +98,6 @@ export async function createOrganization(
     }
 
     console.log("Creating organization with data:", data);
-    console.log("Subscription tier:", data.tier);
 
     // Generate slug from shop name
     const slug = data.shopName
