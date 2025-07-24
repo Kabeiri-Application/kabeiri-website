@@ -6,7 +6,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { auditLogTable, profilesTable, type Profile } from "@/db/app.schema";
+import { profilesTable, type Profile } from "@/db/app.schema";
 import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
 
@@ -52,9 +52,11 @@ export async function updateUser(
   data: z.infer<typeof updateUserFormSchema>
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // Context is used by requirePermission for authorization
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const context = await requirePermission("USER_UPDATE", userId);
     
-    // Get current user data for audit log
+    // Verify user exists
     const currentUser = await getUserById(userId);
     if (!currentUser) {
       return { success: false, error: "User not found" };
@@ -74,17 +76,6 @@ export async function updateUser(
         zipCode: data.zipCode,
       })
       .where(eq(profilesTable.id, userId));
-    
-    // Create audit log
-    await db.insert(auditLogTable).values({
-      actorId: context.userId,
-      action: "USER_UPDATE",
-      targetTable: "profiles",
-      targetId: userId,
-      before: JSON.stringify(currentUser),
-      after: JSON.stringify({ ...currentUser, ...data }),
-      organization: context.organizationId,
-    });
     
     revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${userId}`);
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
@@ -129,17 +120,6 @@ export async function changeUserRole(
       .set({ role: newRole })
       .where(eq(profilesTable.id, userId));
     
-    // Create audit log
-    await db.insert(auditLogTable).values({
-      actorId: context.userId,
-      action: "USER_ROLE_CHANGE",
-      targetTable: "profiles",
-      targetId: userId,
-      before: JSON.stringify({ role: currentUser.role }),
-      after: JSON.stringify({ role: newRole }),
-      organization: context.organizationId,
-    });
-    
     revalidatePath(`/dashboard/settings/adminSettings/manageUsers/${userId}`);
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
     
@@ -164,7 +144,7 @@ export async function deleteUser(
       return { success: false, error: "Cannot delete your own account" };
     }
     
-    // Get current user data for audit log
+    // Verify user exists
     const currentUser = await getUserById(userId);
     if (!currentUser) {
       return { success: false, error: "User not found" };
@@ -186,17 +166,6 @@ export async function deleteUser(
       .update(profilesTable)
       .set({ deletedAt: new Date() })
       .where(eq(profilesTable.id, userId));
-    
-    // Create audit log
-    await db.insert(auditLogTable).values({
-      actorId: context.userId,
-      action: "USER_DELETE",
-      targetTable: "profiles",
-      targetId: userId,
-      before: JSON.stringify(currentUser),
-      after: JSON.stringify({ ...currentUser, deletedAt: new Date() }),
-      organization: context.organizationId,
-    });
     
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
     
@@ -243,17 +212,6 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>): Promise<
       zipCode: data.zipCode || "",
     });
     
-    // Create audit log
-    await db.insert(auditLogTable).values({
-      actorId: context.userId,
-      action: "USER_CREATE",
-      targetTable: "profiles",
-      targetId: newUserResult.user.id,
-      before: null,
-      after: JSON.stringify(data),
-      organization: context.organizationId,
-    });
-    
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
     
     return { success: true };
@@ -284,7 +242,7 @@ export async function updateOrganization(
   try {
     const context = await requirePermission("ORG_UPDATE");
     
-    // Get current organization data for audit log
+    // Verify organization exists
     const currentOrg = await getOrganization();
     if (!currentOrg) {
       return { success: false, error: "Organization not found" };
@@ -304,17 +262,6 @@ export async function updateOrganization(
         website: data.website,
       })
       .where(eq(organization.id, context.organizationId));
-    
-    // Create audit log
-    await db.insert(auditLogTable).values({
-      actorId: context.userId,
-      action: "ORG_UPDATE",
-      targetTable: "organization",
-      targetId: context.organizationId,
-      before: JSON.stringify(currentOrg),
-      after: JSON.stringify({ ...currentOrg, ...data }),
-      organization: context.organizationId,
-    });
     
     revalidatePath("/dashboard/settings/adminSettings/organization");
     
@@ -353,28 +300,6 @@ export async function transferOwnership(
         .update(profilesTable)
         .set({ role: "owner" })
         .where(eq(profilesTable.id, targetUserId));
-      
-      // Create audit logs
-      await tx.insert(auditLogTable).values([
-        {
-          actorId: context.userId,
-          action: "OWNER_TRANSFER",
-          targetTable: "profiles",
-          targetId: context.userId,
-          before: JSON.stringify({ role: "owner" }),
-          after: JSON.stringify({ role: "admin" }),
-          organization: context.organizationId,
-        },
-        {
-          actorId: context.userId,
-          action: "OWNER_TRANSFER",
-          targetTable: "profiles",
-          targetId: targetUserId,
-          before: JSON.stringify({ role: targetUser.role }),
-          after: JSON.stringify({ role: "owner" }),
-          organization: context.organizationId,
-        },
-      ]);
     });
     
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
