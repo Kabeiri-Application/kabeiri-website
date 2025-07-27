@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { TrashIcon, LoaderIcon } from "lucide-react";
+import { LoaderIcon, TrashIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import {

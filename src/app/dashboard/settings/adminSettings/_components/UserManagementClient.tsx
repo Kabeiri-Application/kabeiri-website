@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
-import { EditIcon, PlusIcon, UserIcon, LoaderIcon } from "lucide-react";
+import { EditIcon, LoaderIcon, PlusIcon, UserIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,19 +32,23 @@ interface UserManagementClientProps {
   initialUsers: User[];
 }
 
-export function UserManagementClient({ initialUsers }: UserManagementClientProps) {
+export function UserManagementClient({
+  initialUsers,
+}: UserManagementClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("all");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const filteredUsers = useMemo(() => {
     return initialUsers.filter((user) => {
-      const matchesSearch = 
+      const matchesSearch =
         searchQuery === "" ||
         user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase());
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
       const matchesRole = selectedRole === "all" || user.role === selectedRole;
 
@@ -125,7 +129,9 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
         <CardHeader>
           <CardTitle>
             Users ({filteredUsers.length}
-            {filteredUsers.length !== initialUsers.length && ` of ${initialUsers.length}`})
+            {filteredUsers.length !== initialUsers.length &&
+              ` of ${initialUsers.length}`}
+            )
           </CardTitle>
           <CardDescription>
             View and manage all users in your organization
@@ -136,11 +142,13 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
             <div className="py-8 text-center">
               <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-                {searchQuery || selectedRole !== "all" ? "No users match your filters" : "No users found"}
+                {searchQuery || selectedRole !== "all"
+                  ? "No users match your filters"
+                  : "No users found"}
               </h3>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {searchQuery || selectedRole !== "all" 
-                  ? "Try adjusting your search or filter criteria." 
+                {searchQuery || selectedRole !== "all"
+                  ? "Try adjusting your search or filter criteria."
                   : "Get started by adding your first user."}
               </p>
             </div>
