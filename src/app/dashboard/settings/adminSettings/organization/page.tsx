@@ -1,5 +1,8 @@
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+
+import { ArrowLeftIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -79,15 +82,26 @@ export default async function OrganizationPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Organization Settings
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-300">
-          Manage your organization information and settings
-        </p>
-      </div>
+    <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="space-y-8">
+        <div className="mb-6">
+          <Link
+            href="/dashboard/settings/adminSettings"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            <ArrowLeftIcon className="mr-1 h-4 w-4" />
+            Back to Admin Settings
+          </Link>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Organization Settings
+          </h2>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Manage your organization information and settings
+          </p>
+        </div>
 
       <Card>
         <CardHeader>
@@ -244,6 +258,7 @@ export default async function OrganizationPage() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

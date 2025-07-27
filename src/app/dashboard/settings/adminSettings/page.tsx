@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { BuildingIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { ArrowLeftIcon, BuildingIcon, SettingsIcon, UsersIcon } from "lucide-react";
 
 import {
   Card,
@@ -22,6 +22,16 @@ export default async function AdminSettingsPage() {
 
   return (
     <div className="container mx-auto p-8">
+      <div className="mb-6">
+        <Link
+          href="/dashboard/settings"
+          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <ArrowLeftIcon className="mr-1 h-4 w-4" />
+          Back to Settings
+        </Link>
+      </div>
+
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Admin Settings

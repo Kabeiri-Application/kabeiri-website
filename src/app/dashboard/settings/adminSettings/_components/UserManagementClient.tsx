@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
-import { EditIcon, LoaderIcon, PlusIcon, UserIcon } from "lucide-react";
+import { ArrowLeftIcon, EditIcon, LoaderIcon, PlusIcon, UserIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -85,7 +85,17 @@ export function UserManagementClient({
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <div className="space-y-6">
+      <div className="space-y-8">
+        <div className="mb-6">
+          <Link
+            href="/dashboard/settings/adminSettings"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            <ArrowLeftIcon className="mr-1 h-4 w-4" />
+            Back to Admin Settings
+          </Link>
+        </div>
+
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
