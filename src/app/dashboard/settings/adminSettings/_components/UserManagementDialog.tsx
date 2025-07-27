@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { LoaderIcon } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -71,10 +74,13 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
     setIsLoading(false);
 
     if (response.success) {
+      toast.success("User created successfully!");
       setOpen(false);
       router.refresh();
     } else {
-      setErrors({ general: response.error || "Failed to add user" });
+      const errorMessage = response.error || "Failed to add user";
+      toast.error(errorMessage);
+      setErrors({ general: errorMessage });
     }
   }
 
@@ -214,7 +220,14 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Adding..." : "Add User"}
+              {isLoading ? (
+                <>
+                  <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                "Add User"
+              )}
             </Button>
           </DialogFooter>
         </form>

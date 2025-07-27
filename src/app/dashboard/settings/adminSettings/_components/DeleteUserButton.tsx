@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, LoaderIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -33,12 +34,15 @@ export function DeleteUserButton({ userId }: DeleteUserButtonProps) {
     try {
       const result = await deleteUser(userId);
       if (result.success) {
+        toast.success("User deleted successfully!");
         router.refresh();
       } else {
-        // Handle error - could show toast notification
+        const errorMessage = result.error || "Failed to delete user";
+        toast.error(errorMessage);
         console.error("Failed to delete user:", result.error);
       }
     } catch (error) {
+      toast.error("An unexpected error occurred");
       console.error("Error deleting user:", error);
     } finally {
       setIsLoading(false);
@@ -67,7 +71,14 @@ export function DeleteUserButton({ userId }: DeleteUserButtonProps) {
             disabled={isLoading}
             className="bg-red-600 hover:bg-red-700"
           >
-            {isLoading ? "Deleting..." : "Delete"}
+            {isLoading ? (
+              <>
+                <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              "Delete"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
