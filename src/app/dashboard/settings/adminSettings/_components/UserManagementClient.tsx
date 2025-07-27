@@ -84,93 +84,94 @@ export function UserManagementClient({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            User Management
-          </h2>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Manage users in your organization
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="flex items-center gap-2"
-          >
-            {isRefreshing ? (
-              <LoaderIcon className="h-4 w-4 animate-spin" />
-            ) : (
-              "Refresh"
-            )}
-          </Button>
-          <UserManagementDialog>
-            <Button>
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Add User
+    <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              User Management
+            </h2>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">
+              Manage users in your organization
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="flex items-center gap-2"
+            >
+              {isRefreshing ? (
+                <LoaderIcon className="h-4 w-4 animate-spin" />
+              ) : (
+                "Refresh"
+              )}
             </Button>
-          </UserManagementDialog>
+            <UserManagementDialog>
+              <Button>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add User
+              </Button>
+            </UserManagementDialog>
+          </div>
         </div>
-      </div>
 
-      <UserSearchAndFilter
-        onSearch={handleSearch}
-        onRoleFilter={handleRoleFilter}
-        searchQuery={searchQuery}
-        selectedRole={selectedRole}
-        userCount={initialUsers.length}
-        filteredCount={filteredUsers.length}
-      />
+        <UserSearchAndFilter
+          onSearch={handleSearch}
+          onRoleFilter={handleRoleFilter}
+          searchQuery={searchQuery}
+          selectedRole={selectedRole}
+          userCount={initialUsers.length}
+          filteredCount={filteredUsers.length}
+        />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Users ({filteredUsers.length}
-            {filteredUsers.length !== initialUsers.length &&
-              ` of ${initialUsers.length}`}
-            )
-          </CardTitle>
-          <CardDescription>
-            View and manage all users in your organization
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {filteredUsers.length === 0 ? (
-            <div className="py-8 text-center">
-              <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-                {searchQuery || selectedRole !== "all"
-                  ? "No users match your filters"
-                  : "No users found"}
-              </h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {searchQuery || selectedRole !== "all"
-                  ? "Try adjusting your search or filter criteria."
-                  : "Get started by adding your first user."}
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                      User
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                      Contact
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                      Role
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Users ({filteredUsers.length}
+              {filteredUsers.length !== initialUsers.length &&
+                ` of ${initialUsers.length}`}
+              )
+            </CardTitle>
+            <CardDescription>
+              View and manage all users in your organization
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {filteredUsers.length === 0 ? (
+              <div className="py-8 text-center">
+                <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                  {searchQuery || selectedRole !== "all"
+                    ? "No users match your filters"
+                    : "No users found"}
+                </h3>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  {searchQuery || selectedRole !== "all"
+                    ? "Try adjusting your search or filter criteria."
+                    : "Get started by adding your first user."}
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                        User
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                        Contact
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                        Role
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
                 <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                   {filteredUsers.map((user) => (
                     <tr
@@ -228,7 +229,8 @@ export function UserManagementClient({
             </div>
           )}
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }

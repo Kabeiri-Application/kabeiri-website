@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -50,8 +50,17 @@ export function UserSearchAndFilter({
             placeholder="Search users..."
             value={localSearchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-10"
+            className="pl-10 pr-10"
           />
+          {localSearchQuery && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              type="button"
+            >
+              <XIcon className="h-4 w-4" />
+            </button>
+          )}
         </div>
         <Select value={selectedRole} onValueChange={handleRoleChange}>
           <SelectTrigger className="w-48">
