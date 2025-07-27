@@ -103,161 +103,161 @@ export default async function OrganizationPage() {
           </p>
         </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Organization Information</CardTitle>
-          <CardDescription>
-            Update your organization&apos;s basic information
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={handleUpdateOrganization} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="name">Organization Name *</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  defaultValue={organization.name}
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="businessName">Business Name</Label>
-                <Input
-                  id="businessName"
-                  name="businessName"
-                  defaultValue={organization.businessName || ""}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="streetAddress">Street Address</Label>
-              <Input
-                id="streetAddress"
-                name="streetAddress"
-                defaultValue={organization.streetAddress || ""}
-                className="mt-1"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div>
-                <Label htmlFor="city">City</Label>
-                <Input
-                  id="city"
-                  name="city"
-                  defaultValue={organization.city || ""}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="state">State</Label>
-                <Input
-                  id="state"
-                  name="state"
-                  defaultValue={organization.state || ""}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="zipCode">ZIP Code</Label>
-                <Input
-                  id="zipCode"
-                  name="zipCode"
-                  defaultValue={organization.zipCode || ""}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  defaultValue={organization.phone || ""}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="website">Website</Label>
-                <Input
-                  id="website"
-                  name="website"
-                  type="url"
-                  placeholder="https://example.com"
-                  defaultValue={organization.website || ""}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <Button type="submit">Save Changes</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Ownership Transfer</CardTitle>
-          <CardDescription>
-            Transfer ownership of this organization to another user
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {owners.length > 1 ? (
-            <div className="rounded-md bg-amber-50 p-4 dark:bg-amber-900/20">
-              <p className="text-amber-700 dark:text-amber-300">
-                Multiple owners detected. Please contact support for ownership
-                management.
-              </p>
-            </div>
-          ) : (
-            <form action={handleTransferOwnership} className="space-y-4">
-              <div>
-                <Label htmlFor="targetUserId">Select New Owner</Label>
-                <select
-                  id="targetUserId"
-                  name="targetUserId"
-                  required
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
-                >
-                  <option value="">Choose a user...</option>
-                  {users
-                    .filter((user) => user.role !== "owner")
-                    .map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.firstName} {user.lastName} ({user.username}) -{" "}
-                        {user.role}
-                      </option>
-                    ))}
-                </select>
+        <Card>
+          <CardHeader>
+            <CardTitle>Organization Information</CardTitle>
+            <CardDescription>
+              Update your organization&apos;s basic information
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action={handleUpdateOrganization} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="name">Organization Name *</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    defaultValue={organization.name}
+                    required
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="businessName">Business Name</Label>
+                  <Input
+                    id="businessName"
+                    name="businessName"
+                    defaultValue={organization.businessName || ""}
+                    className="mt-1"
+                  />
+                </div>
               </div>
 
-              <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  <strong>Warning:</strong> This action cannot be undone. You
-                  will lose owner privileges and become an admin.
-                </p>
+              <div>
+                <Label htmlFor="streetAddress">Street Address</Label>
+                <Input
+                  id="streetAddress"
+                  name="streetAddress"
+                  defaultValue={organization.streetAddress || ""}
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div>
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
+                    name="city"
+                    defaultValue={organization.city || ""}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="state">State</Label>
+                  <Input
+                    id="state"
+                    name="state"
+                    defaultValue={organization.state || ""}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="zipCode">ZIP Code</Label>
+                  <Input
+                    id="zipCode"
+                    name="zipCode"
+                    defaultValue={organization.zipCode || ""}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    defaultValue={organization.phone || ""}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    name="website"
+                    type="url"
+                    placeholder="https://example.com"
+                    defaultValue={organization.website || ""}
+                    className="mt-1"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit" variant="destructive">
-                  Transfer Ownership
-                </Button>
+                <Button type="submit">Save Changes</Button>
               </div>
             </form>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Ownership Transfer</CardTitle>
+            <CardDescription>
+              Transfer ownership of this organization to another user
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {owners.length > 1 ? (
+              <div className="rounded-md bg-amber-50 p-4 dark:bg-amber-900/20">
+                <p className="text-amber-700 dark:text-amber-300">
+                  Multiple owners detected. Please contact support for ownership
+                  management.
+                </p>
+              </div>
+            ) : (
+              <form action={handleTransferOwnership} className="space-y-4">
+                <div>
+                  <Label htmlFor="targetUserId">Select New Owner</Label>
+                  <select
+                    id="targetUserId"
+                    name="targetUserId"
+                    required
+                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+                  >
+                    <option value="">Choose a user...</option>
+                    {users
+                      .filter((user) => user.role !== "owner")
+                      .map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.firstName} {user.lastName} ({user.username}) -{" "}
+                          {user.role}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+                  <p className="text-sm text-red-700 dark:text-red-300">
+                    <strong>Warning:</strong> This action cannot be undone. You
+                    will lose owner privileges and become an admin.
+                  </p>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button type="submit" variant="destructive">
+                    Transfer Ownership
+                  </Button>
+                </div>
+              </form>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

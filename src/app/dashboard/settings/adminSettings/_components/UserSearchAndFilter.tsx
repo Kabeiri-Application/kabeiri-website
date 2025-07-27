@@ -50,7 +50,7 @@ export function UserSearchAndFilter({
             placeholder="Search users..."
             value={localSearchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-10 pr-10"
+            className="pr-10 pl-10"
           />
           {localSearchQuery && (
             <button

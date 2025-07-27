@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { ArrowLeftIcon, BuildingIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BuildingIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react";
 
 import {
   Card,
