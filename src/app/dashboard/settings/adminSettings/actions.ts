@@ -2,6 +2,10 @@
 
 import { headers } from "next/headers";
 
+import { eq } from "drizzle-orm";
+
+import { db } from "@/db";
+import { profilesTable } from "@/db/app.schema";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 
@@ -21,19 +25,23 @@ export async function addUser(formData: addUserFormSchema) {
   }
 }
 
-// export async function getUsers() {
-//   const session = await auth.api.getSession({ headers: await headers() });
-//   if (!session?.user?.id) {
-//     console.error("Not authenticated");
-//     return [];
-//   }
+export async function getOrganizationUsers() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    throw new Error("Not authenticated");
+  }
 
-//   const users = await authClient.admin.listUsers();
+  // Get the user's profile to determine their organization
+  const profile = await db.query.profilesTable.findFirst({
+    where: eq(profilesTable.id, session.user.id),
+  });
+  if (!profile?.organization) {
+    throw new Error("No organization found for user");
+  }
 
-//   if (!users) {
-//     console.error("Failed to fetch users");
-//     return [];
-//   }
-
-//   return users;
-// }
+  // Fetch all users in the same organization
+  const users = await db.query.profilesTable.findMany({
+    where: eq(profilesTable.organization, profile.organization),
+  });
+  return users;
+}
