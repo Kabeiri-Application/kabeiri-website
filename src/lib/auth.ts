@@ -37,7 +37,7 @@ export const auth = betterAuth({
     organization(),
     polar({
       client: polarClient,
-      createCustomerOnSignUp: true,
+      createCustomerOnSignUp: false,
       use: [
         checkout({
           products: [
