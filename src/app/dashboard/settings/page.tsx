@@ -1,12 +1,17 @@
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
+import { can, getAuthContext } from "@/lib/authz";
 
 import SettingsCard from "./components/settings-card";
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   console.log("Session:", session);
+
+  // Check if user has admin access
+  const authContext = await getAuthContext();
+  const hasAdminAccess = authContext ? can(authContext, "ADMIN_SETTINGS_ACCESS") : false;
 
   return (
     <main className="p-8">
@@ -21,8 +26,8 @@ export default async function Page() {
           href="/dashboard/settings/accountSettings"
         />
 
-        {/* Temporarily allow all users to see admin settings for testing */}
-        {true && (
+        {/* Show admin settings only for users with proper permissions */}
+        {hasAdminAccess && (
           <SettingsCard
             title="Admin"
             description="Manage users, view logs, and configure application settings."
