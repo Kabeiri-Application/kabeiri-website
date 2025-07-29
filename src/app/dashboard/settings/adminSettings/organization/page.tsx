@@ -221,8 +221,8 @@ export default async function OrganizationPage() {
               {owners.length > 1 ? (
                 <div className="rounded-md bg-amber-50 p-4 dark:bg-amber-900/20">
                   <p className="text-amber-700 dark:text-amber-300">
-                    Multiple owners detected. Please contact support for ownership
-                    management.
+                    Multiple owners detected. Please contact support for
+                    ownership management.
                   </p>
                 </div>
               ) : (
@@ -249,8 +249,8 @@ export default async function OrganizationPage() {
 
                   <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
                     <p className="text-sm text-red-700 dark:text-red-300">
-                      <strong>Warning:</strong> This action cannot be undone. You
-                      will lose owner privileges and become an admin.
+                      <strong>Warning:</strong> This action cannot be undone.
+                      You will lose owner privileges and become an admin.
                     </p>
                   </div>
 

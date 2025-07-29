@@ -11,7 +11,9 @@ export default async function Page() {
 
   // Check if user has admin access
   const authContext = await getAuthContext();
-  const hasAdminAccess = authContext ? can(authContext, "ADMIN_SETTINGS_ACCESS") : false;
+  const hasAdminAccess = authContext
+    ? can(authContext, "ADMIN_SETTINGS_ACCESS")
+    : false;
 
   return (
     <main className="p-8">
