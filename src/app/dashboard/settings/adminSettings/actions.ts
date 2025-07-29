@@ -184,23 +184,24 @@ export async function addUser(
   try {
     const context = await requirePermission("USER_INVITE");
 
-    // Create user through auth system
-    const newUserResult = await auth.api.signUpEmail({
+    // Create user through admin API (doesn't auto-login)
+    const newUserResult = await auth.api.admin.createUser({
       body: {
         name: `${data.firstName} ${data.lastName}`,
         email: data.email,
         password: data.password,
+        role: "user", // Default role, will be overridden in profile creation
       },
     });
 
     // Check if user creation was successful
-    if (!newUserResult?.user?.id) {
+    if (!newUserResult?.data?.id) {
       return { success: false, error: "Failed to create user account" };
     }
 
     // Create profile
     await db.insert(profilesTable).values({
-      id: newUserResult.user.id,
+      id: newUserResult.data.id,
       username: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
