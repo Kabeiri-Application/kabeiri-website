@@ -61,8 +61,8 @@ export async function editCustomer(formData: NewCustomer) {
   }
 }
 
-export async function addCustomer(
-  formData: NewCustomer,
+export async function createCustomer(
+  formData: Omit<NewCustomer, "id" | "createdAt" | "updatedAt" | "deletedAt">,
   organizationId: string,
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
