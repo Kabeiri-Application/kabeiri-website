@@ -20,13 +20,16 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
     // BETTER_AUTH_SECRET: z.string().startsWith("sk."), // TODO: Change secret to have sk. prefix
     BETTER_AUTH_SECRET: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
   },
   /**
    * Specify your client-side environment variables schema here.
    * This way you can ensure the app isn't built with invalid env vars.
    * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
    */
-  client: {},
+  client: {
+    NEXT_PUBLIC_APP_URL: z.string().url(),
+  },
   /**
    * You can't destruct `process.env` as a regular object in the Next.js edge
    * runtimes (e.g. middlewares) or client-side so we need to destruct manually.
@@ -36,6 +39,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

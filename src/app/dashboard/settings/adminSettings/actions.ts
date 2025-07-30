@@ -8,6 +8,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { profilesTable, type Profile } from "@/db/app.schema";
 import { invitation, organization } from "@/db/auth.schema";
+import { sendInvitationEmail } from "@/lib/email";
 import { isLastOwner, requirePermission, type Role } from "@/lib/authz";
 
 import {
@@ -229,13 +230,28 @@ export async function addUser(
       inviterId: context.userId,
     });
 
-    // TODO: Send actual invitation email
-    console.log('Invitation created:', {
-      email: data.email,
-      role: data.role,
-      invitationId,
-      expiresAt,
-    });
+    // Send invitation email
+    try {
+      // Get organization and inviter details
+      const org = await getOrganization();
+      const inviter = await db.query.profilesTable.findFirst({
+        where: eq(profilesTable.id, context.userId),
+      });
+
+      if (org && inviter) {
+        await sendInvitationEmail({
+          email: data.email,
+          invitedByName: `${inviter.firstName} ${inviter.lastName}`,
+          organizationName: org.name,
+          role: data.role,
+          invitationId,
+        });
+        console.log('Invitation email sent successfully to:', data.email);
+      }
+    } catch (emailError) {
+      console.error('Failed to send invitation email:', emailError);
+      // Still return success since invitation was created in database
+    }
 
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");
 
