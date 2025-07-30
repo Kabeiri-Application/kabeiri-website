@@ -84,48 +84,51 @@ export function SubscriptionPage() {
       </p>
 
       {pricing && (
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="space-y-4">
           {Object.entries(pricing).map(([tier, details]) => (
-            <div
+            <label
               key={tier}
-              className={`relative cursor-pointer rounded-lg border-2 p-6 transition-all hover:shadow-md ${
+              className={`relative flex cursor-pointer items-start gap-4 rounded-lg border-2 p-6 transition-all hover:bg-muted/50 ${
                 selectedTier === tier
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"
               }`}
-              onClick={() => handleTierSelect(tier as "Free" | "Pro" | "Enterprise")}
             >
-              {selectedTier === tier && (
-                <div className="absolute right-4 top-4">
-                  <CheckIcon className="size-5 text-primary" />
-                </div>
-              )}
+              <input
+                type="radio"
+                name="subscription-tier"
+                value={tier}
+                checked={selectedTier === tier}
+                onChange={() => handleTierSelect(tier as "Free" | "Pro" | "Enterprise")}
+                className="mt-1 size-4 text-primary focus:ring-primary"
+              />
               
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold">{details.name}</h3>
-                  <p className="text-muted-foreground text-sm">{details.description}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold">
-                    {formatPrice(details.price, details.currency)}
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">{details.name}</h3>
+                    <p className="text-muted-foreground text-sm">{details.description}</p>
                   </div>
-                  {details.interval && (
-                    <p className="text-muted-foreground text-sm">per {details.interval}</p>
-                  )}
+                  <div className="text-right">
+                    <div className="text-2xl font-bold">
+                      {formatPrice(details.price, details.currency)}
+                    </div>
+                    {details.interval && (
+                      <p className="text-muted-foreground text-sm">per {details.interval}</p>
+                    )}
+                  </div>
                 </div>
                 
-                <ul className="space-y-2">
+                <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
                   {details.features.map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center gap-2 text-sm">
-                      <CheckIcon className="size-4 text-green-500" />
-                      {feature}
-                    </li>
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <CheckIcon className="size-3 text-green-500" />
+                      <span>{feature}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
-            </div>
+            </label>
           ))}
         </div>
       )}
