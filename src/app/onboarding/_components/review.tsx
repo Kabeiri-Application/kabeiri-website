@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeftIcon, CheckCircle2Icon, XCircleIcon } from "lucide-react";
 
 import {
-  createOrganization,
+  createOrganizationWithCheckout,
   createUserAccount,
   createUserProfile,
 } from "@/app/onboarding/actions";
@@ -54,20 +54,35 @@ export function ReviewForm() {
       }
       setStatus((prev) => ({ ...prev, profile: true }));
 
-      // Step 3: Create organization if shop info exists
+      // Step 3: Create organization with checkout if shop info exists
       if (shopInfo.shopName) {
-        const orgResult = await createOrganization(shopInfo);
+        const orgResult = await createOrganizationWithCheckout({
+          ...shopInfo,
+          tier: subscriptionInfo.tier,
+          customerEmail: personalInfo.email,
+          customerName: `${personalInfo.firstName} ${personalInfo.lastName}`,
+        });
 
         if (!orgResult.success) {
           throw new Error(orgResult.error || "Failed to create organization");
         }
+        
         setStatus((prev) => ({ ...prev, organization: true }));
+
+        // If checkout URL is provided (paid tier), redirect to checkout
+        if (orgResult.data?.checkoutUrl) {
+          // Clear the store before redirecting to checkout
+          reset();
+          // Redirect to Polar checkout
+          window.location.href = orgResult.data.checkoutUrl;
+          return; // Don't continue with normal flow
+        }
       }
 
       // Clear the store
       reset();
 
-      // Success! Redirect to dashboard
+      // Success! Redirect to dashboard (Free tier or no organization)
       router.push(`/dashboard?tier=${subscriptionInfo.tier}`);
     } catch (error) {
       setStatus((prev) => ({

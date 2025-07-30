@@ -15,6 +15,7 @@ import { db } from "@/db";
 import { profilesTable } from "@/db/app.schema";
 import { organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
+import { createPolarCheckout, type TierType } from "@/lib/polar-checkout";
 
 type ActionResponse<T = undefined> = {
   success: boolean;
@@ -81,6 +82,108 @@ export async function createUserProfile(
       success: false,
       error:
         error instanceof Error ? error.message : "Failed to create profile",
+    };
+  }
+}
+
+export async function createOrganizationWithCheckout(
+  data: ShopSchema & SubscriptionSchema & { customerEmail: string; customerName: string },
+): Promise<ActionResponse<{ organizationId: string; checkoutUrl?: string }>> {
+  try {
+    console.log("Creating organization with checkout data:", data);
+
+    // Generate slug from shop name
+    const slug = data.shopName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    // Create organization first
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      throw new Error("User not authenticated");
+    }
+
+    // Create organization using better-auth with ONLY allowed fields
+    const orgResponse = await auth.api.createOrganization({
+      headers: await headers(),
+      body: {
+        name: data.shopName,
+        slug: slug,
+        logo: data.businessPhotoUrl || undefined,
+      },
+    });
+
+    const orgId = orgResponse?.id;
+    if (!orgId) {
+      throw new Error("Failed to create organization - no ID returned");
+    }
+
+    // Update organization with business fields
+    await db
+      .update(organization)
+      .set({
+        businessName: data.shopName,
+        businessPhotoUrl: data.businessPhotoUrl || null,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        phone: data.phone,
+        website: data.website || null,
+      })
+      .where(eq(organization.id, orgId));
+
+    // Update user profile with organization ID and owner role
+    await db
+      .update(profilesTable)
+      .set({
+        organization: orgId,
+        role: "owner",
+        updatedAt: new Date(),
+      })
+      .where(eq(profilesTable.id, session.user.id));
+
+    // If tier is not Free, create Polar checkout
+    if (data.tier !== "Free") {
+      const checkoutResult = await createPolarCheckout({
+        tier: data.tier as TierType,
+        organizationId: orgId,
+        customerEmail: data.customerEmail,
+        customerName: data.customerName,
+      });
+
+      if (checkoutResult.success && checkoutResult.checkoutUrl) {
+        return {
+          success: true,
+          data: {
+            organizationId: orgId,
+            checkoutUrl: checkoutResult.checkoutUrl,
+          },
+        };
+      } else {
+        console.error("Checkout creation failed:", checkoutResult.error);
+        // Organization created but checkout failed - still return success
+        return {
+          success: true,
+          data: { organizationId: orgId },
+        };
+      }
+    }
+
+    // Free tier - no checkout needed
+    return {
+      success: true,
+      data: { organizationId: orgId },
+    };
+  } catch (error) {
+    console.error("Error creating organization with checkout:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create organization",
     };
   }
 }
