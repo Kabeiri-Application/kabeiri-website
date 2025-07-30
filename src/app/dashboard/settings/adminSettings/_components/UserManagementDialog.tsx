@@ -44,11 +44,9 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
     setErrors({});
 
     const data = {
-      name: formData.get("name") as string,
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
       email: formData.get("email") as string,
-      password: formData.get("password") as string,
       role: formData.get("role") as "admin" | "user" | "owner",
       phone: formData.get("phone") as string,
       streetAddress: formData.get("streetAddress") as string,
@@ -74,11 +72,11 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
     setIsLoading(false);
 
     if (response.success) {
-      toast.success("User created successfully!");
+      toast.success("Invitation sent successfully!");
       setOpen(false);
       router.refresh();
     } else {
-      const errorMessage = response.error || "Failed to add user";
+      const errorMessage = response.error || "Failed to send invitation";
       toast.error(errorMessage);
       setErrors({ general: errorMessage });
     }
@@ -89,9 +87,9 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New User</DialogTitle>
+          <DialogTitle>Invite New User</DialogTitle>
           <DialogDescription>
-            Create a new user account for your organization.
+            Send an invitation to join your organization. They&apos;ll set their own password when they accept.
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit}>
@@ -134,14 +132,6 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
             </div>
 
             <div>
-              <Label htmlFor="name">Display Name *</Label>
-              <Input id="name" name="name" required className="mt-1" />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-              )}
-            </div>
-
-            <div>
               <Label htmlFor="email">Email *</Label>
               <Input
                 id="email"
@@ -152,20 +142,6 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="password">Password *</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="mt-1"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
             </div>
 
@@ -223,10 +199,10 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
               {isLoading ? (
                 <>
                   <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
-                  Adding...
+                  Sending...
                 </>
               ) : (
-                "Add User"
+                "Send Invitation"
               )}
             </Button>
           </DialogFooter>

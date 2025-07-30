@@ -7,8 +7,7 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { profilesTable, type Profile } from "@/db/app.schema";
-import { organization } from "@/db/auth.schema";
-import { auth } from "@/lib/auth";
+import { invitation, organization } from "@/db/auth.schema";
 import { isLastOwner, requirePermission, type Role } from "@/lib/authz";
 
 import {
@@ -184,34 +183,58 @@ export async function addUser(
   try {
     const context = await requirePermission("USER_INVITE");
 
-    // Create user through admin API (doesn't auto-login)
-    const newUserResult = await auth.api.admin.createUser({
-      body: {
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        password: data.password,
-        role: "user", // Default role, will be overridden in profile creation
-      },
+    // Check if user is already invited or is a member
+    const existingUser = await db.query.profilesTable.findFirst({
+      where: and(
+        eq(profilesTable.username, data.email),
+        eq(profilesTable.organization, context.organizationId),
+        isNull(profilesTable.deletedAt)
+      ),
     });
 
-    // Check if user creation was successful
-    if (!newUserResult?.data?.id) {
-      return { success: false, error: "Failed to create user account" };
+    if (existingUser) {
+      return {
+        success: false,
+        error: "User is already a member of this organization"
+      };
     }
 
-    // Create profile
-    await db.insert(profilesTable).values({
-      id: newUserResult.data.id,
-      username: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
+    const existingInvitation = await db.query.invitation.findFirst({
+      where: and(
+        eq(invitation.email, data.email),
+        eq(invitation.organizationId, context.organizationId),
+        eq(invitation.status, "pending")
+      ),
+    });
+
+    if (existingInvitation) {
+      return {
+        success: false,
+        error: "User has already been invited"
+      };
+    }
+
+    // Create invitation record
+    const invitationId = crypto.randomUUID();
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // Expires in 7 days
+
+    await db.insert(invitation).values({
+      id: invitationId,
+      organizationId: context.organizationId,
+      email: data.email,
       role: data.role,
-      organization: context.organizationId,
-      phone: data.phone || "",
-      streetAddress: data.streetAddress || "",
-      city: data.city || "",
-      state: data.state || "",
-      zipCode: data.zipCode || "",
+      status: "pending",
+      expiresAt,
+      inviterId: context.userId,
+    });
+
+    // TODO: Send actual invitation email
+    console.log('Invitation created:', {
+      email: data.email,
+      role: data.role,
+      invitationId,
+      expiresAt,
     });
 
     revalidatePath("/dashboard/settings/adminSettings/manageUsers");

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
+// Schema for inviting users (no password required)
 export const addUserFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z
@@ -9,10 +9,6 @@ export const addUserFormSchema = z.object({
     .email("Invalid email address")
     .min(5, "Email must be at least 5 characters long")
     .max(254, "Email must be at most 254 characters long"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .max(64, "Password must be at most 64 characters long"),
   role: z.enum(["admin", "user", "owner"]),
   phone: z.string().optional(),
   streetAddress: z.string().optional(),

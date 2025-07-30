@@ -127,7 +127,7 @@ export function UserManagementClient({
             <UserManagementDialog>
               <Button>
                 <PlusIcon className="mr-2 h-4 w-4" />
-                Add User
+                Invite User
               </Button>
             </UserManagementDialog>
           </div>
