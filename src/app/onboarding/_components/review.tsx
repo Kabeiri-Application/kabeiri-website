@@ -66,7 +66,7 @@ export function ReviewForm() {
         if (!orgResult.success) {
           throw new Error(orgResult.error || "Failed to create organization");
         }
-        
+
         setStatus((prev) => ({ ...prev, organization: true }));
 
         // If checkout URL is provided (paid tier), redirect to checkout
@@ -83,7 +83,7 @@ export function ReviewForm() {
       reset();
 
       // Success! Redirect to dashboard (Free tier or no organization)
-      router.push(`/dashboard?tier=${subscriptionInfo.tier}`);
+      router.push(`/dashboard`);
     } catch (error) {
       setStatus((prev) => ({
         ...prev,

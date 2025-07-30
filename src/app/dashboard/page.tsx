@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
-import { PolarEmbedCheckout } from "@polar-sh/checkout/embed";
 import {
   BarChart3Icon,
   ClockIcon,
@@ -36,37 +34,6 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [subscription, setSubscription] = useState("");
-  const searchParams = useSearchParams();
-  const tier = searchParams.get("tier");
-
-  useEffect(() => {
-    if (tier) {
-      setSubscription(tier);
-    }
-  }, [tier]);
-
-  const openCheckout = async () => {
-    const checkoutLink =
-      "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_wQFHdnKg5GgudV9SLwbLPcj1TsVWy9OspFp4E21FFmK/redirect";
-    const theme = "dark";
-
-    try {
-      // This creates the checkout iframe and returns a Promise
-      // that resolves when the checkout is fully loaded
-      const checkout = await PolarEmbedCheckout.create(checkoutLink, theme);
-
-      // Now you can interact with the checkout instance
-      return checkout;
-    } catch (error) {
-      console.error("Failed to open checkout", error);
-    }
-  };
-
-  if (subscription) {
-    openCheckout();
-  }
 
   useEffect(() => {
     const fetchStats = async () => {

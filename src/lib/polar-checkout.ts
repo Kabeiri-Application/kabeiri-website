@@ -6,15 +6,15 @@ import { env } from "@/env";
 
 // Initialize Polar client
 const polarClient = new Polar({
-  accessToken: env.POLAR_DEV_TOKEN,
+  accessToken: process.env.POLAR_DEV_TOKEN,
   server: "sandbox",
 });
 
 // Tier to Product ID mapping
 const TIER_PRODUCT_MAP = {
-  Free: env.POLAR_FREE_PRODUCT_ID,
-  Pro: env.POLAR_PRO_PRODUCT_ID,
-  Enterprise: env.POLAR_ENTERPRISE_PRODUCT_ID,
+  Free: process.env.POLAR_FREE_PRODUCT_ID,
+  Pro: process.env.POLAR_PRO_PRODUCT_ID,
+  Enterprise: process.env.POLAR_ENTERPRISE_PRODUCT_ID,
 } as const;
 
 export type TierType = keyof typeof TIER_PRODUCT_MAP;
@@ -34,7 +34,7 @@ export async function createPolarCheckout({
 }: CheckoutData) {
   try {
     const productId = TIER_PRODUCT_MAP[tier];
-
+    console.log("productId", productId);
     if (!productId) {
       throw new Error(`Invalid tier: ${tier}`);
     }
@@ -43,7 +43,7 @@ export async function createPolarCheckout({
     const checkoutLink = await polarClient.checkoutLinks.create({
       productId,
       paymentProcessor: "stripe", // Required field
-      successUrl: `${env.POLAR_SUCCESS_URL}?org=${organizationId}&tier=${tier}`,
+      successUrl: `${process.env.POLAR_SUCCESS_URL}?org=${organizationId}&tier=${tier}`,
       metadata: {
         organizationId,
         tier,
@@ -65,7 +65,8 @@ export async function createPolarCheckout({
     console.error("Error creating Polar checkout:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to create checkout",
+      error:
+        error instanceof Error ? error.message : "Failed to create checkout",
     };
   }
 }
@@ -79,7 +80,11 @@ export async function getTierPricing() {
       price: 0,
       currency: "USD",
       interval: null,
-      features: ["Basic shop management", "Up to 5 jobs per month", "Email support"],
+      features: [
+        "Basic shop management",
+        "Up to 5 jobs per month",
+        "Email support",
+      ],
     },
     Pro: {
       name: "Pro",
@@ -87,7 +92,12 @@ export async function getTierPricing() {
       price: 2900, // $29.00 in cents
       currency: "USD",
       interval: "month",
-      features: ["Unlimited jobs", "Advanced analytics", "Priority support", "Custom integrations"],
+      features: [
+        "Unlimited jobs",
+        "Advanced analytics",
+        "Priority support",
+        "Custom integrations",
+      ],
     },
     Enterprise: {
       name: "Enterprise",
@@ -95,7 +105,12 @@ export async function getTierPricing() {
       price: 9900, // $99.00 in cents
       currency: "USD",
       interval: "month",
-      features: ["Everything in Pro", "Multi-location support", "Dedicated account manager", "Custom workflows"],
+      features: [
+        "Everything in Pro",
+        "Multi-location support",
+        "Dedicated account manager",
+        "Custom workflows",
+      ],
     },
   };
 }
@@ -112,7 +127,8 @@ export async function verifyCheckoutComplete(checkoutId: string) {
     console.error("Error verifying checkout:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to verify checkout",
+      error:
+        error instanceof Error ? error.message : "Failed to verify checkout",
     };
   }
 }

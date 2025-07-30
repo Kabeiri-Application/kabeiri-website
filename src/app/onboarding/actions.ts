@@ -87,7 +87,8 @@ export async function createUserProfile(
 }
 
 export async function createOrganizationWithCheckout(
-  data: ShopSchema & SubscriptionSchema & { customerEmail: string; customerName: string },
+  data: ShopSchema &
+    SubscriptionSchema & { customerEmail: string; customerName: string },
 ): Promise<ActionResponse<{ organizationId: string; checkoutUrl?: string }>> {
   try {
     console.log("Creating organization with checkout data:", data);
@@ -148,42 +149,38 @@ export async function createOrganizationWithCheckout(
       .where(eq(profilesTable.id, session.user.id));
 
     // If tier is not Free, create Polar checkout
-    if (data.tier !== "Free") {
-      const checkoutResult = await createPolarCheckout({
-        tier: data.tier as TierType,
-        organizationId: orgId,
-        customerEmail: data.customerEmail,
-        customerName: data.customerName,
-      });
 
-      if (checkoutResult.success && checkoutResult.checkoutUrl) {
-        return {
-          success: true,
-          data: {
-            organizationId: orgId,
-            checkoutUrl: checkoutResult.checkoutUrl,
-          },
-        };
-      } else {
-        console.error("Checkout creation failed:", checkoutResult.error);
-        // Organization created but checkout failed - still return success
-        return {
-          success: true,
-          data: { organizationId: orgId },
-        };
-      }
+    const checkoutResult = await createPolarCheckout({
+      tier: data.tier as TierType,
+      organizationId: orgId,
+      customerEmail: data.customerEmail,
+      customerName: data.customerName,
+    });
+
+    if (checkoutResult.success && checkoutResult.checkoutUrl) {
+      return {
+        success: true,
+        data: {
+          organizationId: orgId,
+          checkoutUrl: checkoutResult.checkoutUrl,
+        },
+      };
+    } else {
+      console.error("Checkout creation failed:", checkoutResult.error);
+      // Organization created but checkout failed - still return success
+      return {
+        success: true,
+        data: { organizationId: orgId },
+      };
     }
-
-    // Free tier - no checkout needed
-    return {
-      success: true,
-      data: { organizationId: orgId },
-    };
   } catch (error) {
     console.error("Error creating organization with checkout:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to create organization",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create organization",
     };
   }
 }
