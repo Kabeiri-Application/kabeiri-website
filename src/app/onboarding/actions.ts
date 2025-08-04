@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "crypto";
+
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -205,50 +207,32 @@ export async function createOrganization(
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-    // Create organization using better-auth with ONLY allowed fields
-    const orgResponse = await auth.api.createOrganization({
-      headers: await headers(),
-      body: {
-        name: data.shopName,
-        slug: slug,
-        logo: data.businessPhotoUrl || undefined,
-      },
+    // Create organization directly in our database (not Polar organization)
+    const orgId = randomUUID();
+
+    await db.insert(organization).values({
+      id: orgId,
+      name: data.shopName,
+      slug: slug,
+      logo: data.businessPhotoUrl || null,
+      businessName: data.shopName,
+      businessPhotoUrl: data.businessPhotoUrl || null,
+      streetAddress: data.streetAddress,
+      city: data.city,
+      state: data.state,
+      zipCode: data.zipCode,
+      phone: data.phone,
+      website: data.website || null,
+      createdAt: new Date(),
     });
 
-    console.log("Organization created:", orgResponse);
-
-    // Extract organization ID - handle different response structures
-    const orgId = orgResponse?.id;
-
-    if (!orgId) {
-      console.error("No organization ID returned:", orgResponse);
-      throw new Error("Failed to create organization - no ID returned");
-    }
-
-    console.log("Organization ID:", orgId);
-
-    // Update organization with business fields using direct DB query
-    await db
-      .update(organization)
-      .set({
-        businessName: data.shopName,
-        businessPhotoUrl: data.businessPhotoUrl || null,
-        streetAddress: data.streetAddress,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode,
-        phone: data.phone,
-        website: data.website || null,
-      })
-      .where(eq(organization.id, orgId));
-
-    console.log("Organization updated with business fields");
+    console.log("Organization created with ID:", orgId);
 
     // Update the user's profile with the organization ID and change role to owner
     await db
       .update(profilesTable)
       .set({
-        organization: orgId, // Now this will be a text ID that matches better-auth
+        organization: orgId,
         role: "owner",
         updatedAt: new Date(),
       })
@@ -257,9 +241,18 @@ export async function createOrganization(
     console.log("Profile updated successfully");
 
     revalidatePath(`/dashboard?tier=${data.tier}`);
-    return { success: true };
+    return {
+      success: true,
+      data: { organizationId: orgId },
+    };
   } catch (error) {
     console.error("Error creating organization:", error);
-    throw error;
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create organization",
+    };
   }
 }

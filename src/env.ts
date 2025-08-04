@@ -24,7 +24,10 @@ export const env = createEnv({
     POLAR_SUCCESS_URL: z.string().url(),
     POLAR_FREE_PRODUCT_ID: z.string().min(1),
     POLAR_PRO_PRODUCT_ID: z.string().optional().default("placeholder-pro-id"),
-    POLAR_ENTERPRISE_PRODUCT_ID: z.string().optional().default("placeholder-enterprise-id"),
+    POLAR_ENTERPRISE_PRODUCT_ID: z
+      .string()
+      .optional()
+      .default("placeholder-enterprise-id"),
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -45,7 +48,8 @@ export const env = createEnv({
     POLAR_SUCCESS_URL: process.env.POLAR_SUCCESS_URL,
     POLAR_FREE_PRODUCT_ID: process.env.POLAR_FREE_PRODUCT_ID,
     POLAR_PRO_PRODUCT_ID: process.env.POLAR_PRO_PRODUCT_ID || undefined,
-    POLAR_ENTERPRISE_PRODUCT_ID: process.env.POLAR_ENTERPRISE_PRODUCT_ID || undefined,
+    POLAR_ENTERPRISE_PRODUCT_ID:
+      process.env.POLAR_ENTERPRISE_PRODUCT_ID || undefined,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

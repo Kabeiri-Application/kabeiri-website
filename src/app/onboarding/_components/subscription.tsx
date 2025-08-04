@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useState, useEffect } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,9 @@ export function SubscriptionPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { subscriptionInfo, setSubscriptionInfo } = useOnboardingStore();
-  const [selectedTier, setSelectedTier] = useState<"Free" | "Pro" | "Enterprise">(subscriptionInfo.tier || "Free");
+  const [selectedTier, setSelectedTier] = useState<
+    "Free" | "Pro" | "Enterprise"
+  >(subscriptionInfo.tier || "Free");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pricing, setPricing] = useState<Record<string, any> | null>(null);
 
@@ -88,7 +90,7 @@ export function SubscriptionPage() {
           {Object.entries(pricing).map(([tier, details]) => (
             <label
               key={tier}
-              className={`relative flex cursor-pointer items-start gap-4 rounded-lg border-2 p-6 transition-all hover:bg-muted/50 ${
+              className={`hover:bg-muted/50 relative flex cursor-pointer items-start gap-4 rounded-lg border-2 p-6 transition-all ${
                 selectedTier === tier
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"
@@ -99,29 +101,38 @@ export function SubscriptionPage() {
                 name="subscription-tier"
                 value={tier}
                 checked={selectedTier === tier}
-                onChange={() => handleTierSelect(tier as "Free" | "Pro" | "Enterprise")}
-                className="mt-1 size-4 text-primary focus:ring-primary"
+                onChange={() =>
+                  handleTierSelect(tier as "Free" | "Pro" | "Enterprise")
+                }
+                className="text-primary focus:ring-primary mt-1 size-4"
               />
-              
+
               <div className="flex-1 space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold">{details.name}</h3>
-                    <p className="text-muted-foreground text-sm">{details.description}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {details.description}
+                    </p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">
                       {formatPrice(details.price, details.currency)}
                     </div>
                     {details.interval && (
-                      <p className="text-muted-foreground text-sm">per {details.interval}</p>
+                      <p className="text-muted-foreground text-sm">
+                        per {details.interval}
+                      </p>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
                   {details.features.map((feature: string, index: number) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 text-sm"
+                    >
                       <CheckIcon className="size-3 text-green-500" />
                       <span>{feature}</span>
                     </div>

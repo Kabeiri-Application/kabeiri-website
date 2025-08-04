@@ -2,8 +2,6 @@
 
 import { Polar } from "@polar-sh/sdk";
 
-import { env } from "@/env";
-
 // Initialize Polar client
 const polarClient = new Polar({
   accessToken: process.env.POLAR_DEV_TOKEN,
@@ -39,16 +37,27 @@ export async function createPolarCheckout({
       throw new Error(`Invalid tier: ${tier}`);
     }
 
-    // Create checkout session with Polar API
-    const checkoutLink = await polarClient.checkoutLinks.create({
-      productId,
-      paymentProcessor: "stripe", // Required field
-      successUrl: `${process.env.POLAR_SUCCESS_URL}?org=${organizationId}&tier=${tier}`,
+    // Create Polar customer first
+    const customer = await polarClient.customers.create({
+      email: customerEmail,
+      name: customerName,
       metadata: {
         organizationId,
         tier,
-        customerEmail,
-        customerName,
+      },
+    });
+
+    console.log("Polar customer created:", customer);
+
+    // Create checkout session with Polar API
+    const checkoutLink = await polarClient.checkoutLinks.create({
+      productId,
+      paymentProcessor: "stripe",
+      successUrl: `${process.env.POLAR_SUCCESS_URL}?org=${organizationId}&tier=${tier}&customer=${customer.id}`,
+      metadata: {
+        organizationId,
+        tier,
+        customerId: customer.id, // Store customer ID in metadata
       },
     });
 
