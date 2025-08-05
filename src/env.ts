@@ -23,7 +23,7 @@ export const env = createEnv({
     POLAR_DEV_TOKEN: z.string().min(1),
     POLAR_SUCCESS_URL: z.string().url(),
     POLAR_FREE_PRODUCT_ID: z.string().min(1),
-    POLAR_PRO_PRODUCT_ID: z.string().optional().default("placeholder-pro-id"),
+    POLAR_PRO_PRODUCT_ID: z.string().min(1),
     POLAR_ENTERPRISE_PRODUCT_ID: z
       .string()
       .optional()
