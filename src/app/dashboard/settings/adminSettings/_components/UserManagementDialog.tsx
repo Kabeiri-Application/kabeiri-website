@@ -89,7 +89,8 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
         <DialogHeader>
           <DialogTitle>Invite New User</DialogTitle>
           <DialogDescription>
-            Send an invitation to join your organization. They&apos;ll set their own password when they accept.
+            Send an invitation to join your organization. They&apos;ll set their
+            own password when they accept.
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit}>

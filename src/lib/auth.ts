@@ -22,14 +22,14 @@ export const auth = betterAuth({
       async sendInvitationEmail(data) {
         // For now, we'll log the invitation details
         // In production, you'd send an actual email
-        console.log('Organization Invitation:', {
+        console.log("Organization Invitation:", {
           email: data.email,
           organizationName: data.organization.name,
           inviterName: data.inviter.user.name,
           inviterEmail: data.inviter.user.email,
           invitationId: data.id,
         });
-        
+
         // TODO: Implement actual email sending
         // const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
         // await sendEmail({

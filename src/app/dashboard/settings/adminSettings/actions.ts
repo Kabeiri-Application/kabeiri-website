@@ -188,14 +188,14 @@ export async function addUser(
       where: and(
         eq(profilesTable.username, data.email),
         eq(profilesTable.organization, context.organizationId),
-        isNull(profilesTable.deletedAt)
+        isNull(profilesTable.deletedAt),
       ),
     });
 
     if (existingUser) {
       return {
         success: false,
-        error: "User is already a member of this organization"
+        error: "User is already a member of this organization",
       };
     }
 
@@ -203,14 +203,14 @@ export async function addUser(
       where: and(
         eq(invitation.email, data.email),
         eq(invitation.organizationId, context.organizationId),
-        eq(invitation.status, "pending")
+        eq(invitation.status, "pending"),
       ),
     });
 
     if (existingInvitation) {
       return {
         success: false,
-        error: "User has already been invited"
+        error: "User has already been invited",
       };
     }
 
@@ -230,7 +230,7 @@ export async function addUser(
     });
 
     // TODO: Send actual invitation email
-    console.log('Invitation created:', {
+    console.log("Invitation created:", {
       email: data.email,
       role: data.role,
       invitationId,
