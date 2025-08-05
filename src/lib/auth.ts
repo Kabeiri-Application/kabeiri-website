@@ -12,7 +12,6 @@ import { nextCookies } from "better-auth/next-js";
 import { admin, organization } from "better-auth/plugins";
 
 import { db } from "@/db";
-import { env } from "@/env";
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_DEV_TOKEN,
@@ -23,8 +22,8 @@ const polarClient = new Polar({
 });
 
 export const auth = betterAuth({
-  baseUrl: env.BETTER_AUTH_URL,
-  secret: env.BETTER_AUTH_SECRET,
+  baseUrl: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -42,19 +41,19 @@ export const auth = betterAuth({
         checkout({
           products: [
             {
-              productId: env.POLAR_FREE_PRODUCT_ID,
+              productId: process.env.POLAR_FREE_PRODUCT_ID || "",
               slug: "free",
             },
             {
-              productId: env.POLAR_PRO_PRODUCT_ID,
+              productId: process.env.POLAR_PRO_PRODUCT_ID || "",
               slug: "pro",
             },
             {
-              productId: env.POLAR_ENTERPRISE_PRODUCT_ID,
+              productId: process.env.POLAR_ENTERPRISE_PRODUCT_ID || "",
               slug: "enterprise",
             },
           ],
-          successUrl: env.POLAR_SUCCESS_URL,
+          successUrl: process.env.POLAR_SUCCESS_URL,
           authenticatedUsersOnly: false, // Allow checkout before auth for org creation
         }),
         portal(),
