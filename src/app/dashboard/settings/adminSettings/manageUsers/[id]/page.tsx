@@ -28,6 +28,7 @@ import type { Role } from "@/lib/authz";
 
 import { DeleteUserButton } from "../../_components/DeleteUserButton";
 import { changeUserRole, getUserById, updateUser } from "../../actions";
+import { isLastOwner } from "@/lib/authz";
 import { updateUserFormSchema } from "../../schema";
 
 interface UserPageProps {
@@ -76,9 +77,15 @@ export default async function UserDetailPage({ params }: UserPageProps) {
     notFound();
   }
 
+  // Check if this user is trying to edit themselves and if they're the last owner
+  const isEditingSelf = currentUserId === params.id;
+  const isLastOwnerInOrg = isEditingSelf && user.role === "owner" ? 
+    await isLastOwner(params.id, user.organization!) : 
+    false;
+
   // Simplified permission logic based on Better Auth roles
   const canEditUser = hasAdminAccess;
-  const canChangeRole = isOwner; // Only owners can change roles
+  const canChangeRole = isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg); // Only owners can change roles, but not if they're the last owner editing themselves
   const canDeleteUser = hasAdminAccess && user.role !== "owner"; // Can't delete owners
 
   async function handleUpdateUser(formData: FormData) {
@@ -341,6 +348,16 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                     {user.role}
                   </Badge>
                 </div>
+                {isEditingSelf && user.role === "owner" && isLastOwnerInOrg && (
+                  <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
+                    ⚠️ As the only owner, you cannot change your own role. Transfer ownership to another user first.
+                  </p>
+                )}
+                {!isOwner && (
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Only organization owners can modify user roles.
+                  </p>
+                )}
               </div>
             )}
 

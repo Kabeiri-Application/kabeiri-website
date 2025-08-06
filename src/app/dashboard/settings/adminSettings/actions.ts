@@ -86,6 +86,7 @@ export async function getOrganizationUsers(): Promise<Profile[]> {
 export async function getUserById(userId: string): Promise<Profile | null> {
   const context = await requireBetterAuthPermission("admin");
 
+  // Get user from database
   const user = await db.query.profilesTable.findFirst({
     where: and(
       eq(profilesTable.id, userId),
@@ -94,7 +95,27 @@ export async function getUserById(userId: string): Promise<Profile | null> {
     ),
   });
 
-  return user || null;
+  if (!user) {
+    return null;
+  }
+
+  // Get Better Auth organization member role for this specific user
+  const memberRecord = await db.query.member.findFirst({
+    where: and(
+      eq(member.userId, userId),
+      eq(member.organizationId, context.organizationId)
+    ),
+  });
+
+  // Use Better Auth member role if available, fallback to database role
+  const correctRole = memberRecord?.role
+    ? (Array.isArray(memberRecord.role) ? memberRecord.role[0] : memberRecord.role)
+    : user.role;
+
+  return {
+    ...user,
+    role: correctRole as Role,
+  };
 }
 
 export async function updateUser(
