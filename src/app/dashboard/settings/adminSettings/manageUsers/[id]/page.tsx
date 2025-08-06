@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { ArrowLeftIcon, ShieldIcon, UserIcon } from "lucide-react";
 
@@ -22,7 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { can, getAuthContext, requirePermission } from "@/lib/authz";
+import { auth } from "@/lib/auth";
+import type { Role } from "@/lib/authz";
 
 import { DeleteUserButton } from "../../_components/DeleteUserButton";
 import { changeUserRole, getUserById, updateUser } from "../../actions";
@@ -33,37 +35,51 @@ interface UserPageProps {
 }
 
 export default async function UserDetailPage({ params }: UserPageProps) {
-  // Check authorization
+  // Check authorization using Better Auth organization member role
+  let hasAdminAccess = false;
+  let userRole: Role | undefined;
+  let isOwner = false;
+  let currentUserId: string | undefined;
+  
   try {
-    await requirePermission("USER_READ", params.id);
-  } catch {
+    // Get session and member information from Better Auth
+    const session = await auth.api.getSession({ headers: await headers() });
+    const activeMember = await auth.api.getActiveMember({ headers: await headers() });
+    
+    currentUserId = session?.user?.id;
+    
+    if (activeMember?.role) {
+      // Better Auth organization roles can be a string or array
+      const memberRole = Array.isArray(activeMember.role) 
+        ? activeMember.role[0] 
+        : activeMember.role;
+      
+      userRole = memberRole as Role;
+      
+      // Check if user has admin access based on Better Auth organization role
+      hasAdminAccess = userRole === "admin" || userRole === "owner";
+      isOwner = userRole === "owner";
+    }
+  } catch (error) {
+    console.error("Error getting active member:", error);
+    hasAdminAccess = false;
+  }
+  
+  // Redirect if no admin access
+  if (!hasAdminAccess) {
     redirect("/dashboard?error=unauthorized");
   }
 
   const user = await getUserById(params.id);
-  const authContext = await getAuthContext();
 
-  if (!user || !authContext) {
+  if (!user) {
     notFound();
   }
 
-  const canEditUser = can(authContext, "USER_UPDATE");
-  const canChangeRole = can(
-    {
-      ...authContext,
-      targetUserId: params.id,
-      targetUserRole: user.role as "user" | "admin" | "owner",
-    },
-    "USER_ROLE_CHANGE",
-  );
-  const canDeleteUser = can(
-    {
-      ...authContext,
-      targetUserId: params.id,
-      targetUserRole: user.role as "user" | "admin" | "owner",
-    },
-    "USER_DELETE",
-  );
+  // Simplified permission logic based on Better Auth roles
+  const canEditUser = hasAdminAccess;
+  const canChangeRole = isOwner; // Only owners can change roles
+  const canDeleteUser = hasAdminAccess && user.role !== "owner"; // Can't delete owners
 
   async function handleUpdateUser(formData: FormData) {
     "use server";
@@ -146,7 +162,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
           </div>
           <div className="flex items-center space-x-3">
             <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
-            {canDeleteUser && user.id !== authContext.userId && (
+            {canDeleteUser && user.id !== currentUserId && (
               <DeleteUserButton userId={user.id} />
             )}
           </div>
