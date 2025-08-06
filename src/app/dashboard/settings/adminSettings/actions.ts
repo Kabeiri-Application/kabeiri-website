@@ -1,14 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 import { and, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
 import { profilesTable, type Profile } from "@/db/app.schema";
-import { invitation, organization } from "@/db/auth.schema";
-import { isLastOwner, requirePermission, type Role } from "@/lib/authz";
+import { invitation, organization, member } from "@/db/auth.schema";
+import { auth } from "@/lib/auth";
+import { isLastOwner, type Role } from "@/lib/authz";
 
 import {
   addUserFormSchema,
@@ -16,11 +18,40 @@ import {
   updateUserFormSchema,
 } from "./schema";
 
+// Better Auth authorization helper
+async function requireBetterAuthPermission(minRole: "admin" | "owner" = "admin") {
+  const activeMember = await auth.api.getActiveMember({ headers: await headers() });
+  
+  if (!activeMember?.role) {
+    throw new Error("Unauthorized: No organization membership found");
+  }
+
+  const memberRole = Array.isArray(activeMember.role) 
+    ? activeMember.role[0] 
+    : activeMember.role;
+  
+  const userRole = memberRole as Role;
+  
+  // Check if user has required permissions
+  const hasPermission = userRole === "owner" || (minRole === "admin" && userRole === "admin");
+  
+  if (!hasPermission) {
+    throw new Error(`Unauthorized: ${minRole} role required`);
+  }
+  
+  return {
+    userId: activeMember.userId,
+    userRole,
+    organizationId: activeMember.organizationId,
+  };
+}
+
 // User Management Actions
 
 export async function getOrganizationUsers(): Promise<Profile[]> {
-  const context = await requirePermission("USER_READ");
+  const context = await requireBetterAuthPermission("admin");
 
+  // Get users from database
   const users = await db.query.profilesTable.findMany({
     where: and(
       eq(profilesTable.organization, context.organizationId),
@@ -28,11 +59,32 @@ export async function getOrganizationUsers(): Promise<Profile[]> {
     ),
   });
 
-  return users;
+  // Get Better Auth organization members from database to get the correct roles
+  const members = await db.query.member.findMany({
+    where: eq(member.organizationId, context.organizationId),
+  });
+
+  // Merge Better Auth member roles with database user data
+  const usersWithBetterAuthRoles = users.map((user) => {
+    const memberRecord = members.find((m) => m.userId === user.id);
+    const memberRole = memberRecord?.role;
+    
+    // Use Better Auth member role if available, fallback to database role
+    const correctRole = memberRole
+      ? (Array.isArray(memberRole) ? memberRole[0] : memberRole)
+      : user.role;
+    
+    return {
+      ...user,
+      role: correctRole as Role,
+    };
+  });
+
+  return usersWithBetterAuthRoles;
 }
 
 export async function getUserById(userId: string): Promise<Profile | null> {
-  const context = await requirePermission("USER_READ", userId);
+  const context = await requireBetterAuthPermission("admin");
 
   const user = await db.query.profilesTable.findFirst({
     where: and(
@@ -50,9 +102,8 @@ export async function updateUser(
   data: z.infer<typeof updateUserFormSchema>,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // Context is used by requirePermission for authorization
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const context = await requirePermission("USER_UPDATE", userId);
+    // Check Better Auth permissions for user updates
+    await requireBetterAuthPermission("admin");
 
     // Verify user exists
     const currentUser = await getUserById(userId);
@@ -93,7 +144,7 @@ export async function changeUserRole(
   newRole: Role,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const context = await requirePermission("USER_ROLE_CHANGE", userId);
+    const context = await requireBetterAuthPermission("admin");
 
     // Get current user data
     const currentUser = await getUserById(userId);
@@ -135,7 +186,7 @@ export async function deleteUser(
   userId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const context = await requirePermission("USER_DELETE", userId);
+    const context = await requireBetterAuthPermission("admin");
 
     // Prevent self-deletion
     if (userId === context.userId) {
@@ -181,7 +232,7 @@ export async function addUser(
   data: z.infer<typeof addUserFormSchema>,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const context = await requirePermission("USER_INVITE");
+    const context = await requireBetterAuthPermission("admin");
 
     // Check if user is already invited or is a member
     const existingUser = await db.query.profilesTable.findFirst({
@@ -252,7 +303,7 @@ export async function addUser(
 // Organization Management Actions
 
 export async function getOrganization() {
-  const context = await requirePermission("ORG_READ");
+  const context = await requireBetterAuthPermission("admin");
 
   const org = await db.query.organization.findFirst({
     where: eq(organization.id, context.organizationId),
@@ -265,7 +316,7 @@ export async function updateOrganization(
   data: z.infer<typeof updateOrganizationFormSchema>,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const context = await requirePermission("ORG_UPDATE");
+    const context = await requireBetterAuthPermission("admin");
 
     // Verify organization exists
     const currentOrg = await getOrganization();
@@ -307,7 +358,7 @@ export async function transferOwnership(
   targetUserId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const context = await requirePermission("OWNER_TRANSFER", targetUserId);
+    const context = await requireBetterAuthPermission("owner");
 
     // Get target user
     const targetUser = await getUserById(targetUserId);

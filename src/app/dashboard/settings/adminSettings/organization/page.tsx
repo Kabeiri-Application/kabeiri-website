@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { ArrowLeftIcon } from "lucide-react";
 
@@ -14,7 +15,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { can, getAuthContext, requirePermission } from "@/lib/authz";
+import { auth } from "@/lib/auth";
+import type { Role } from "@/lib/authz";
 
 import {
   getOrganization,
@@ -25,16 +27,36 @@ import {
 import { updateOrganizationFormSchema } from "../schema";
 
 export default async function OrganizationPage() {
-  // Check authorization
+  // Check authorization using Better Auth organization member role
+  let hasAdminAccess = false;
+  let isOwner = false;
+  
   try {
-    await requirePermission("ORG_READ");
-  } catch {
+    // Get the user's active member information from Better Auth
+    const activeMember = await auth.api.getActiveMember({ headers: await headers() });
+    
+    if (activeMember?.role) {
+      // Better Auth organization roles can be a string or array
+      const memberRole = Array.isArray(activeMember.role) 
+        ? activeMember.role[0] 
+        : activeMember.role;
+      
+      const userRole = memberRole as Role;
+      
+      // Check if user has admin access based on Better Auth organization role
+      hasAdminAccess = userRole === "admin" || userRole === "owner";
+      isOwner = userRole === "owner";
+    }
+  } catch (error) {
+    console.error("Error getting active member:", error);
+    hasAdminAccess = false;
+    isOwner = false;
+  }
+  
+  // Redirect if no admin access
+  if (!hasAdminAccess) {
     redirect("/dashboard?error=unauthorized");
   }
-
-  // Check if current user is an owner for ownership transfer functionality
-  const authContext = await getAuthContext();
-  const isOwner = authContext ? can(authContext, "OWNER_TRANSFER") : false;
 
   const organization = await getOrganization();
   const users = await getOrganizationUsers();
