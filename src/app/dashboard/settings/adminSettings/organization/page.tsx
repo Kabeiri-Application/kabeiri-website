@@ -64,6 +64,7 @@ export default async function OrganizationPage() {
   const users = await getOrganizationUsers();
   const owners = users.filter((user) => user.role === "owner");
 
+  //TODO: Move to a separate action file
   async function handleUpdateOrganization(formData: FormData) {
     "use server";
 
@@ -90,6 +91,7 @@ export default async function OrganizationPage() {
     }
   }
 
+  // TODO: Move to a separate action file
   async function handleTransferOwnership(formData: FormData) {
     "use server";
 
@@ -108,7 +110,7 @@ export default async function OrganizationPage() {
       </div>
     );
   }
-
+  //TODO: User React Hook Form for better type safety and validation in your form
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="space-y-8">

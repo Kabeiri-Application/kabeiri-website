@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card";
 
 import { DeleteUserButton } from "./DeleteUserButton";
-import { UserManagementDialog } from "./UserManagementDialog";
+import { UserManagementDialog } from "./InviteUserDialog";
 import { UserSearchAndFilter } from "./UserSearchAndFilter";
 
 interface User {

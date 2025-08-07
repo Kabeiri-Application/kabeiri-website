@@ -91,6 +91,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
     isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg); // Only owners can change roles, but not if they're the last owner editing themselves
   const canDeleteUser = hasAdminAccess && user.role !== "owner"; // Can't delete owners
 
+  //TODO: Move to actions.ts file
   async function handleUpdateUser(formData: FormData) {
     "use server";
 
@@ -119,6 +120,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
     }
   }
 
+  //TODO: Move to actions.ts file
   async function handleRoleChange(formData: FormData) {
     "use server";
 
