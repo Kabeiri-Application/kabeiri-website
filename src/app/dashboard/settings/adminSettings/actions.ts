@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { profilesTable, type Profile } from "@/db/app.schema";
-import { invitation, organization, member } from "@/db/auth.schema";
+import { invitation, member, organization } from "@/db/auth.schema";
 import { auth } from "@/lib/auth";
 import { isLastOwner, type Role } from "@/lib/authz";
 
@@ -19,26 +19,31 @@ import {
 } from "./schema";
 
 // Better Auth authorization helper
-async function requireBetterAuthPermission(minRole: "admin" | "owner" = "admin") {
-  const activeMember = await auth.api.getActiveMember({ headers: await headers() });
-  
+async function requireBetterAuthPermission(
+  minRole: "admin" | "owner" = "admin",
+) {
+  const activeMember = await auth.api.getActiveMember({
+    headers: await headers(),
+  });
+
   if (!activeMember?.role) {
     throw new Error("Unauthorized: No organization membership found");
   }
 
-  const memberRole = Array.isArray(activeMember.role) 
-    ? activeMember.role[0] 
+  const memberRole = Array.isArray(activeMember.role)
+    ? activeMember.role[0]
     : activeMember.role;
-  
+
   const userRole = memberRole as Role;
-  
+
   // Check if user has required permissions
-  const hasPermission = userRole === "owner" || (minRole === "admin" && userRole === "admin");
-  
+  const hasPermission =
+    userRole === "owner" || (minRole === "admin" && userRole === "admin");
+
   if (!hasPermission) {
     throw new Error(`Unauthorized: ${minRole} role required`);
   }
-  
+
   return {
     userId: activeMember.userId,
     userRole,
@@ -68,12 +73,14 @@ export async function getOrganizationUsers(): Promise<Profile[]> {
   const usersWithBetterAuthRoles = users.map((user) => {
     const memberRecord = members.find((m) => m.userId === user.id);
     const memberRole = memberRecord?.role;
-    
+
     // Use Better Auth member role if available, fallback to database role
     const correctRole = memberRole
-      ? (Array.isArray(memberRole) ? memberRole[0] : memberRole)
+      ? Array.isArray(memberRole)
+        ? memberRole[0]
+        : memberRole
       : user.role;
-    
+
     return {
       ...user,
       role: correctRole as Role,
@@ -103,13 +110,15 @@ export async function getUserById(userId: string): Promise<Profile | null> {
   const memberRecord = await db.query.member.findFirst({
     where: and(
       eq(member.userId, userId),
-      eq(member.organizationId, context.organizationId)
+      eq(member.organizationId, context.organizationId),
     ),
   });
 
   // Use Better Auth member role if available, fallback to database role
   const correctRole = memberRecord?.role
-    ? (Array.isArray(memberRecord.role) ? memberRecord.role[0] : memberRecord.role)
+    ? Array.isArray(memberRecord.role)
+      ? memberRecord.role[0]
+      : memberRecord.role
     : user.role;
 
   return {

@@ -16,18 +16,20 @@ export default async function Page() {
 
   try {
     // Get the user's active member information from Better Auth
-    const activeMember = await auth.api.getActiveMember({ headers: await headers() });
+    const activeMember = await auth.api.getActiveMember({
+      headers: await headers(),
+    });
     console.log("Active member:", activeMember);
-    
+
     if (activeMember?.role) {
       // Better Auth organization roles can be a string or array
-      const memberRole = Array.isArray(activeMember.role) 
-        ? activeMember.role[0] 
+      const memberRole = Array.isArray(activeMember.role)
+        ? activeMember.role[0]
         : activeMember.role;
-      
+
       userRole = memberRole as Role;
       console.log("User role from Better Auth organization member:", userRole);
-      
+
       // Check if user has admin access based on Better Auth organization role
       hasAdminAccess = userRole === "admin" || userRole === "owner";
     } else {

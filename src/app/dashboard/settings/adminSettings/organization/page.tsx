@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 
 import { ArrowLeftIcon } from "lucide-react";
 
@@ -30,19 +30,21 @@ export default async function OrganizationPage() {
   // Check authorization using Better Auth organization member role
   let hasAdminAccess = false;
   let isOwner = false;
-  
+
   try {
     // Get the user's active member information from Better Auth
-    const activeMember = await auth.api.getActiveMember({ headers: await headers() });
-    
+    const activeMember = await auth.api.getActiveMember({
+      headers: await headers(),
+    });
+
     if (activeMember?.role) {
       // Better Auth organization roles can be a string or array
-      const memberRole = Array.isArray(activeMember.role) 
-        ? activeMember.role[0] 
+      const memberRole = Array.isArray(activeMember.role)
+        ? activeMember.role[0]
         : activeMember.role;
-      
+
       const userRole = memberRole as Role;
-      
+
       // Check if user has admin access based on Better Auth organization role
       hasAdminAccess = userRole === "admin" || userRole === "owner";
       isOwner = userRole === "owner";
@@ -52,7 +54,7 @@ export default async function OrganizationPage() {
     hasAdminAccess = false;
     isOwner = false;
   }
-  
+
   // Redirect if no admin access
   if (!hasAdminAccess) {
     redirect("/dashboard?error=unauthorized");

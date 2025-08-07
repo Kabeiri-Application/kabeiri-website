@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { headers } from "next/headers";
 
 import { ArrowLeftIcon, ShieldIcon, UserIcon } from "lucide-react";
 
@@ -24,11 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { auth } from "@/lib/auth";
-import type { Role } from "@/lib/authz";
+import { isLastOwner, type Role } from "@/lib/authz";
 
 import { DeleteUserButton } from "../../_components/DeleteUserButton";
 import { changeUserRole, getUserById, updateUser } from "../../actions";
-import { isLastOwner } from "@/lib/authz";
 import { updateUserFormSchema } from "../../schema";
 
 interface UserPageProps {
@@ -41,22 +40,24 @@ export default async function UserDetailPage({ params }: UserPageProps) {
   let userRole: Role | undefined;
   let isOwner = false;
   let currentUserId: string | undefined;
-  
+
   try {
     // Get session and member information from Better Auth
     const session = await auth.api.getSession({ headers: await headers() });
-    const activeMember = await auth.api.getActiveMember({ headers: await headers() });
-    
+    const activeMember = await auth.api.getActiveMember({
+      headers: await headers(),
+    });
+
     currentUserId = session?.user?.id;
-    
+
     if (activeMember?.role) {
       // Better Auth organization roles can be a string or array
-      const memberRole = Array.isArray(activeMember.role) 
-        ? activeMember.role[0] 
+      const memberRole = Array.isArray(activeMember.role)
+        ? activeMember.role[0]
         : activeMember.role;
-      
+
       userRole = memberRole as Role;
-      
+
       // Check if user has admin access based on Better Auth organization role
       hasAdminAccess = userRole === "admin" || userRole === "owner";
       isOwner = userRole === "owner";
@@ -65,7 +66,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
     console.error("Error getting active member:", error);
     hasAdminAccess = false;
   }
-  
+
   // Redirect if no admin access
   if (!hasAdminAccess) {
     redirect("/dashboard?error=unauthorized");
@@ -79,13 +80,15 @@ export default async function UserDetailPage({ params }: UserPageProps) {
 
   // Check if this user is trying to edit themselves and if they're the last owner
   const isEditingSelf = currentUserId === params.id;
-  const isLastOwnerInOrg = isEditingSelf && user.role === "owner" ? 
-    await isLastOwner(params.id, user.organization!) : 
-    false;
+  const isLastOwnerInOrg =
+    isEditingSelf && user.role === "owner"
+      ? await isLastOwner(params.id, user.organization!)
+      : false;
 
   // Simplified permission logic based on Better Auth roles
   const canEditUser = hasAdminAccess;
-  const canChangeRole = isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg); // Only owners can change roles, but not if they're the last owner editing themselves
+  const canChangeRole =
+    isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg); // Only owners can change roles, but not if they're the last owner editing themselves
   const canDeleteUser = hasAdminAccess && user.role !== "owner"; // Can't delete owners
 
   async function handleUpdateUser(formData: FormData) {
@@ -350,7 +353,8 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                 </div>
                 {isEditingSelf && user.role === "owner" && isLastOwnerInOrg && (
                   <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-                    ⚠️ As the only owner, you cannot change your own role. Transfer ownership to another user first.
+                    ⚠️ As the only owner, you cannot change your own role.
+                    Transfer ownership to another user first.
                   </p>
                 )}
                 {!isOwner && (
