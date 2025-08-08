@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -6,7 +5,6 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeftIcon, ShieldIcon, UserIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,21 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { auth } from "@/lib/auth";
 import { isLastOwner, type Role } from "@/lib/authz";
 
 import { DeleteUserButton } from "../../_components/DeleteUserButton";
-import { changeUserRole, getUserById, updateUser } from "../../actions";
-import { updateUserFormSchema } from "../../schema";
+import { EditUserForm } from "../../_components/EditUserForm";
+import { getUserById } from "../../actions/userActions";
 
 interface UserPageProps {
   params: { id: string };
@@ -88,301 +77,92 @@ export default async function UserDetailPage({ params }: UserPageProps) {
   // Simplified permission logic based on Better Auth roles
   const canEditUser = hasAdminAccess;
   const canChangeRole =
-    isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg); // Only owners can change roles, but not if they're the last owner editing themselves
-  const canDeleteUser = hasAdminAccess && user.role !== "owner"; // Can't delete owners
-
-  //TODO: Move to actions.ts file
-  async function handleUpdateUser(formData: FormData) {
-    "use server";
-
-    const data = {
-      firstName: formData.get("firstName") as string,
-      lastName: formData.get("lastName") as string,
-      username: formData.get("username") as string,
-      phone: formData.get("phone") as string,
-      streetAddress: formData.get("streetAddress") as string,
-      city: formData.get("city") as string,
-      state: formData.get("state") as string,
-      zipCode: formData.get("zipCode") as string,
-    };
-
-    const result = updateUserFormSchema.safeParse(data);
-    if (!result.success) {
-      // Handle validation errors
-      return;
-    }
-
-    const response = await updateUser(params.id, result.data);
-    if (response.success) {
-      revalidatePath(
-        `/dashboard/settings/adminSettings/manageUsers/${params.id}`,
-      );
-    }
-  }
-
-  //TODO: Move to actions.ts file
-  async function handleRoleChange(formData: FormData) {
-    "use server";
-
-    const newRole = formData.get("role") as "user" | "admin" | "owner";
-    const response = await changeUserRole(params.id, newRole);
-
-    if (response.success) {
-      revalidatePath(
-        `/dashboard/settings/adminSettings/manageUsers/${params.id}`,
-      );
-    }
-  }
-
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case "owner":
-        return "destructive";
-      case "admin":
-        return "default";
-      default:
-        return "secondary";
-    }
-  };
+    isOwner && !(isEditingSelf && user.role === "owner" && isLastOwnerInOrg);
+  const canDeleteUser = hasAdminAccess && user.role !== "owner";
 
   return (
-    <div className="container mx-auto max-w-4xl p-8">
-      <div className="mb-6">
-        <Link
-          href="/dashboard/settings/adminSettings/manageUsers"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-        >
-          <ArrowLeftIcon className="mr-2 h-4 w-4" />
-          Back to User Management
-        </Link>
-      </div>
+    <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="space-y-8">
+        <div className="mb-6">
+          <Link
+            href="/dashboard/settings/adminSettings/manageUsers"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            <ArrowLeftIcon className="mr-1 h-4 w-4" />
+            Back to User Management
+          </Link>
+        </div>
 
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
-              <UserIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+        {/* User Header */}
+        <div>
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+              <UserIcon className="h-6 w-6 text-gray-600 dark:text-gray-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {user.firstName} {user.lastName}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300">
-                @{user.username}
-              </p>
+              </h2>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  @{user.username}
+                </span>
+                <Badge
+                  variant={
+                    user.role === "owner"
+                      ? "default"
+                      : user.role === "admin"
+                        ? "secondary"
+                        : "outline"
+                  }
+                  className="flex items-center gap-1"
+                >
+                  <ShieldIcon className="h-3 w-3" />
+                  {user.role}
+                </Badge>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
-            {canDeleteUser && user.id !== currentUserId && (
-              <DeleteUserButton userId={user.id} />
-            )}
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {/* User Information */}
+        {/* Edit User Form */}
         <Card>
           <CardHeader>
-            <CardTitle>User Information</CardTitle>
+            <CardTitle>User Details</CardTitle>
             <CardDescription>
-              Basic user details and contact information
+              {canEditUser
+                ? "Update user information and manage their role in the organization."
+                : "View user information. Contact an administrator to make changes."}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {canEditUser ? (
-              <form action={handleUpdateUser} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      name="firstName"
-                      defaultValue={user.firstName}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      name="lastName"
-                      defaultValue={user.lastName}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    name="username"
-                    defaultValue={user.username}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    defaultValue={user.phone}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="streetAddress">Street Address</Label>
-                  <Input
-                    id="streetAddress"
-                    name="streetAddress"
-                    defaultValue={user.streetAddress}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      defaultValue={user.city}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="state">State</Label>
-                    <Input
-                      id="state"
-                      name="state"
-                      defaultValue={user.state}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="zipCode">ZIP Code</Label>
-                    <Input
-                      id="zipCode"
-                      name="zipCode"
-                      defaultValue={user.zipCode}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <Button type="submit">Save Changes</Button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>First Name</Label>
-                    <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                      {user.firstName}
-                    </p>
-                  </div>
-                  <div>
-                    <Label>Last Name</Label>
-                    <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                      {user.lastName}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <Label>Username</Label>
-                  <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                    {user.username}
-                  </p>
-                </div>
-                <div>
-                  <Label>Phone</Label>
-                  <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                    {user.phone || "Not provided"}
-                  </p>
-                </div>
-                <div>
-                  <Label>Address</Label>
-                  <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                    {user.streetAddress && user.city && user.state
-                      ? `${user.streetAddress}, ${user.city}, ${user.state} ${user.zipCode}`
-                      : "Not provided"}
-                  </p>
-                </div>
-              </div>
-            )}
+            <EditUserForm
+              user={user}
+              canChangeRole={canChangeRole}
+              canEditUser={canEditUser}
+              isEditingSelf={isEditingSelf}
+              isLastOwner={isLastOwnerInOrg}
+            />
           </CardContent>
         </Card>
 
-        {/* Role Management */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <ShieldIcon className="h-5 w-5" />
-              <CardTitle>Role & Permissions</CardTitle>
-            </div>
-            <CardDescription>
-              Manage user role and access levels
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {canChangeRole ? (
-              <form action={handleRoleChange} className="space-y-4">
-                <div>
-                  <Label htmlFor="role">User Role</Label>
-                  <Select name="role" defaultValue={user.role}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="owner">Owner</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex justify-end">
-                  <Button type="submit">Update Role</Button>
-                </div>
-              </form>
-            ) : (
-              <div>
-                <Label>Current Role</Label>
-                <div className="mt-2">
-                  <Badge variant={getRoleBadgeVariant(user.role)}>
-                    {user.role}
-                  </Badge>
-                </div>
-                {isEditingSelf && user.role === "owner" && isLastOwnerInOrg && (
-                  <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-                    ⚠️ As the only owner, you cannot change your own role.
-                    Transfer ownership to another user first.
-                  </p>
-                )}
-                {!isOwner && (
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    Only organization owners can modify user roles.
-                  </p>
-                )}
-              </div>
-            )}
-
-            <div className="mt-6 border-t pt-6">
-              <h4 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Role Permissions
-              </h4>
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                {user.role === "owner" && (
-                  <div>• Full system access and organization management</div>
-                )}
-                {(user.role === "admin" || user.role === "owner") && (
-                  <div>• User management and settings access</div>
-                )}
-                <div>• Dashboard and job management access</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Danger Zone */}
+        {canDeleteUser && (
+          <Card className="border-red-200 dark:border-red-800">
+            <CardHeader>
+              <CardTitle className="text-red-600 dark:text-red-400">
+                Danger Zone
+              </CardTitle>
+              <CardDescription>
+                Permanently remove this user from your organization. This action
+                cannot be undone.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DeleteUserButton userId={user.id} />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

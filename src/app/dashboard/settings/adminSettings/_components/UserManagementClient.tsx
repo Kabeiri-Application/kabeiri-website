@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card";
 
 import { DeleteUserButton } from "./DeleteUserButton";
-import { UserManagementDialog } from "./InviteUserDialog";
+import { InviteUserDialog } from "./InviteUserDialog";
 import { UserSearchAndFilter } from "./UserSearchAndFilter";
 
 interface User {
@@ -124,12 +124,12 @@ export function UserManagementClient({
                 "Refresh"
               )}
             </Button>
-            <UserManagementDialog>
+            <InviteUserDialog>
               <Button>
                 <PlusIcon className="mr-2 h-4 w-4" />
                 Invite User
               </Button>
-            </UserManagementDialog>
+            </InviteUserDialog>
           </div>
         </div>
 

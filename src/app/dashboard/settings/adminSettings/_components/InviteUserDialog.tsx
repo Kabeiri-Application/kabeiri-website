@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -26,67 +28,61 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { addUser } from "../actions";
-import { addUserFormSchema } from "../schema";
+import { inviteUser } from "../actions/userActions";
+import {
+  inviteUserSchema,
+  type InviteUserFormValues,
+} from "../schemas/userSchemas";
+import { AddressFields } from "./AddressFields";
 
-interface UserManagementDialogProps {
+interface InviteUserDialogProps {
   children: React.ReactNode;
 }
 
-export function UserManagementDialog({ children }: UserManagementDialogProps) {
+export function InviteUserDialog({ children }: InviteUserDialogProps) {
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 
-  //TODO: use react-hook-form for better form handling
-  async function handleSubmit(formData: FormData) {
-    setIsLoading(true);
-    setErrors({});
+  const form = useForm<InviteUserFormValues>({
+    resolver: zodResolver(inviteUserSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: undefined,
+      phone: "",
+      streetAddress: "",
+      city: "",
+      state: "",
+      zipCode: "",
+    },
+  });
 
-    const data = {
-      firstName: formData.get("firstName") as string,
-      lastName: formData.get("lastName") as string,
-      email: formData.get("email") as string,
-      role: formData.get("role") as "admin" | "user" | "owner",
-      phone: formData.get("phone") as string,
-      streetAddress: formData.get("streetAddress") as string,
-      city: formData.get("city") as string,
-      state: formData.get("state") as string,
-      zipCode: formData.get("zipCode") as string,
-    };
+  const isLoading = form.formState.isSubmitting;
 
-    const result = addUserFormSchema.safeParse(data);
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((error) => {
-        if (error.path[0]) {
-          fieldErrors[error.path[0] as string] = error.message;
-        }
-      });
-      setErrors(fieldErrors);
-      setIsLoading(false);
-      return;
-    }
+  async function onSubmit(data: InviteUserFormValues) {
+    try {
+      const response = await inviteUser(data);
 
-    const response = await addUser(result.data);
-    setIsLoading(false);
-
-    if (response.success) {
-      toast.success("Invitation sent successfully!");
-      setOpen(false);
-      router.refresh();
-    } else {
-      const errorMessage = response.error || "Failed to send invitation";
-      toast.error(errorMessage);
-      setErrors({ general: errorMessage });
+      if (response.success) {
+        toast.success("Invitation sent successfully!");
+        form.reset();
+        setOpen(false);
+        router.refresh();
+      } else {
+        const errorMessage = response.error || "Failed to send invitation";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send invitation");
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Invite New User</DialogTitle>
           <DialogDescription>
@@ -94,28 +90,19 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
             own password when they accept.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
-            {errors.general && (
-              <div className="rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  {errors.general}
-                </p>
-              </div>
-            )}
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName">First Name *</Label>
                 <Input
                   id="firstName"
-                  name="firstName"
-                  required
+                  {...form.register("firstName")}
                   className="mt-1"
                 />
-                {errors.firstName && (
+                {form.formState.errors.firstName && (
                   <p className="mt-1 text-sm text-red-600">
-                    {errors.firstName}
+                    {form.formState.errors.firstName.message}
                   </p>
                 )}
               </div>
@@ -123,12 +110,13 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
                 <Label htmlFor="lastName">Last Name *</Label>
                 <Input
                   id="lastName"
-                  name="lastName"
-                  required
+                  {...form.register("lastName")}
                   className="mt-1"
                 />
-                {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                {form.formState.errors.lastName && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {form.formState.errors.lastName.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -137,19 +125,25 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
               <Label htmlFor="email">Email *</Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                required
+                {...form.register("email")}
                 className="mt-1"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              {form.formState.errors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {form.formState.errors.email.message}
+                </p>
               )}
             </div>
 
             <div>
               <Label htmlFor="role">Role *</Label>
-              <Select name="role" required>
+              <Select
+                value={form.watch("role")}
+                onValueChange={(value) =>
+                  form.setValue("role", value as "user" | "admin" | "owner")
+                }
+              >
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
@@ -159,35 +153,19 @@ export function UserManagementDialog({ children }: UserManagementDialogProps) {
                   <SelectItem value="owner">Owner</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.role && (
-                <p className="mt-1 text-sm text-red-600">{errors.role}</p>
+              {form.formState.errors.role && (
+                <p className="mt-1 text-sm text-red-600">
+                  {form.formState.errors.role.message}
+                </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" name="phone" type="tel" className="mt-1" />
-            </div>
-
-            <div>
-              <Label htmlFor="streetAddress">Street Address</Label>
-              <Input id="streetAddress" name="streetAddress" className="mt-1" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <Label htmlFor="city">City</Label>
-                <Input id="city" name="city" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="state">State</Label>
-                <Input id="state" name="state" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="zipCode">ZIP</Label>
-                <Input id="zipCode" name="zipCode" className="mt-1" />
-              </div>
-            </div>
+            <AddressFields
+              form={form}
+              errors={form.formState.errors}
+              showPhone={true}
+              showStreetAddress={true}
+            />
           </div>
           <DialogFooter>
             <Button

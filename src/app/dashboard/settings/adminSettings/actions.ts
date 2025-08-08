@@ -19,7 +19,7 @@ import {
 } from "./schema";
 
 // Better Auth authorization helper
-async function requireBetterAuthPermission(
+export async function requireBetterAuthPermission(
   minRole: "admin" | "owner" = "admin",
 ) {
   const activeMember = await auth.api.getActiveMember({
