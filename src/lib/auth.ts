@@ -14,6 +14,28 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      // Log for development
+      console.log("🔐 Password Reset Request:", {
+        email: user.email,
+        resetUrl: url,
+        userId: user.id,
+        timestamp: new Date().toISOString(),
+      });
+
+      // TODO: Send actual email using your email service
+      // Example with Resend:
+      // await resend.emails.send({
+      //   from: 'noreply@kabeiri.com',
+      //   to: user.email,
+      //   subject: 'Reset Your Password',
+      //   html: `
+      //     <p>Hello ${user.name},</p>
+      //     <p>Click <a href="${url}">here</a> to reset your password.</p>
+      //     <p>This link will expire in 1 hour.</p>
+      //   `
+      // });
+    },
   },
   plugins: [
     admin(),
