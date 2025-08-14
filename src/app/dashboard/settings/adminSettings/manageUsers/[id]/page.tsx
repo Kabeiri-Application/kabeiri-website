@@ -20,10 +20,11 @@ import { EditUserForm } from "../../_components/EditUserForm";
 import { getUserById } from "../../actions/userActions";
 
 interface UserPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function UserDetailPage({ params }: UserPageProps) {
+  const { id } = await params;
   // Check authorization using Better Auth organization member role
   let hasAdminAccess = false;
   let userRole: Role | undefined;
@@ -61,17 +62,18 @@ export default async function UserDetailPage({ params }: UserPageProps) {
     redirect("/dashboard?error=unauthorized");
   }
 
-  const user = await getUserById(params.id);
+  // Get the user details
+  const user = await getUserById(id);
 
   if (!user) {
     notFound();
   }
 
   // Check if this user is trying to edit themselves and if they're the last owner
-  const isEditingSelf = currentUserId === params.id;
+  const isEditingSelf = currentUserId === id;
   const isLastOwnerInOrg =
     isEditingSelf && user.role === "owner"
-      ? await isLastOwner(params.id, user.organization!)
+      ? await isLastOwner(id, user.organization!)
       : false;
 
   // Simplified permission logic based on Better Auth roles

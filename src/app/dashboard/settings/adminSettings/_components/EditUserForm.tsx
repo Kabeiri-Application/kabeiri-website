@@ -194,12 +194,7 @@ export function EditUserForm({
           </div>
 
           {/* Address Fields */}
-          <AddressFields
-            form={userForm}
-            errors={userFormErrors}
-            disabled={!canEditUser}
-            showTitle
-          />
+          <AddressFields form={userForm} disabled={!canEditUser} showTitle />
 
           {canEditUser && (
             <Button

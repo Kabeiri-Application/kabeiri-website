@@ -9,8 +9,7 @@ export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   console.log("Session:", session);
 
-  // Get role from Better Auth organization member instead of user role
-  // The user's role in an organization is stored in the member table
+  // Get role from Better Auth organization member
   let userRole: Role | undefined;
   let hasAdminAccess = false;
 
@@ -19,26 +18,24 @@ export default async function Page() {
     const activeMember = await auth.api.getActiveMember({
       headers: await headers(),
     });
-    console.log("Active member:", activeMember);
+    console.log("Active member inspect:", activeMember);
 
+    // getActiveMember returns a member object with role directly on it
     if (activeMember?.role) {
-      // Better Auth organization roles can be a string or array
       const memberRole = Array.isArray(activeMember.role)
         ? activeMember.role[0]
         : activeMember.role;
 
       userRole = memberRole as Role;
-      console.log("User role from Better Auth organization member:", userRole);
-
-      // Check if user has admin access based on Better Auth organization role
       hasAdminAccess = userRole === "admin" || userRole === "owner";
+      console.log("User role:", userRole, "Has admin access:", hasAdminAccess);
     } else {
       console.log("No active member found or no role assigned");
+      // If no active member, user shouldn't even be on this page - redirect to sign in
+      // This is a critical auth issue if it happens
     }
   } catch (error) {
     console.error("Error getting active member:", error);
-    // Fallback: if no organization membership, user has no admin access
-    hasAdminAccess = false;
   }
 
   return (

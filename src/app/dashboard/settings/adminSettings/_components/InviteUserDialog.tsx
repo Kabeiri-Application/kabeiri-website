@@ -160,12 +160,7 @@ export function InviteUserDialog({ children }: InviteUserDialogProps) {
               )}
             </div>
 
-            <AddressFields
-              form={form}
-              errors={form.formState.errors}
-              showPhone={true}
-              showStreetAddress={true}
-            />
+            <AddressFields form={form} showPhone />
           </div>
           <DialogFooter>
             <Button

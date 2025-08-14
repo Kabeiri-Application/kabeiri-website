@@ -133,7 +133,7 @@ export function OrganizationSettingsForm({
       </div>
 
       {/* Address Fields */}
-      <AddressFields form={form} errors={errors} showTitle />
+      <AddressFields form={form} showTitle />
 
       {/* Submit Button */}
       <Button

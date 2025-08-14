@@ -1,27 +1,28 @@
-import { FieldErrors, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface AddressFieldsProps<T extends Record<string, any>> {
-  form: UseFormReturn<T>;
-  errors: FieldErrors<T>;
-  showStreetAddress?: boolean;
-  showPhone?: boolean;
-  showTitle?: boolean;
-  disabled?: boolean;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function AddressFields<T extends Record<string, any>>({
+// Using a more specific type approach without interfaces
+// This component works with any form that has these optional address fields
+export function AddressFields({
   form,
-  errors,
   showStreetAddress = true,
   showPhone = true,
   showTitle = false,
   disabled = false,
-}: AddressFieldsProps<T>) {
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: UseFormReturn<any>;
+  showStreetAddress?: boolean;
+  showPhone?: boolean;
+  showTitle?: boolean;
+  disabled?: boolean;
+}) {
+  const {
+    register,
+    formState: { errors },
+  } = form;
   return (
     <div className="space-y-4">
       {showTitle && (
@@ -35,8 +36,7 @@ export function AddressFields<T extends Record<string, any>>({
           <Label htmlFor="phone">Phone</Label>
           <Input
             id="phone"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...form.register("phone" as any)}
+            {...register("phone")}
             placeholder="Phone number"
             className="mt-1"
             disabled={disabled}
@@ -54,8 +54,7 @@ export function AddressFields<T extends Record<string, any>>({
           <Label htmlFor="streetAddress">Street Address</Label>
           <Input
             id="streetAddress"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...form.register("streetAddress" as any)}
+            {...register("streetAddress")}
             placeholder="Street address"
             className="mt-1"
             disabled={disabled}
@@ -73,8 +72,7 @@ export function AddressFields<T extends Record<string, any>>({
           <Label htmlFor="city">City</Label>
           <Input
             id="city"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...form.register("city" as any)}
+            {...register("city")}
             placeholder="City"
             className="mt-1"
             disabled={disabled}
@@ -90,8 +88,7 @@ export function AddressFields<T extends Record<string, any>>({
           <Label htmlFor="state">State</Label>
           <Input
             id="state"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...form.register("state" as any)}
+            {...register("state")}
             placeholder="State"
             className="mt-1"
             disabled={disabled}
@@ -107,8 +104,7 @@ export function AddressFields<T extends Record<string, any>>({
           <Label htmlFor="zipCode">Zip Code</Label>
           <Input
             id="zipCode"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...form.register("zipCode" as any)}
+            {...register("zipCode")}
             placeholder="Zip code"
             className="mt-1"
             disabled={disabled}
