@@ -65,7 +65,7 @@ export async function createUserProfile(
       firstName: formData.firstName,
       lastName: formData.lastName,
       phone: formData.phoneNumber,
-      role: "user",
+      role: "owner", // Set as owner since they're creating an organization
       streetAddress: formData.address,
       city: formData.city,
       state: formData.state,
