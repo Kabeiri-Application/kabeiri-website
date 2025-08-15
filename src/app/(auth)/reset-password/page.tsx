@@ -1,26 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 
-const resetPasswordSchema = z.object({
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
@@ -54,9 +63,12 @@ export default function ResetPasswordPage() {
 
       if (response.error) {
         toast.error(response.error.message || "Failed to reset password");
-        
+
         // If token is expired or invalid, redirect to forgot password
-        if (response.error.message?.includes("expired") || response.error.message?.includes("invalid")) {
+        if (
+          response.error.message?.includes("expired") ||
+          response.error.message?.includes("invalid")
+        ) {
           setTimeout(() => {
             router.push("/forgot-password");
           }, 2000);
@@ -103,9 +115,7 @@ export default function ResetPasswordPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Reset your password</CardTitle>
-          <CardDescription>
-            Enter your new password below
-          </CardDescription>
+          <CardDescription>Enter your new password below</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -119,7 +129,7 @@ export default function ResetPasswordPage() {
                 disabled={isLoading}
               />
               {form.formState.errors.password && (
-                <p className="text-sm text-destructive mt-1">
+                <p className="text-destructive mt-1 text-sm">
                   {form.formState.errors.password.message}
                 </p>
               )}
@@ -134,7 +144,7 @@ export default function ResetPasswordPage() {
                 disabled={isLoading}
               />
               {form.formState.errors.confirmPassword && (
-                <p className="text-sm text-destructive mt-1">
+                <p className="text-destructive mt-1 text-sm">
                   {form.formState.errors.confirmPassword.message}
                 </p>
               )}

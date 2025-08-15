@@ -1,18 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -44,7 +51,9 @@ export default function ForgotPasswordPage() {
         toast.error(response.error.message || "Failed to send reset email");
       } else {
         setIsSuccess(true);
-        toast.success("If an account exists with this email, you will receive a password reset link");
+        toast.success(
+          "If an account exists with this email, you will receive a password reset link",
+        );
       }
     } catch (error) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -61,16 +70,16 @@ export default function ForgotPasswordPage() {
           <CardHeader>
             <CardTitle>Check your email</CardTitle>
             <CardDescription>
-              We've sent a password reset link to your email address
+              We&apos;ve sent a password reset link to your email address
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Click the link in the email to reset your password. 
-              The link will expire in 1 hour.
+            <p className="text-muted-foreground mb-4 text-sm">
+              Click the link in the email to reset your password. The link will
+              expire in 1 hour.
             </p>
-            <p className="text-sm text-muted-foreground mb-6">
-              Didn't receive the email? Check your spam folder or{" "}
+            <p className="text-muted-foreground mb-6 text-sm">
+              Didn&apos;t receive the email? Check your spam folder or{" "}
               <button
                 onClick={() => {
                   setIsSuccess(false);
@@ -99,7 +108,8 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle>Forgot password?</CardTitle>
           <CardDescription>
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we&apos;ll send you a link to reset
+            your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -114,7 +124,7 @@ export default function ForgotPasswordPage() {
                 disabled={isLoading}
               />
               {form.formState.errors.email && (
-                <p className="text-sm text-destructive mt-1">
+                <p className="text-destructive mt-1 text-sm">
                   {form.formState.errors.email.message}
                 </p>
               )}
@@ -124,8 +134,11 @@ export default function ForgotPasswordPage() {
             </Button>
           </form>
           <div className="mt-6 text-center">
-            <Link href="/login" className="text-sm text-muted-foreground hover:text-primary">
-              <ArrowLeftIcon className="inline-block mr-1 h-3 w-3" />
+            <Link
+              href="/login"
+              className="text-muted-foreground hover:text-primary text-sm"
+            >
+              <ArrowLeftIcon className="mr-1 inline-block h-3 w-3" />
               Back to login
             </Link>
           </div>
