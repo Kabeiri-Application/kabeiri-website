@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
           <CardHeader>
             <CardTitle>Check your email</CardTitle>
             <CardDescription>
-              We&apos;ve sent a password reset link to your email address
+              {`We've sent a password reset link to your email address`}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
               expire in 1 hour.
             </p>
             <p className="text-muted-foreground mb-6 text-sm">
-              Didn&apos;t receive the email? Check your spam folder or{" "}
+              {`Didn't receive the email? Check your spam folder or `}
               <button
                 onClick={() => {
                   setIsSuccess(false);
@@ -108,8 +108,7 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle>Forgot password?</CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you a link to reset
-            your password
+            {`Enter your email address and we'll send you a link to reset your password`}
           </CardDescription>
         </CardHeader>
         <CardContent>
